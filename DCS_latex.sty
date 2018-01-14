@@ -1,0 +1,78 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{BTB}[2015/15/05 Custom Package]
+
+\usepackage{titlesec}
+\usepackage{multirow,multicol}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{verbatim} 
+\usepackage{rotating}
+\usepackage{subcaption}
+\usepackage{fixltx2e}
+\usepackage[outdir=./]{epstopdf} 
+\usepackage{natbib}
+\usepackage[dutch]{babel}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx,xcolor}
+\bibpunct{(}{)}{;}{a}{,}{,}
+\usepackage{authblk}
+\usepackage{parskip}
+\usepackage[margin=10pt,font=small]{caption}
+\usepackage{placeins}
+%\usepackage{xcolor}
+\usepackage{adjustbox}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{eso-pic}
+\usepackage{everyshi}
+\usepackage{bibentry}
+\usepackage{changepage}
+
+
+\DeclareGraphicsExtensions{.pdf,.png,.eps}
+
+% Floatbox (fbx)
+\newfloat{frame}{t}{lob}
+\floatname{frame}{Frame}
+\usepackage{multicol}
+\usepackage[within=chapter]{newfloat}
+\usepackage[framemethod=TikZ]{mdframed}
+\DeclareFloatingEnvironment[fileext=box,placement={!t},name=Box]{floatbox}
+
+% blockquote (bq)
+\newenvironment{bq}{%
+  \par \small \medskip \block
+  \leftskip=4em \rightskip=4em%
+  \noindent \ignorespaces}{%
+  \par \medskip}
+ 
+ \newenvironment{fbx}[1]
+    {\begin{floatbox}[!t]
+    \begin{mdframed}[roundcorner=10pt]
+    \caption{#1}
+    }
+    {
+    \end{mdframed}
+    \end{floatbox}
+    }
+
+\newcommand{\stitle}{Inleiding Wetenschappelijk Onderzoek}
+\addto\captionsdutch{\renewcommand{\chaptername}{Hoofdstuk}}
+
+% Headers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\nouppercase{\rightmark}}
+\fancyhead[RO]{\textsc{\stitle}}
+\fancyfoot[LE,RO]{\thepage}
+\fancyheadoffset[RE,LO]{\textwidth}
+
+% Create some reference defaults 
+\captionsetup[figure]{labelfont=bf,labelsep=endash}
+\captionsetup[floatbox]{labelfont=bf,labelsep=colon}
+\captionsetup[table]{textfont=it,labelsep=newline}
+\renewcommand{\thefigure}{\textbf{\arabic{chapter}.\arabic{figure}}}
+\renewcommand{\thetable}{\textbf{\arabic{chapter}.\arabic{table}}}
+\renewcommand{\thefloatbox}{\textbf{\arabic{chapter}.\arabic{floatbox}}}
+%\renewcommand{\thechapter}{\textsc}

@@ -1,0 +1,127 @@
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{framed,color}
+\definecolor{shadecolor}{gray}{.95}
+\usepackage{natbib}
+\usepackage[dutch]{babel}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\definecolor{shadecolor}{gray}{.95}
+\usepackage{parskip}
+\usepackage[margin=10pt,font=small]{caption}
+\usepackage{placeins}
+\usepackage{adjustbox}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{eso-pic}
+\usepackage{everyshi}
+\usepackage{bibentry}
+\usepackage{changepage}
+\usepackage{fontspec}
+\bibpunct{(}{)}{;}{a}{,}{,}
+
+\DeclareGraphicsExtensions{.pdf, .png, .eps, .jpg}
+
+  \renewenvironment{quote}{%
+  \par \small \medskip \block
+  \leftskip=4em \rightskip=4em%
+  \noindent \ignorespaces}{%
+  \par \medskip
+  }
+ 
+\newcommand{\stitle}{Inleiding Wetenschappelijk Onderzoek}
+\addto\captionsdutch{\renewcommand{\chaptername}{Hoofdstuk}}
+
+% Headers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\nouppercase{\rightmark}}
+\fancyhead[RO]{\textsc{\stitle}}
+\fancyfoot[LE,RO]{\thepage}
+\fancyheadoffset[RE,LO]{\textwidth}
+
+% Create some reference defaults 
+\captionsetup[figure]{labelfont=bf,labelsep=endash}
+\captionsetup[table]{textfont=it,labelsep=newline}
+\renewcommand{\thefigure}{\textbf{\arabic{chapter}.\arabic{figure}}}
+\renewcommand{\thetable}{\textbf{\arabic{chapter}.\arabic{table}}}
+%\renewcommand{\thechapter}{\textsc}
+
+\let\stdsection\section
+\renewcommand\section{\newpage\stdsection}
+
+\setmainfont{Calibri}
+\newfontface\itGS{Gill Sans Light Italic}
+\newfontface\bfGS{Gill Sans SemiBold}
+\newfontfamily\block{Gill Sans Light}
+
+\ifxetex
+  \usepackage{letltxmacro}
+  \setlength{\XeTeXLinkMargin}{1pt}
+  \LetLtxMacro\SavedIncludeGraphics\includegraphics
+  \def\includegraphics#1#{% #1 catches optional stuff (star/opt. arg.)
+    \IncludeGraphicsAux{#1}%
+  }%
+  \newcommand*{\IncludeGraphicsAux}[2]{%
+    \XeTeXLinkBox{%
+      \SavedIncludeGraphics#1{#2}%
+    }%
+  }%
+\fi
+
+\setkeys{Gin}{width=\linewidth}
+
+\newenvironment{rmdblock}[1]
+  {\begin{shaded*}
+  \begin{itemize}
+  \renewcommand{\labelitemi}{
+    \raisebox{-.7\height}[0pt][0pt]{
+      {\setkeys{Gin}{width=3em,keepaspectratio}\includegraphics{images/#1}}
+    }
+  }
+  \item
+  }
+  {
+  \end{itemize}
+  \end{shaded*}
+  }
+  
+\newenvironment{rmdnote}
+  {\begin{rmdblock}{note}}
+  {\end{rmdblock}}
+\newenvironment{rmdselfThink}
+  {\begin{rmdblock}{selfThink}}
+  {\end{rmdblock}}
+\newenvironment{rmdimportant}
+  {\begin{rmdblock}{important}}
+  {\end{rmdblock}}
+\newenvironment{rmdkennen}
+  {\begin{rmdblock}{kennen}}
+  {\end{rmdblock}}
+\newenvironment{rmdentertain}
+  {\begin{rmdblock}{entertain}}
+  {\end{rmdblock}}
+\newenvironment{rmdfilo}
+  {\begin{rmdblock}{Filosoof_150px}}
+  {\end{rmdblock}}
+\newenvironment{rmdempi}
+  {\begin{rmdblock}{Empirist_150px}}
+  {\end{rmdblock}}
+\newenvironment{rmdscip}
+  {\begin{rmdblock}{Sci-Pract_150px}}
+  {\end{rmdblock}}
+  
+ \usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Inleiding Wetenschappelijk Onderzoek},
+            pdfauthor={Fred Hasselman},
+            pdfborder={0 0 0},
+            breaklinks=true,
+            colorlinks=true,
+            allcolors=[rgb]{.05 .5 .7}}
+            
+ 
+
+
+

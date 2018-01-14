@@ -1,0 +1,167 @@
+--- 
+title: "The Complex Systems Approach to Behavioural Science"
+author: "Fred Hasselman & Maarten Wijnants"
+date: "2017 - 2018"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib, Memory_Article.bib]
+biblio-style: apalike
+csl: apa.csl
+link-citations: true
+description: "The Complex Systems Approach to Behavioural Science. This book is a practical guide to basic theory, models, methods and analyses that can be used to study human physiology, behaviour and cognition from the perspective of Complex Adaptive Systems and Networks."
+#url: "https\://darwin.pwo.ru.nl/skunkworks/courseware/1718_IWO/"
+#documentclass: krantz
+fontsize: "12pt"
+monofont: "Source Code Pro"
+monofontoptions: "Scale=0.7"
+cover-image: images/foundations.png
+---
+
+
+
+#  *A practical guide* {-}
+
+
+```{r init, include=FALSE}
+require(devtools)
+library(knitr)
+library(kableExtra)
+require(bookdown)
+require(bookdownplus)
+library(png)
+library(jpeg)
+library(DiagrammeR)
+library(plyr)
+library(tidyverse)
+library(rio)
+library(lattice)
+library(htmlTable)
+library(htmlwidgets)
+library(lubridate)
+library(casnet)
+
+knitr::opts_chunk$set(out.width = "99%",fig.align='center',echo=TRUE)
+knitr::knit_hooks$set(document = function(x) {gsub("\\usepackage[]{color}", "\\usepackage{xcolor}", x, fixed = TRUE)})
+getOutFormat <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+```
+
+
+
+```{r cover, fig.align='center',echo=FALSE}
+knitr::include_graphics("images/foundations.png", dpi = NA)
+```
+
+
+# **Course guide** {-}
+
+Complexity research transcends the boundaries between the classical scientific disciplines and is a hot topic in physics, mathematics, biology, economy as well as psychology and the life sciences and is collectively referred to as the Complexity Sciences. This course will discuss techniques that allow for the study of human behaviour from the perspective of the Complexity Sciences, specifically, the study of complex physical systems that are alive and display complex adaptive behaviour such as learning and development.
+
+Contrary to what the term “complex” might suggest, complexity research is often about finding simple models / explanations that are able to simulate a wide range of qualitatively different behavioural phenomena. “Complex” generally refers to the object of study: Complex systems are composed of many constituent parts that interact with one another across many different temporal and spatial scales to generate behaviour at the level of the system as a whole that can appear to be periodic, nonlinear, unstable or extremely persistent. The focus of many research designs and analyses is to quantify the degree of periodicity, nonlinearity, context sensitivity or resistance to perturbation by exploiting the fact that “everything is interacting” in complex systems. 
+
+This requires a mathematical formalism and rules of scientific inference that are very different from the mathematics underlying traditional statistical analyses that assume “everything is NOT interacting” in order to be able to validly infer statistical regularities in a dataset and generalise them to a population. The complex systems approach to behavioural science often overlaps with the idiographical approach of the science of the individual, that is, the goal is not to generalise properties or regularities to universal or statistical laws that hold at the level of infinitely large populations, but to apply general principles and universal laws that govern the adaptive behaviour of all complex systems to study specific facts, about specific systems observed in specific contexts at a specific instant.
+
+The main focus of the course will be hands-on data-analysis and the main analytical tool we will use is R (if you are an expert: It is also possible to use Matlab for most of the assignments, let us know in advance). Practical sessions will follow after a lecture session in which a specific technique will be introduced.
+
+We will cover the following topics:
+
+-	Theoretical background of phase transitions (self-organised criticality) and synchronisation (coupling dynamics) in complex dynamical systems and networks.
+-	Simple models of linear and nonlinear dynamical behaviour (Linear & logistic growth, Predator-Prey dynamics, Lorenz system, the chaos game);
+-	Analysis of long range dependence in time and trial series (Entropy, Relative roughness, Standardized Dispersion Analysis, Detrended Fluctuation Analysis).
+-	Quantification of temporal patterns in time and trial series including dyadic interactions (Phase Space Reconstruction, [Cross] Recurrence Quantification Analysis).
+-	Network analyses (Estimating symptom networks, calculating network based complexity measures)
+
+
+## **Teaching formats** {-}
+ 
+Each meeting starts with a lecture addressing the theoretical and methodological backgrounds of the practical applications that will be used in hands-on assignments during the practical sessions. Several meetings include a part where guest lecturers discuss the use of one or more techniques in their recent research.
+
+### Preparation {-}
+
+To prepare for each lecture students read a contemporary research paper or watch a videolecture (e.g., [TED](http://www.ted.com)) featuring complexity theory and its application on a topic in behavioural science that will be discussed in the subsequent lecture. Students are required to formulate questions about each paper, and to initiate a discussion with their fellow-students on Blackboard.
+
+Before each lecture, students should:
+
+* Read (parts of) a scientific article, or watch a videolecture featuring a complex systems perspective and/or methodology.
+* Ask (or answer) a question about what they have read / seen in the appropriate discussion forum on Blackboard.
+    + The answers students provide will be discussed during the lecture.
+
+### Using Cerego {-}
+
+
+
+```{block2, synoniemen0, type='rmdimportant'}
+ <span style="font-size:80%;">Je zult in deze tekst en in andere bronnen zul je vaak synoniemen tegenkomen voor bepaalde begrippen, zoals *inferentie*, *gevolgtrekking* en de Engelse vertaling *inference*. Soms kunnen begrippen net iets anders gedefinieerd zijn en een bredere of juist engere betekenis hebben dan in dit boek wordt gebruikt.</br></br>In de begrippenlijst die je ook via [Cerego](https://www.cerego.com) zult bestuderen is geprobeerd om maximaal onderscheid te maken tussen de verschillende definities. Houd altijd de definities uit de begrippenlijst aan.</span>
+
+```
+
+### Test information {-}
+ 
+Examination will be based on a final assignment and a check of participation in weekly discussions on blackboard (the content of contributions will not be evaluated).
+Specifically:
+
+-	To prepare for each lecture students read a contemporary research paper in which a complex systems approach is used to a phenomenon studied in behavioural science. Students are required to formulate questions about each paper, and to initiate a discussion with their fellow-students on Blackboard. Each week at least one post by each student is expected in the discussion forum.
+-	A final take-home assignment will be provided at the end of the course. Details will be discussed during the course. In general, the assignment will take about 2 days to complete, the time available to complete the assignment will be 1-2 weeks depending on the schedule.
+
+This course is for students of the Research Master Behavioural Science. Other Research Master students and PhD students interested in following the course ask for permission by emailing to rm@bsi.ru.nl until 3 weeks before the start of the course.
+
+If permission is granted, this will be emailed 2 weeks before the start of the course. Please confirm this mail! PhD students (RU and external) have to subscribe through http://www.ru.nl/socialewetenschappen/onderwijs/overig/aanschuifonderwijs
+This course is not available for Bachelor and Master students.
+
+## **Learning objectives** {-}
+
+### Specific {-}
+
+Students who followed this course will be able to:
+
+-	Critically evaluate whether their scientific inquiries can benefit from adopting theories, models, methods and analyses that were developed in the Complexity Sciences to study the structure and behaviour of complex adaptive systems.
+-	Understand the differences between using an independent-statistical-component-dominant causal ontology, versus an interdependent-dynamical-interaction-dominant approach to the scientific study of human behaviour.
+-	Understand and apply important terms to describe behavioural change and adaptation: Nonlinear dynamics (e.g. hysteresis), attractor state, order parameter, control parameter, state-space, phase-space, phase transition, self-organisation, emergence, synergies as coordinative structures.
+-	Simulate linear, nonlinear and coupled growth using simple mathematical models in Excel and R (or Matlab).
+-	Fit parameters of simple models of linear and nonlinear growth to real data in SPSS or R (or Matlab).
+-	Perform analyses on time and trial series of human performance and physiology that quantify the presence and nature of scaling relations (fractal geometry) in continuous or categorical data in R (or Matlab).
+-	Perform analyses on time and trial series of human performance and physiology that quantify the presence and nature of temporal patterns (recurrent trajectories in phase space) in continuous or categorical data data in R (or Matlab).
+-	Perform network analyses on datasets that may be considered static or dynamical representations of social networks, or symptom networks (psychopathology) in R.
+-	Understand the results from analyses in terms of early warning signals indicating a phase transition might be imminent.
+-	Understand the results from analyses in terms of synchronisation and coupling phenomena, e.g. “complexity matching” and “leading/following” behaviour.
+
+### General {-}
+
+At the end of this course, students have reached a level of understanding that will allow them to: 
+
+-	Study relevant scientific literature using a complex systems approach to behavioural science.
+-	Getting help with using a complex systems approach in their own scientific inquiries, e.g. by being able to ask relevant questions to experts on a specific topic discussed during the course.
+-	Work through tutorials on more advanced topics that were not discussed during the course.
+-	Keep up with the continuous influx of new theoretical, methodological and empirical studies on applying the complex systems approach in the behavioural-, cognitive- and neurosciences.
+
+
+## **Literature** {-}
+
+Main literature: 
+
+-	Hasselman, F., & Wijnants, M. (2018). A Complex Systems Approach to the Behavioural Sciences. A practical guide to basic theory, models, methods and analyses [this book]
+-	Rose, T. (2016). The end of average: How we succeed in a world that values sameness. Penguin UK. [also available in Dutch and many other languages]
+
+Selected chapters from these books will be made available to make a personal copy:
+
+-	Friedenberg, J. (2009). Dynamical psychology: Complexity, self-organization and mind. ISCE Publishing.
+-	Kaplan, D., & Glass, L. (2012). Understanding nonlinear dynamics. Springer Science & Business Media.
+
+A list of required and optional literature related to the topic discussed in each session will be available on Blackboard.
+
+We als provide links to online materials on specific topics that may provide additional explanation and information about key concepts. These materials are not obligatory, but highly recommended to study at least once.
+
+
+## **Schedule** {-}
+
+The dates and locations can be found below. All lectures are on Thursday from `10.45` to `12.30`. The practical sessions take place on Thursday from `13.45` to `15.30`.
+
+
+## **We use `R`!** {-}
+
+This text was transformed to `HTML`, `PDF` en `ePUB` using `bookdown`[@R-bookdown] in [**RStudio**](https://www.rstudio.com), the graphical user interface of the statistical language [**R**](https://www.r-project.org) [@R-base]. `bookdown` makes use of the `R` version of [markdown](https://en.wikipedia.org/wiki/Markdown) called [Rmarkdown](http://rmarkdown.rstudio.com) [@R-rmarkdown], together with [knitr](http://yihui.name/knitr/) [@R-knitr] and [pandoc](http://pandoc.org). 
+
+We'll use some web applications made in [Shiny](http://shiny.rstudio.com) [@R-shiny] 
+
+Other `R` packages used are: `DT` [@R-DT], `htmlTable` [@R-htmlTable], `plyr` [@R-plyr], `dplyr` [@R-dplyr],`tidyr` [@R-tidyr], `png` [@R-png], `rio` [@R-rio].
+

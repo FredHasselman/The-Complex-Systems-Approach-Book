@@ -1,0 +1,29 @@
+bookdown::gitbook:
+  css: css/style.css
+  split_by: section
+  split_bib: no
+  config:
+    toc:
+      scroll_highlight: yes
+      collapse: section
+      before: |
+        <li><strong><a href="./">The Complex Systems Approach</a></strong></li>
+      after: |
+        <li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
+  toolbar:
+      position: fixed
+  download: ["pdf", "epub"]
+  sharing:
+      twitter: yes
+      facebook: yes
+  search: yes
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  keep_tex: yes
+  latex_engine: xelatex
+  citation_package: natbib
+  number_sections: yes
+  toc: yes
+bookdown::epub_book:
+  stylesheet: css/style.css
