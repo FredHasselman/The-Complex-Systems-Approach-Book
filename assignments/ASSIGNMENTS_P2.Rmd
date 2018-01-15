@@ -1,0 +1,312 @@
+---
+title: "Time Series Analysis: Temporal Correlations and Fractal Scaling"
+author: "Fred Hasselman & Maarten Wijnants"
+date: "1/14/2018"
+output: 
+  html_document: 
+    fig_caption: yes
+    highlight: pygments
+    keep_md: yes
+    number_sections: no
+    theme: spacelab
+    toc: yes
+    toc_float: true
+    collapsed: false
+    smooth_scroll: true
+    code_folding: show
+
+---
+
+
+# **Basic Timeseries Analysis** 
+
+Most of the basic timeseries analyses can be performed in `SPSS`, because many of you will be familiar with the software we present the first assignments mainly as `SPSS` instructions, but you can go ahead an try your preferred environment for (statistical) computing.
+
+
+## Time series analysis in SPSS (17 and higher) 
+
+### Nonlinear Growth curves in SPSS {#bta}
+
+ * Open the file [Growthregression.sav](https://github.com/FredHasselman/DCS/blob/master/assignmentData/BasicTSA_nonlinreg/GrowthRegression.sav), it contains two variables: `Time` and `Y(t)`. 
+
+This is data from an iteration of the logistic growth differential equation you are familiar with by now, but let’s pretend it’s data from one subject measured on 100 occasions.
+
+1. Plot Y(t) against Time Recognize the shape?
+2. To get the growth parameter we’ll try to fit the solution of the logistic flow with SPSS nonlinear regression
+     - Select nonlinear… from the `Analysis` >> `Regression` menu.
+     - Here we can build the solution equation. We need three parameters:
+            a. **Yzero**, the initial condition.
+            b. *K*, the carrying capacity.
+            c. *r*, the growth rate.
+    - Fill these in where it says `parameters` give all parameters a starting value of  $0.01$
+
+4.	Take a good look at the analytic solution of the (stilized) logistic flow:
+
+$$
+Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K-Y_{0}\right) * e^{(-K*r*t)} }
+$$
+
+Tr to build this equation, the function fo $e$ is called `EXP` in `SPSS` (`Function Group` >> `Arithmetic`)
+Group terms by using parentheses as shown in the equation.
+
+5. If you think you have built the model correctly, click on `Save` choose `predicted values`. Then paste your syntax and run it!
+    - Check the estimated parameter values.
+    - Check $R^2$!!!
+
+6. Plot a line graph of both the original data and the predicted values. (Smile)
+
+7. A polynomial fishing expedition:
+     - Create time-varying covariates of $Y(t)$:
+```
+COMPUTE T1=Yt * Time.
+COMPUTE T2=Yt * (Time ** 2). 
+COMPUTE T3=Yt * (Time ** 3). 
+COMPUTE T4=Yt * (Time ** 4). 
+EXECUTE.
+```
+    - Use these variables as predictors of $Y(t)$ in a regular linear regression analysis. This is called a *polynomial regression*: Fitting combinations of curves of different shapes on the data.
+    -  Before you run the analysis: Click `Save` Choose `Predicted Values: Unstandardized`
+
+8. Look at $R^2$. This is also almost 1. Which model is better? Think about this: Based o the results o the linear regression what can yo tell about the *growth rate*, the *carrying capacity* or the *initial condition*?
+
+9.	Create a line graph of $Y(t)$, plot the predicted values of the nonlinear regression and the unstandardized predicted values of the linear polynomial regression against `time` in one figure.
+
+10. Now you can see that the shape is approximated by the polynomials, but it is not quite the same. Is this really a model of a growth process as we could encounter it in nature?
+
+[| jump to solution |](#btasol)
+
+### Correlation functions and AR-MA models {#pacf}
+
+1. Download the file [`series.sav`](https://github.com/FredHasselman/DCS/blob/master/assignmentData/BasicTSA_arma/series.sav) from blackboard. It contains three time series `TS_1`, `TS_2` and `TS_3`. As a first step look at the mean and the standard deviation (`Analyze` >> `Descriptives`).  Suppose these were time series from three subjects in an experiment, what would you conclude based on the means and SD’s?  
+
+2. Let’s visualize these data. Go to `Forecasting` >> `Time Series` >> `Sequence Charts`. Check the box One chart per variable and move all the variables to Variables. Are they really the same?  
+
+3. Let’s look at the `ACF` and `PCF`
+    * Go to `Analyze` >> `Forecasting` >> `Autocorrelations`. 
+    * Enter all the variables and make sure both *Autocorrelations* (ACF) and *Partial autocorrelations* (PACF) boxes are checked. Click `Options`, and change the `Maximum Number of Lags` to `30`. 
+    * Use the table to characterize the time series:  
+
+
+|                    SHAPE                | INDICATED MODEL |
+|-----------------------------------------|-------------------------------------------------------------------------------------------------|
+|       Exponential, decaying to zero     | Autoregressive model. Use the partial autocorrelation plot to identify the order of the autoregressive model|
+| Alternating positive and negative, decaying to zero  | Autoregressive model. Use the partial autocorrelation plot to help identify the order.|
+| One or more spikes, rest are essentially zero | Moving average model, order identified by where plot becomes zero. |
+| Decay, starting after a few lags | Mixed autoregressive and moving average model.|
+All zero or close to zero  | Data is essentially random.|
+| High values at fixed intervals | Include seasonal autoregressive term. |
+| No decay to zero  | Series is not stationary. |
+
+
+4. You should have identified just one time series with autocorrelations: `TS_2`. Try to fit an `ARIMA(p,0,q)` model on this time series. 
+    - Go to `Analyze` >> `Forecasting` >> `Create Model`, and at `Method` (Expert modeler) choose `ARIMA`. 
+    - Look back at the `PACF` to identify which order (`p`) you need (last lag value at which the correlation is still significant). This lag value should go in the Autocorrelation p box. 
+    - Start with a Moving Average `q` of one. The time series variable `TS_2` is the `Dependent`. 
+    - You can check the statistical significance of the parameters in the output under `Statistics`, by checking the box `Parameter Estimates`. 
+    - This value for `p` is probably too high, because not all AR parameters are significant. 
+    - Run ARIMA again and decrease the number of AR parameters by leaving out the non-significant ones.  
+
+5. By default `SPSS` saves the predicted values and 95% confidence limits (check the data file). We can now check how well the prediction is: Go to `Graphs` >> `Legacy Dialogs` >> `Line.` Select `Multiple` and `Summaries of Separate Variables`. Now enter `TS_2`, `Fit_X`, `LCL_X` and `UCL_X` in `Lines Represent`. `X` should be the number of the last (best) model you fitted, probably 2. Enter `TIME` as the `Category Axis`.  
+
+6. In the simulation part of this course we have learned a very simple way to explore the dynamics of a system: The return plot. The time series is plotted against itself shifted by 1 step in time. 
+    - Create return plots (use a Scatterplot) for the three time series. Tip: You can easily create a `t+1` version of the time series by using the LAG function in a `COMPUTE` statement. For instance: 
+```
+COMPUTE TS_1_lag1 = LAG(TS_1)
+``` 
+    - Are your conclusions about the time series the same as in 3. after interpreting these return plots? 
+
+[| jump to solution |](#pacfsol)
+
+## Notes on TSA in `R` {#bTSAinR}
+
+If you use `R` the command below will install all the packages we will use during the entire course on you private computer. This might take too long on a university PC, just install the packages you need for an assignment each session.
+
+### Importing data in `R`
+
+If you have package `rio` installed in `R`, you can load the data directly into the local environment.
+
+1. Follow the link, e.g. for [`series.sav`](https://github.com/FredHasselman/DCS/blob/master/assignmentData/BasicTSA_arma/series.sav).
+2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
+3. Copy the `url` associated with the **Download**  button on Github (right-clik).
+4. The copied path should contain the word 'raw' somewhere in the url.
+5. Call `import(url)`:
+```{r, include=TRUE, eval=FALSE}
+series <- import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/BasicTSA_arma/series.sav")
+```
+
+You can use the function `arima()`, `acf()` and `pacf()` in `R` (`Matlab` has functions that go by slightly different names, check the [Matlab Help pages](https://nl.mathworks.com/help/econ/autocorr.html)). 
+
+There are many extensions to these linear models, check the [`CRAN Task View` on `Time Series Analysis`](https://cran.r-project.org/web/views/TimeSeries.html) to learn more (e.g. about package `zoo` and `forecast`).
+
+
+[| jump to solution |](#bTSAinRsol)
+
+
+## Heartbeat dynamics {#hrv}
+Download three different time series of heartbeat intervals (HBI) [here](https://github.com/FredHasselman/DCS/tree/master/assignmentData/RelativeRoughness). If you use `R` and have package `rio` installed you can run this code and the load the data into a `data.frame` directly from `Github`.
+```{r, echo=TRUE, eval=FALSE, include=TRUE}
+library(rio)
+TS1 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS1.xlsx", col_names=FALSE)
+TS2 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS2.xlsx", col_names=FALSE)
+TS3 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS3.xlsx", col_names=FALSE)
+```
+
+The Excel files did not have any column names, so let's create them in the `data.frame`
+```{r, eval=FALSE, include=TRUE}
+colnames(TS1) <- "TS1"
+colnames(TS2) <- "TS2"
+colnames(TS3) <- "TS3"
+```
+
+### The recordings
+These HBI’s were constructed from the R-R intervals in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).
+
+```{r RRf1, fig.cap="Definition of Heart Beat Periods.", fig.align='center',echo=FALSE, include=TRUE}
+knitr::include_graphics('images/RRfig1.png')
+```
+
+
+ * One HBI series is a sample from a male adult, 62 years old (called *Jimmy*). Approximately two years before the recording, the subject has had a coronary artery bypass, as advised by his physician following a diagnosis of congestive heart failure. *Jimmy* used antiarrhythmic medicines at the time of measurement.
+
+ * Another HBI series is a sample from a healthy male adult, 21 years old (called *Tommy*). This subject never reported any cardiac complaint. Tommy was playing the piano during the recording.
+
+ * A third supposed HBI series is fictitious, and was never recorded from a human subject (let’s call this counterfeit *Dummy*).
+Your challenge
+
+The assignment is to scrutinise the data and find out which time series belongs to *Jimmy*, *Tommy*, and *Dummy* respectively. ^[The HBI intervals were truncated (not rounded) to a multiple of 10 ms (e.g., an interval of 0.457s is represented as 0.450s), and to 750 data points each. The means and standard deviations among the HBI series are approximately equidistant, which might complicate your challenge.]
+
+
+### First inspection
+The chances that you are an experienced cardiologist are slim. We therefore suggest you proceed your detective work as follows:
+
+*	Construct a graphical representation of the time series, and inspect their dynamics visually (use the code examples provided in the [solutions to previous sessions](#moc1Rsol) to plot your time series).
+* Write down your first guesses about which time series belongs to which subject. Take your time for this visual inspection (i.e., which one looks more like a line than a plane, which one looks more 'smooth' than 'rough').
+*	Next, explore some measures of central tendency and dispersion, etc.
+*	Third, compute the Relative Roughness for each time series, use Equation \@ref(eq:RR)
+
+\begin{equation}
+RR = 2\left[1−\frac{\gamma_1(x_i)}{Var(x_i)}\right]
+(\#eq:RR)
+\end{equation}
+
+The numerator in the formula stands for the `lag 1` autocovariance of the HBI time series $x_i$. The denominator stands for the (global) variance of $x_i$. Most statistics packages can calculate these variances, `R` and `Matlab` have built in functions. Alternatively, you can create the formula yourself.
+
+*	Compare your (intuitive) visual inspection with these preliminary dynamic quantifications, and find out where each of the HIB series are positions on the ‘colorful spectrum of noises’ (i.e., line them up with Figure \@ref(fig:RRf3)).
+
+```{r RRf3, fig.cap="Coloured Noise versus Relative Roughness", fig.align='center',echo=FALSE, include=TRUE}
+knitr::include_graphics('images/RRfig3.png')
+```
+
+
+### What do we know now, that we didn’t knew before?
+Any updates on Jimmy’s, Tommy’s and Dummy’s health? You may start to wonder about the 'meaning' of these dynamics, and not find immediate answers.
+
+Don’t worry; we’ll cover the interpretation over the next two weeks in further depth. Let’s focus the dynamics just a little further for now. It might give you some clues.
+
+* Use the `randperm` function (in `Matlab` or in package  [`pracma`](http://www.inside-r.org/packages/cran/pracma) in `R`) to randomize the temporal ordering of the HBI series.
+* Visualize the resulting time series to check whether they were randomized successfully
+* Next estimate the Relative Roughness of the randomized series. Did the estimates change compared to your previous outcomes (if so, why)?
+
+* Now suppose you would repeat what you did the previous, but instead of using shuffle you would integrate the fictitious HBI series (i.e., normalize, then use `x=cumsum(x))`. You can look up `cumsum` in `R` or `Matlab`’s Help documentation). Would you get an estimate of Relative Roughness that is approximately comparable with what you got in another HBI series? If so, why?
+
+[| jump to solution |](#hrvsol)
+
+
+
+# **Fluctuation and Disperion analyses I** {#fda1}
+
+```{block2, L5, type='rmdimportant'}
+Before you begin, look at the notes for [Lecture 4](#lecture-4).
+```
+
+## The Spectral Slope {#psd}
+
+We can use the power spectrum to estimate a **self-affinity parameter**, or scaling exponent.
+
+* Download `ts1.txt`, `ts2.txt`, `ts3.txt` [here](https://github.com/FredHasselman/DCS/tree/master/assignmentData/Fluctuation_PSDslope). If you use `R` and have package `rio` installed you can run this code. It loads the data into a `data.frame` object directly from `Github`.
+```{r, echo=TRUE, eval=FALSE, include=TRUE}
+library(rio)
+TS1 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts1.txt")
+TS2 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts2.txt")
+TS3 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts3.txt")
+
+# These objects are now data.frames with one column named V1.
+# If you want to change the column names
+colnames(TS1) <- "TS1"
+colnames(TS2) <- "TS2"
+colnames(TS3) <- "TS3"
+```
+
+* Plot the three 'raw' time series.
+
+### Basic data checks and preparations
+
+For spectral analysis we need to check some data assumptions (see [notes on data preparation, Lecture 4](#data-considerations)).
+
+#### Normalize {-}
+1. Are the lengths of the time series a power of 2? (Use `log2(length of var)` )
+  + Computation of the frequency domain is greatly enhanced if data length is a power (of 2).
+2. Are the data normalized? (we will *not* remove datapoints outside 3SD)
+    + To normalize we have to subtract the mean from each value in the time series and divide it by the standard deviation, the function `scale()` can do this for you, but you could also use `mean()` and `sd()` to construct your own function.
+3. Plot the normalized time series.
+
+#### Detrend {-}
+Before a spectral analysis you should remove any linear trends (it cannot deal with nonstationary signals!)
+
+1. Detrend the normalized data (just the linear trend).
+    + This can be done using the function `pracma::detrend()`.
+    + Extra: Try to figure out how to detrend the data using `stats::lm()` or `stats::poly()`
+2. Plot the detrended data.
+
+#### Get the log-log slope in Power Spectral Density {-}
+The function `fd.psd()` will perform the spectral slope fitting procedure.
+
+1. Look at the manual pages to figure out how to call the function. The manual is on blackboard and [Github](https://github.com/FredHasselman/DCS/blob/master/functionLib/)
+    + Remember, we have already normalized and detrended the data.
+    + You can also look at the code itself by selecting the function name in`R` and pressing `F2`
+2. Calculate the spectral slopes for the three normalized and detrended time series.
+    + Call with `plot = TRUE`
+    + Compare the results... What is your conclusion?
+
+
+[| jump to solution |](#psdsol)
+
+## DFA and SDA {#dfa}
+
+* Use the functions `fd.dfa()` and `fd.sda()` to estimate the self-affinity parameter and Dimension of the series.
+    + Check what kind of data preparation is required for SDA and DFA in [notes on data preparation, Lecture 4](#data-considerations).
+    + Compare the results between the three different methods.
+
+[| jump to solution |](#dfasol)
+
+## ACF/PACF, Relative Roughness {#pacfrel}
+
+* Also calculate the ACF, PACF ([see assignment](#pacf)) and [Relative Roughness](#relR)
+    + Compare the results.
+
+[| jump to solution |](#pacfrelrsol)
+
+## Heartbeat dynamics II {#hrv2}
+In the [previous assignment](#relR), you were presented with three different time series of heartbeat intervals (HBI), and you analyzed them using a measure of Relative Roughness (RR; cf. Marmelat & Delignières, 2012).
+
+A logical step is to unleash the full force of your new analytic toolbox onto the HBI series.
+
+* Keep track of the outcomes of each time series for 4 different analyses (RR, PSD, SDA, DFA).
+    + Do the outcomes of the different methods converge on the continuum of blue, white and pink, to Brownian and black noise? That is, do they indicate the same type of temporal structure?
+* As a final step, construct return plots for each time series and try to interpret what you observe, given the outcomes of the scaling parameter estimates.
+
+[| jump to solution |](#hrv2sol)
+
+## Analysis of Deterministic Chaos {#chaos}
+
+* Generate a chaotic timeseries (e.g. $r = 4$ ) of equal length as the time series used above (use the function `growth.ac( ..., type = "logistic")` in `nlRtsa_SOURCE`, see the [solutions of Lecture 1 and 2](#linear-and-logistic-growth))
+    + This is in fact one of the series you analysed in a [previous assignment](#pacf). If you still have the results use them for the next part.
+* Get all the scaling quantities for this series as well as the ACF and PACF and [some return plots](#the-return-plot) just like in the previous assignments.
+    + Compare the results to e.g. the heartbeat series.
+
+[| jump to solution |](#chaossol)
+
+# Fluctuation and Disperion analyses II {#fda2}
+
+There were no assignments for this Lecture.
+

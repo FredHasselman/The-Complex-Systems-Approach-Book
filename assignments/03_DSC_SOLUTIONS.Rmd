@@ -1,0 +1,1463 @@
+# (APPENDIX) Solutions {-}
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+knitr::opts_chunk$set(include=TRUE, comment = "")
+library(plyr)
+library(tidyverse)
+```
+
+# **Mathematics of change I**
+
+Solutions to assignments in section \@ref(moc1ass).
+
+* Linear and logistic growth
+* Deterministic Chaos
+
+## Linear and logistic growth
+
+### Solutions in a spreadsheet {-}
+
+The 'solutions' to iterating the Linear Map and theLogistic Map in a spreadsheet can be found in this [GoogleSheet](https://docs.google.com/spreadsheets/d/1BL_oKoCFH3NQ3qKLBQ-WbkPg_ppSZsyDNl2nS9oPGcM/edit?usp=sharing).     
+
+### Solutions in `R` {#moc1Rsol} {-}
+
+[| jump to question |]({#moc1R})
+
+Coding the difference equations in `Matlab` and `R` is always easier than using a spreadsheet. One obvious way to do it is to use a counter variable representing the iterations of time in a `for ... next` loop. The iterations should run over a vector (which is the same concept as a row or a column in a spreadsheet: An indexed array of numbers or characters). The first entry should be the starting value, so the vector index $1$ represents $Y_0$.
+
+The loop can be implemented a number of ways, for example as a function which can be called from a script or the command / console window. In `R` working with functions is easy, and very much recommended, because it will speed up calculations considerably, and it will reduce the amount of code you need to write. You need to gain some experience with coding in `R` before you'll get it right. In order to get it lean and clean (and possibly even mean as well) you'll need a lot of experience with coding in `R`,therefore, we will (eventually) provide you the functions you'll need to complete the assignments. All you have to do is figure out how to use, or modify them to suit your specific needs.
+
+To model the autocatalytic growth equations we provide a function `growth.ac()`, which is able to simulate all of the processes discussed in the lectures. Using just a few lines of code, each of the 4 difference equations used in the assignments can be simulated. Basically the code block below contains the solutions to the Linear Map, the stylized Logisitc Map and the Van Geert model for cognitive growth.
+
+```{r, eval=TRUE, include=TRUE, tidy=FALSE}
+library(plyr)
+
+growth.ac <- function(Y0 = 0.01, r = 1, k = 1, N = 100, type = c("driving", "damping", "logistic", "vanGeert")[1]){
+    # Create a vector Y of length N, which has value Y0 at Y[1]
+    if(N>1){
+    Y <- as.numeric(c(Y0, rep(NA,N-2)))
+    # Conditional on the value of type ... 
+    switch(type, 
+           # Iterate N steps of the difference function with values passed for Y0, k and r.
+           driving  = sapply(seq_along(Y), function(t) Y[[t+1]] <<- r * Y[t] ),
+           damping  = k + sapply(seq_along(Y), function(t) Y[[t+1]] <<- Y[t] -r * Y[t] / k),
+           logistic = sapply(seq_along(Y), function(t) Y[[t+1]] <<- r * Y[t] * ((k - Y[t]) / k)),
+           vanGeert = sapply(seq_along(Y), function(t) Y[[t+1]] <<- Y[t] * (1 + r - r * Y[t] / k)) 
+    )}
+    return(ts(Y))
+}
+
+# Call the function with default settings and r = 1.1
+Y <- growth.ac(r = 1.1)
+```
+
+**Some notes about this function:**
+
+* To select which growth process to simulate, the argument `type` is defined which takes the values `driving` (default), `damping`, `logistic` and `vanGeert`. 
+    + The statement `switch(type, ...)` will iterate an equation based on the value of `type`.
+* A `time series` object is returned due to the function `ts()`. This is a convenient way to represent time series data, it can also store the sample rate of the signal and start and end times.
+    + Most of the basic functions, like `plot()` and `summary()` will recognise a time series object when it is passed as an argument and use settings appropriate for time series data.
+* The `sapply()` function iterates $t$ from $1$ to the number of elements in $Y$ (`seq_along(Y)`) and then applies the function.
+* The double headed arrow `<<-` is necessary because we want to update vector $Y$, which is defined outside the `sapply()` environment.
+
+
+#### The return plot {-}
+
+To create a return plot the values of $Y$ have to be shifted by a certain lag. The functions `lead()` and `lag()` in `package::dplyr` are excellent for this purpose (note that `dplyr::lag()` behaves different from `stats::lag()`).
+```{r, eval=TRUE, include=TRUE, tidy = FALSE, collapse = TRUE}
+# Function lag() and lead()
+require(dplyr)
+
+# Get exponential growth
+Y1 <- growth.ac(Y0 = .9, r = .9, N = 1000, type = "driving")
+# Get logistic growth in the chaotic regime
+Y2 <- growth.ac(r = 4, N = 1000, type = "logistic")
+# Use the `lag` function from package `dplyr`
+op <- par(mfrow = c(1,2), pty = "s")
+plot(lag(Y1), Y1, xy.labels = FALSE, pch = ".", xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",
+     main = expression(paste(Y[t+1]==r*Y[t])))
+plot(lag(Y2), Y2, xy.labels = FALSE, pch = ".", xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",
+     main = expression(paste(Y[t+1]==r*Y[t]*(1-Y[t]))))
+par(op)
+```
+
+Use `l_ply()` from `package::plyr` to create return plots with different lags. The **l_** before **ply** means the function will take a **l**ist as input to a function, but it will not expect any data to be returned, for example in the case of a function that is used to plot something.
+
+```{r, eval=TRUE, include=TRUE, tidy = FALSE, collapse = FALSE, figure.width = 20, figure.height = 20}
+# Explore different lags
+op <- par(mfrow = c(1,2), pty = "s")
+l_ply(1:4, function(l) plot(lag(Y2, n = l), Y2, xy.labels = FALSE, pch = ".", xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = paste0("Y(t+",l,")"), cex = .8))
+par(op)
+```
+
+----
+
+# **EXTRA** 
+
+Solutions to assignments in section \@ref(moc2ass)
+
+* Time-varying parameters
+* Predator-prey dynamics
+
+
+## Time-varying parameters {#tvpar}
+
+### Solutions in a spreadsheet {-}
+
+* [Van Geert, including jumps and stages](https://docs.google.com/spreadsheets/d/1DAg0u-zMFOIvRSDOZDxqnzyS0HQJg4FIXzJIMvEMwiI/edit?usp=sharing).     
+
+### Solutions in `R`  {-}
+
+#### The growth model by Van Geert (1991) {-}
+
+Different values for `r`:
+```{r, eval=TRUE, include=TRUE}
+# Parameters
+rs <- c(1.2, 2.2, 2.5, 2.7, 2.9, 3)
+# Plot 
+op <- par(mfrow=c(1,2))
+l_ply(rs,function(r){plot(growth.ac(r = r,  Y0 = 0.01, type = "vanGeert"),
+                          ylim = c(0,1.4), ylab = "L(t)", main = paste("r =",r))})
+par(op)
+```
+
+Different values for $k$ reveal that the dispersion of values (variance) increases if the carrying capacity increases. This occurs because we are dealing with nonlinear changes to the values of $Y$ and if larger values of $Y$ are allowed by a hihger $k$, these values will be amplified once they occur.
+```{r,eval=TRUE, include=TRUE}
+# Parameters
+ks <- c(0.5, 0.75, 1, 1.5)
+# Plot 
+op <- par(mfrow=c(1,2))
+l_ply(ks,function(k){plot(growth.ac(r = 2.9, k = k, Y0 = 0.01, type = "vanGeert"),
+                          ylim = c(0, 2), ylab = "L(t)", main = paste("k =",k))})
+par(op)
+```
+
+#### Stages and Jumps {-}
+
+```{r,eval=TRUE, include=TRUE}
+library(lattice)
+
+growth.ac.cond <- function(Y0 = 0.01, r = 0.1, k = 2, cond = cbind.data.frame(Y = 0.2, par = "r", val = 2), N = 100){
+    # Create a vector Y of length N, which has value Y0 at Y[1]
+    Y <- c(Y0, rep(NA, N-1))
+    # Iterate N steps of the difference equation with values passed for Y0, k and r.
+    cnt <- 1
+    for(t in seq_along(Y)){
+        # Check if the current value of Y is greater than the threshold for the current conditional rule in cond
+        if(Y[t] > cond$Y[cnt]){
+            # If the threshold is surpassed, change the parameter settings by evaluating: cond$par = cond$val 
+            eval(parse(text = paste(cond$par[cnt], "=", cond$val[cnt])))
+            # Update the counter if there is another conditional rule in cond
+            if(cnt < nrow(cond)){cnt <- cnt + 1}
+        }
+        # Van Geert growth model
+        Y[[t+1]] <- Y[t] * (1 + r - r * Y[t] / k)
+    }
+    return(ts(Y))
+}
+
+# Plot with the default settings (same as first step in the assignment) 
+xyplot(growth.ac.cond())
+```
+
+The 'trick' used here is to define the function such that it can take a set of conditional rules and apply them sequentially during the iterations. The conditiona rule is passed as a `data.frame`, but one could also use a `list` object. 
+
+```{r,eval=TRUE, include=TRUE}
+(cond <- cbind.data.frame(Y = c(0.2, 0.6), par = c("r", "r"), val = c(0.5, 0.1)))
+xyplot(growth.ac.cond(cond=cond))
+```
+
+Or, combine a change of `r` and a change of `k`
+```{r,eval=TRUE, include=TRUE, fig.show='asis'}
+(cond <- cbind.data.frame(Y = c(0.2, 1.99), par = c("r", "k"), val = c(0.5, 3)))
+xyplot(growth.ac.cond(cond=cond))
+
+# A fantasy growth process
+(cond <- cbind.data.frame(Y = c(0.1, 1.99, 1.999, 2.5, 2.9), par = c("r", "k", "r", "r","k"), val = c(0.3, 3, 0.9, 0.1, 1.3)))
+xyplot(growth.ac.cond(cond=cond))
+```
+
+#### Connected Growers {-}
+
+Somewhat more realstic would be to model a change of `r` as dependent on the values of another process. The proper 'dynamical' way to do this would be to define a coupled system of difference or differential equations in which the interaction dynamics regulate growth. An example is the predator-prey system discussed in the next assignment. 
+
+Using the 'conditional' rules on a number of seperate processes will 'work' as a model, but it isn't exactly what is meant by *interaction dynamics*, or *multiplicative interactions*. Basically, these processes will be independent and non-interacting. The conditional rules that change the parameters are 'given'. 
+
+```{r, eval=TRUE, include=TRUE, tidy = FALSE}
+# Generate 3 timeseries
+Y1 <- growth.ac(k = 2, r =.2, type = "vanGeert")
+# Y2 and Y3 start at r = 0.001
+Y3 <- Y2 <- growth.ac(k = 2, r = 0.001, type = "vanGeert")
+
+# Y2 and Y3 start when k is approached
+c1 <- 1.6
+c2 <- 2.2
+Y2[Y1 > c1] <- growth.ac(r = .3, k = 3, type = "vanGeert", N = sum(Y1 > c1))
+Y3[Y2 > c2] <- growth.ac(r = .5, k = 4, type = "vanGeert", N = sum(Y2 > c2))
+
+# Make a nice plot
+ts.plot(Y1, Y2, Y3,
+        gpars = list(xlab = "time (a.u.)",
+                     ylab = expression(Y(t)),
+                     main = expression(paste("'Connected' Growers ",Y[t+1]==Y[t]*(1 + r - r*Y[t]))),
+                     lwd = rep(2,3),
+                     lty = c(1:3),
+                     col = c("darkred","darkblue","darkgreen")
+                     )
+        )
+legend(1, 3.8, c("Y1(0):  r = .2",
+                 paste0("Y2(",which(Y1 > c1)[1],"): r = .3"), 
+                 paste0("Y3(",which(Y2 > c2)[1],"): r = .5")),
+       lwd = rep(2,3), lty = c(1:3), col = c("darkred","darkblue","darkgreen"), merge = TRUE)
+```
+
+
+# Predator-prey dynamics {#ppdsol}
+
+[| jump to question |]({#moc1R})
+
+### Iterating 2D Maps and Flows {-}
+
+In order to 'solve' a differential equation for time using a method of numerical integration, one could code it like in the spreadsheet assignment. For `R` and `Matlab` there are so-called *solvers* available, functions that will do the integration for you. Look at the [Examples in package `deSolve`](http://www.inside-r.org/packages/cran/deSolve/docs/euler).
+
+
+##  Solutions in a spreadsheet {-}
+
+* [Predator-Prey Dynamics](https://docs.google.com/spreadsheets/d/1rZDEo8XYNCzhRWrWOli7DDB6f4m87p-hjYv2_KlBLa4/edit?usp=sharing)
+
+
+## Solutions in `R` {-}
+
+### Euler's method and more... {-}
+
+The result of applying a method of numerical integration is called a **numerical solution** of the differential equation. The **analytical solution** is the equation which will give you a value of $Y$ for any point in time, given an initial value $Y_0$. Systems which have an analytical solution can be used to test the accuracy of **numerical solutions**.
+
+Remember that the analytical solution for the logistic equation is:
+
+\begin{equation}
+\frac{K}{1 + \left(\frac{K}{Y_0 - 1}\right) * e^{-r*t} }
+(\#eq:logSol)
+\end{equation}
+
+We have the function `growth.ac()` and could easily adapt all the functions to use Euler's method.   
+Below is a comparison of the analytic solution with Euler's method.
+```{r, eval=TRUE, include=TRUE}
+# Parameter settings
+d <- 1
+N <- 100
+r <- .1
+k <- 1
+Y0 <- 0.01
+
+Y <- as.numeric(c(Y0, rep(NA,N-1)))
+
+# Numerical integration of the logistic differential equation
+Y.euler1 <- ts( sapply(seq_along(Y), function(t) Y[[t+1]] <<- (r * Y[t] * (k - Y[t])) * d + Y[t] )) 
+Y.euler2 <- ts( sapply(seq_along(Y), function(t) Y[[t+1]] <<- (r * Y[t] * (k - Y[t])) * (d+.1) + Y[t] )) 
+
+## analytical solution
+Y.analytic <- ts( k / (1 + (k / Y0 - 1) * exp(-r*(time(Y.euler1)))) )
+
+ts.plot(Y.analytic, Y.euler1, Y.euler2,
+        gpars = list(xlab = "time (a.u.)",
+                     ylab = expression(Y(t)),
+                     main = expression(paste("Analytic vs. Numerical:",Y[t+1]==Y[t]*(1 + r - r*Y[t]))),
+                     lwd = rep(2,3),
+                     lty = c(1:3),
+                     col = c("darkred","darkblue","darkgreen")
+                     )
+        )
+legend(50, 0.4, c("Analytic",
+                 "Euler: delta = 1.0", 
+                 "Euler: delta = 1.1"),
+       lwd = rep(2,3), lty = c(1:3), col = c("darkred","darkblue","darkgreen"), merge = TRUE)
+```
+
+
+### Numerical integration {-}
+
+The Euler setup:
+
+\begin{align}
+R_{t+1} &= f_R(R_t,Ft) * \Delta + R_t \\
+F_{t+1} &= f_F(R_t,F_t) * \Delta + F_t
+\end{align}
+
+
+With the equations:
+
+\begin{align}
+R_{t+1} &=  (a-b*F_t)*R_t * \Delta + R_t \\
+\\
+F_{t+1} &=  (c*R_t-d)*F_t * \Delta + F_t
+\end{align}
+
+
+```{r, eval=TRUE, include=TRUE, tidy = FALSE}
+# Parameters
+N  <- 1000
+a  <- d <- 1
+b  <- c <- 2 
+R0 <- F0 <- 0.1
+R  <- as.numeric(c(R0, rep(NA,N-1)))
+F  <- as.numeric(c(F0, rep(NA,N-1)))
+
+# Time constant
+delta <- 0.01
+
+# Numerical integration of the logistic differential equation
+l_ply(seq_along(R), function(t){
+    R[[t+1]] <<- (a - b * F[t]) * R[t] * delta + R[t] 
+    F[[t+1]] <<- (c * R[t] - d) * F[t] * delta + F[t] 
+    })
+
+# Note different behaviour when ts() is applied
+xyplot(cbind(ts(R),ts(F)))
+xyplot(R ~ F, pch = 16)
+```
+
+[logmapMat]: images/logisticmap_Matlab.png
+
+
+# **Basic Timeseries Analysis** {#btasol}
+
+
+## Nonlinear Growth curves in SPSS 
+
+[| Jump to question |](#bta)
+
+
+The solutions are provided as an `SPSS` [syntax file](https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/BasicTSA_nonlinreg/GrowthRegression_sol.sps) file.
+
+Or copy the block below:
+```
+GRAPH
+  /LINE(SIMPLE)=VALUE(Yt) BY Time.
+
+* NonLinear Regression.
+MODEL PROGRAM  Yzero=0.01 r=0.01 K=0.01.
+COMPUTE  PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * K * Time))).
+NLR Yt
+  /PRED PRED_
+  /SAVE PRED
+  /CRITERIA SSCONVERGENCE 1E-8 PCON 1E-8.
+
+GRAPH
+  /LINE(MULTIPLE)=VALUE(Yt PRED_) BY Time.
+
+COMPUTE T1=Yt * Time.
+COMPUTE T2=Yt * (Time ** 2).
+COMPUTE T3=Yt * (Time ** 3).
+COMPUTE T4=Yt * (Time ** 4).
+EXECUTE.
+
+REGRESSION
+  /MISSING LISTWISE
+  /STATISTICS COEFF OUTS R ANOVA
+  /CRITERIA=PIN(.05) POUT(.10)
+  /NOORIGIN 
+  /DEPENDENT Yt
+  /METHOD=ENTER T1 T2 T3 T4
+  /SAVE PRED.
+
+
+GRAPH
+  /LINE(MULTIPLE)=VALUE(Yt PRED_ PRE_1) BY Time.
+```
+
+* The point here is that the polynomial regression appoach is "just" curve fitting ... adding components until a nice fit is found ... but what does component $Y_t^4$ represent? A quartic subprocess?
+* Fitting the solution of the the logistic function will give us parameters we can interpret unambiguoulsy: Carrying capacity, growth rate, starting value.
+
+
+## Correlation functions and AR-MA models {#pacfsol}
+
+[| Jump to question |](#pacfsol)
+
+The solutions are provided as an `SPSS` [syntax file](https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/BasicTSA_arma/Solution_TS_assignment.sps) file.
+
+Or copy the block below:
+```
+DESCRIPTIVES
+  VARIABLES=TS_1 TS_2 TS_3
+  /STATISTICS=MEAN STDDEV MIN MAX .
+
+*Sequence Charts .
+TSPLOT VARIABLES= TS_1
+  /NOLOG
+  /FORMAT NOFILL REFERENCE.
+TSPLOT VARIABLES= TS_2
+  /NOLOG
+  /FORMAT NOFILL REFERENCE.
+TSPLOT VARIABLES= TS_3
+  /NOLOG
+  /FORMAT NOFILL REFERENCE.
+
+*ACF and PCF.
+ACF
+  VARIABLES= TS_1 TS_2 TS_3
+  /NOLOG
+  /MXAUTO 30
+  /SERROR=IND
+  /PACF.
+
+* ARIMA with p=5 and q=1.
+TSET PRINT=DEFAULT CIN=95 NEWVAR=ALL .
+PREDICT THRU END.
+ARIMA TS_2
+  /MODEL=( 5 0 1)CONSTANT
+  /MXITER= 10
+  /PAREPS= .001
+  /SSQPCT= .001
+  /FORECAST= EXACT .
+
+* ARIMA with p=2 and q=1.
+TSET PRINT=DEFAULT CIN=95 NEWVAR=ALL .
+PREDICT THRU END.
+ARIMA TS_2
+  /MODEL=( 2 0 1)CONSTANT
+  /MXITER= 10
+  /PAREPS= .001
+  /SSQPCT= .001
+  /FORECAST= EXACT .
+
+*Plot Fit.
+GRAPH
+  /LINE(MULTIPLE)=MEAN(TS_2) MEAN(FIT_2) MEAN(LCL_2) MEAN(UCL_2) BY TIME
+  /MISSING=LISTWISE .
+
+*Return plots.
+
+COMPUTE TS_1_lag1 = LAG(TS_1) .
+COMPUTE TS_2_lag1 = LAG(TS_2) .
+COMPUTE TS_3_lag1 = LAG(TS_3) .
+EXECUTE .
+
+
+IGRAPH /VIEWNAME='Scatterplot' /X1 = VAR(TS_1_lag1) TYPE = SCALE /Y =
+  VAR(TS_1) TYPE = SCALE /COORDINATE = VERTICAL  /X1LENGTH=3.0 /YLENGTH=3.0
+  /X2LENGTH=3.0 /CHARTLOOK='NONE' /SCATTER COINCIDENT = NONE.
+EXE.
+
+IGRAPH /VIEWNAME='Scatterplot' /X1 = VAR(TS_2_lag1) TYPE = SCALE /Y =
+  VAR(TS_2) TYPE = SCALE /COORDINATE = VERTICAL  /X1LENGTH=3.0 /YLENGTH=3.0
+  /X2LENGTH=3.0 /CHARTLOOK='NONE' /SCATTER COINCIDENT = NONE.
+EXE.
+
+IGRAPH /VIEWNAME='Scatterplot' /X1 = VAR(TS_3_lag1) TYPE = SCALE /Y =
+  VAR(TS_3) TYPE = SCALE /COORDINATE = VERTICAL  /X1LENGTH=3.0 /YLENGTH=3.0
+  /X2LENGTH=3.0 /CHARTLOOK='NONE' /SCATTER COINCIDENT = NONE.
+EXE.
+```
+
+* Were you surprised finding out Timeseries 3 is the logisitc map in the chaotic regime? It ruly 'looks' random (according to PACF).
+
+## Using `R` to fit the solutions
+
+There are several packages that can perform nonlinear regression analysis, the function most resembling the approach used by `SPSS` is `nls` in the default `stats` package.  
+
+The easiest way to do this is to first define your function (i.e., the solution) and then fit it using starting values for the parameters.
+
+```{r, cache=FALSE}
+library(rio)
+df <- import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/BasicTSA_nonlinreg/GrowthRegression.sav", setclass = "tbl_df")
+
+# Logistic growth
+# Same as SPSS syntax: PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * K * Time))).
+log.eq <- function(Yzero, r, K, Time) {
+    K*Yzero/(Yzero + (K-Yzero) * exp(-1*(r * K * Time)))
+}
+```
+
+There is one drawback and you can read about in the help pages:
+
+> Warning
+>
+> Do not use nls on artificial "zero-residual" data.
+
+This means, "do not use it on data generated by a deterministic model which has no residual error", which is exactly what the timeseries in this assignment is, it is the output of the quadratic map in the chaotic regime.
+
+So, this will give an error:
+```{r, echo=TRUE, message=TRUE, warning=TRUE, cache=FALSE, eval=FALSE}
+# Fit this function ... gives an error
+# The list after 'start' provides the initial values
+m.log <- nls(Yt ~ log.eq(Yzero, r, K, Time), data = df, start = list(Yzero=.01, r=.01, K=1), trace = T)
+```
+
+It is possible to fit these ideal data using package `minpack.lm`, which contains function `nlsM`.
+
+```{r}
+library(minpack.lm)
+
+m.log <- nlsLM(Yt ~ log.eq(Yzero, r, K, Time), data = df, start = list(Yzero = .01, r=.01, K=0.1))
+
+summary(m.log)
+```
+
+In order to look at the model prediction, we use `predict()` which is defined for almost all modelfitting functions in `R`
+```{r}
+Ypred <- predict(m.log)
+
+plot(ts(df$Yt), col="gray40", lwd=5, ylab = ("Yt | Ypred"))
+lines(Ypred, col="gray80", lwd=2, lty=2)
+```
+
+Then we do a polynomial regression using `lm`:
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+# Mimic the SPSS syntax
+attach(df)
+  df$T1 <- Yt * Time
+  df$T2 <- Yt * (Time^2) 
+  df$T3 <- Yt * (Time^3) 
+  df$T4 <- Yt * (Time^4)
+detach(df)
+
+m.poly <- lm(Yt ~ T1 + T2 + T3 + T4, data=df)
+summary(m.poly)
+```
+
+Then, predict and plot!
+```{r}
+Ypoly <- predict(m.poly)
+
+plot(ts(Ypoly), col="blue1", lwd=2, ylab = ("Ypoly (blue) | Ypred (red)"))
+lines(Ypred, col="red1", lwd=2)
+```
+
+SPSS computes an $r^2$ value for nonlinear regression models, which doesn't make a lot of sense if you think about it. Here we van just compare the residual errors:
+
+* Polynomial regression: $0.005506$
+* Analytic solution: $0.002865$"
+
+Slightly less residual error for the analytic solution, using less parameters to fit the model (3 vs. 5). **More important:**, the paramters of the analytic solution have a direct interpretation in terms of growth processes.
+
+<!-- ## Heartbeat dynamics {#hrvsol} -->
+
+<!-- [| jump to assignment |](#hrv) -->
+
+<!-- ```{r, echo=TRUE, eval=TRUE, include=TRUE} -->
+<!-- library(rio) -->
+<!-- TS1 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS1.xlsx", col_names=FALSE) -->
+<!-- TS2 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS2.xlsx", col_names=FALSE) -->
+<!-- TS3 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS3.xlsx", col_names=FALSE) -->
+<!-- ``` -->
+
+<!-- The Excel files did not have any column names, so let's create them in the `data.frame` -->
+<!-- ```{r, eval=TRUE, include=TRUE} -->
+<!-- colnames(TS1) <- "TS1" -->
+<!-- colnames(TS2) <- "TS2" -->
+<!-- colnames(TS3) <- "TS3" -->
+<!-- ``` -->
+
+<!-- ```{r, echo=TRUE, include=TRUE, eval=TRUE} -->
+<!-- # Create a function for RR -->
+<!-- RR <- function(ts){ -->
+<!-- # lag.max = n gives autocovariance of lags 0 ... n,  -->
+<!-- VAR  <- acf(ts, lag.max = 1, type = 'covariance', plot=FALSE) -->
+<!-- # RR formula -->
+<!-- RelR   <- 2*(1-VAR$acf[2] / VAR$acf[1]) -->
+<!-- # Add some attributes to the output -->
+<!-- attributes(RelR) <- list(localAutoCoVariance = VAR$acf[2], globalAutoCoVariance = VAR$acf[1])  -->
+<!-- return(RelR) -->
+<!-- } -->
+
+<!-- # Look at the results -->
+<!-- for(ts in list(TS1,TS2,TS3)){ -->
+<!--   relR <- RR(ts[,1]) -->
+<!--   cat(paste0(colnames(ts),": RR = ",round(relR,digits=3), " = 2*(1-", -->
+<!--          round(attributes(relR)$localAutoCoVariance, digits = 4),"/", -->
+<!--          round(attributes(relR)$globalAutoCoVariance,digits = 4),")\n")) -->
+<!--   } -->
+
+<!-- ``` -->
+
+<!-- Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which type of noise: -->
+
+<!-- **TS1**: Pink noise -->
+<!-- **TS2**: Brownian noise -->
+<!-- **TS3**: White noise -->
+
+<!-- ### Randomise -->
+
+<!-- To randomize the data you may use the function `sample` (which is easier than `randperm`) -->
+
+<!-- ```{r} -->
+<!-- library(pracma) -->
+<!-- # randperm() -->
+<!-- TS1Random <- TS1$TS1[randperm(length(TS1$TS1))] -->
+
+<!-- # sample() -->
+<!-- TS1Random <- sample(TS1$TS1, length(TS1$TS1)) -->
+
+<!-- plot.ts(TS1Random) -->
+<!-- lines(ts(TS1$TS1),col="red3") -->
+<!-- ``` -->
+
+<!-- If you repeat this for TS2 and TS3 and compute the Relative Roughness of each randomized time series, the outcomes should be around 2, white noise! This makes sense, you destroyed all the correlations in the data by removing the temporal order with which values were observed. -->
+
+<!-- ### Integrate -->
+
+<!-- Normalize the white noise time series -->
+<!-- ```{r} -->
+<!-- TS3Norm <- scale(TS3$TS3) -->
+<!-- ``` -->
+
+<!-- Now integrate it, which just means, 'take the cumulative sum'. -->
+<!-- ```{r} -->
+<!-- TS3Int <- cumsum(TS3Norm) -->
+<!-- plot.ts(TS3Int) -->
+<!-- lines(ts(TS3Norm),col="red3") -->
+<!-- ``` -->
+
+<!-- If you compute the Relative Roughness of the integrated time series, the outcome should be close to 0, Brownian noise. -->
+<!-- ```{r} -->
+<!-- RR(TS3Int) -->
+<!-- ``` -->
+
+<!-- # **Fluctuation and Disperion analyses I** {#fda1sol} -->
+
+<!-- ## Assignment: The Spectral Slope {#psdsol} -->
+
+<!-- [| jump to assignment |](#psd) -->
+
+
+
+<!-- ```{block2, psd, type='rmdimportant'} -->
+<!-- First, load the data and source the function library. -->
+<!-- ``` -->
+
+
+<!-- ```{r, include=FALSE} -->
+<!-- library(devtools) -->
+<!-- source_url("https://raw.githubusercontent.com/FredHasselman/DCS/master/functionLib/nlRtsa_SOURCE.R") -->
+
+<!-- library(rio) -->
+<!-- TS1 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts1.txt") -->
+<!-- TS2 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts2.txt") -->
+<!-- TS3 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts3.txt") -->
+
+<!-- # These objects are now data.frames with one column named V1.  -->
+<!-- # If you want to change the column names -->
+<!-- colnames(TS1) <- "TS1" -->
+<!-- colnames(TS2) <- "TS2" -->
+<!-- colnames(TS3) <- "TS3" -->
+<!-- ``` -->
+
+
+<!-- ### Example of using `--ply` functions {-} -->
+<!-- Let's try to use as few commands as possible to analyse all three timeseries. -->
+<!-- The easiest way to do this is to use the so-called `apply` family of functions.  -->
+
+<!-- These functions pass the contents of a `list` object to a function. Suppose we need to calculate the means of column variables in 40 different SPSS `.sav` files stored in the folder `DAT`. With the `rio` package loaded we can execute the following commands:  -->
+<!-- ```{r, eval=FALSE, tidy=FALSE} -->
+<!-- data <- lapply(dir("/DAT/",pattern=".sav$"),import)        -->
+<!-- out  <- sapply(data,colMeans) -->
+<!-- ``` -->
+
+<!-- The first command *applies* `import` to all files with a `.sav` extension found in the folder `/DAT`. It creates a dataframe for each file which are all stored as elements of the list object `data`. The second line applies the function `colMeans` to each element of `data` and puts the combined results in a matrix with the dataset ID as columns (1-40), dataset variables as rows and the calculated column means as cells. -->
+
+<!-- `R` comes with several `apply` functions installed, but an easier interface is provided by package `plyr`. When `plyr` is loaded you can use functions of the type `XYply` where `X` denotes the first letter of the input structure and `Y` the ouput structure: `l` for `list`, `d` `for 'data.frame`, `a` for `array`. So, `laply()` expects a listobject as input and will try to create an array as outout. There is also a special symbol for `Y`, the underscore `_` if no output is expected, e.g. when plotting, `l_ply`. -->
+
+<!-- ### Data preparation {-} -->
+<!-- Let's prepare these series for spectral analysis. -->
+<!-- ```{r, message=TRUE, warning=TRUE} -->
+<!-- library(plyr) -->
+<!-- TSlist <- list(TS1=TS1$TS1,TS2=TS2$TS2,TS3=TS3$TS3) -->
+
+<!-- # Plot raw -->
+<!-- l_ply(TSlist, plot.ts) -->
+
+<!-- # Normalise -->
+<!-- TSlist.n <- llply(TSlist,scale) -->
+
+<!-- # Plot normalised -->
+<!-- l_ply(TSlist.n, plot.ts) -->
+
+<!-- # Detrend -->
+<!-- TSlist.nd <- llply(TSlist.n, detrend) -->
+
+<!-- # Plot normalised, detrended -->
+<!-- l_ply(TSlist.nd, plot.ts) -->
+<!-- ``` -->
+
+<!-- ### Time-series length {-} -->
+<!-- Another preparation concerns checking wether the length of the series is a power of 2 (or 10). This is necessary for the Fourier transfrom to run smoothly. The code below uses `log2` and `nextpow2` to figure out whether the data length is ok.  -->
+
+<!-- What is different from previous uses of the `XYply` functions is that we now customise the function we want to execute. The input is still a list object, each element of the list is passed as a variable `ts` to a so-called `anonymous` function, a function just denoted as `function(ts)`. The function returns a data.frame with columns `pow2`, the current power of 2 and `nextpow2` (a function of `pracma`) the next power of 2.  -->
+
+<!-- The `XYply` functions will add an `.id` variable to the output if the input is a list with named fields. Although we create 3 data frames of one row, the `d` in `ldply` indicates these frames have to be merged if possible.   -->
+<!-- ```{r} -->
+<!-- ldply(TSlist.nd, function(ts) data.frame(pow2 = log2(length(ts)), nextpow2 = nextpow2(length(ts)))) -->
+<!-- ``` -->
+
+<!-- * In this case we don't have to take any action, $2048$ is a power of 2.  -->
+<!-- * Actions that could be taken are: removing datapoints from the front of the series, or, padding the series with zeroes. -->
+
+
+<!-- ### The `fd.psd` function {-} -->
+<!-- The function created for spectral analysis `fd.psd()` will perform normalisation and detrending by default. It also returns information about the power spectrum and log-log fit. It's good to know about the default settings of a function, and the return values. The best place to look for them is usually the `help` documentation, or the `vignettes` that come with a package. -->
+
+<!-- If you select a function in `Rstudio` and press `F1` you'll get the help page, If you press `F2` can have a look at the code (if it is `exported`), or, you can call the function without parentheses `fd.psd` and the code will be printed to the Console. -->
+
+<!-- You can also hover the cursor after you typed the name of the function to reveal the arguments and defaults:  -->
+
+<!-- ```{r fig.align='center', fig.cap= 'Get default values of function arguments.', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')} -->
+<!-- knitr::include_graphics('images/scr.png', dpi = NA) -->
+<!-- ``` -->
+
+<!-- Another way to get this info is to use the function `formals()` -->
+<!-- ```{r, message=FALSE, warning=FALSE} -->
+<!-- formals(fd.psd) -->
+<!-- ``` -->
+
+<!-- Now we know this function has arguments `normalize` and `dtrend` set to `TRUE`, and `plot` set to `FALSE`. We could feed the fuction the raw data, or feed it our normalised, detrended, data and change the defaults. In the `XYply` functions, you can just add function arguments after the function name. -->
+<!-- ```{r, fig.height=12, message=FALSE, warning=FALSE} -->
+<!-- # Analyse -->
+<!-- outPSD <- llply(TSlist.nd, fd.psd, normalize = FALSE, dtrend = FALSE, plot=TRUE) -->
+<!-- ``` -->
+
+
+<!-- # **Fluctuation and Disperion analyses II** {#fda1so2} -->
+
+<!-- There were no assignments for this Lecture. -->
+
+
+# **Phase Space Reconstruction and Recurrence Quantification Analysis (RQA)** 
+
+First load some libraries .
+```{r, message=FALSE, cache=FALSE, tidy=FALSE}
+library(devtools)
+library(plyr)
+library(dplyr)
+library(fractal)
+library(plot3D)
+library(crqa)
+library(dygraphs)
+library(lattice)
+source_url("https://raw.githubusercontent.com/FredHasselman/DCS/master/functionLib/nlRtsa_SOURCE.R")
+```
+
+## Phase Space Reconstruction of the Lorenz Attractor {#PSRsol}
+
+[| Jump to assignment |](#PSR)
+
+Instead of `rgl::plot3d` we use `plot3D::scatter3D` to display the Lorenz attractor, because the 3D interactive plot doesn't run inside this webbook.
+```{r}
+N <- 3000
+scatter3D(lorenz[1:N, 1], lorenz[1:N,2], lorenz[1:N,3], pch=".", col = "black", colkey = FALSE, type = "l")
+```
+
+The three coupled equations of the Lorenz system constitute the three dimensions (X,Y and Z) of the state space of the system.
+```{r, tidy=FALSE}
+lxyz <- data.frame(t=1:N, lorenz[1:N, ])
+
+dygraph(lxyz, main = "Lorenz System - Chaotic Regime") %>%
+  dyHighlight(highlightCircleSize = 5, hideOnMouseOut = FALSE) %>%
+  dyOptions(colors = RColorBrewer::brewer.pal(3, "Set2"),  drawGrid = FALSE) %>%
+  dyLegend(showZeroValues = TRUE)
+```
+
+
+### Embedding Lag {-}
+
+Determine the embedding lag for optimal reconstruction. Use *average mutual information* as the criterion for selecting a delay. 
+```{r}
+lagX <- timeLag(lxyz$X, method = "mutual", plot.data = TRUE)
+```
+
+### False Nearest Neighbours {-}
+
+Determine how many points in the state space turn out to be neigbours if embedding dimension $n$ is added to the state space $X(t), X(t + \tau), \ldots, X(t + n*\tau)$.
+
+```{r, cache=FALSE, fig.align='center'}
+(fnnX <- FNN(lxyz$X, tlag = lagX))
+plotRP.fnn(fnnX)
+```
+
+If you use `plotRP.fnn()`, the figure shows the combined result (grey circles), the maximum of two methods for determining whether points are false neighbours (`atol` and `rtol`). If you want to know the details, see the manual entry for `FNN()`. The combined method will give you the best value for embedding dimension in most contexts. Except... when you try to model a low dimensional system like the Predator-Prey system.
+
+### Plot the reconstructed phase space {-}
+
+Objects of the class `embedSeries` generated by `embedSeries()` have a special `plot` function:
+```{r}
+(lxxx <- embedSeries(lxyz$X,dimension = 3, tlag = lagX))
+plot(lxxx, pch=".", col = "black", type = "l")
+```
+
+Or use `plot3D`
+```{r}
+plot3D::scatter3D(lxxx[, 1], lxxx[,2], lxxx[,3], pch=".", col = "black", colkey = FALSE, type = "l")
+```
+
+## Phase Space Reconstruction of the Predator-Prey system
+
+Get some iterations from the Predator-Prey system.
+```{r, eval=TRUE}
+# Parameters
+N  <- 2048
+a  <- d <- 1
+b  <- c <- 2 
+R0 <- F0 <- 0.1
+R  <- as.numeric(c(R0, rep(NA,N-1)))
+F  <- as.numeric(c(F0, rep(NA,N-1)))
+
+# Time constant
+delta <- 0.01
+
+# Numerical integration of the logistic differential equation
+l_ply(seq_along(R), function(t){
+    R[[t+1]] <<- (a - b * F[t]) * R[t] * delta + R[t] 
+    F[[t+1]] <<- (c * R[t] - d) * F[t] * delta + F[t] 
+    })
+```
+
+Let's plot the results.
+```{r}
+dygraph(data.frame(time=1:2049,Rabbits=R,Foxes=F), main = "Predator-Prey System") %>%
+  dyHighlight(highlightCircleSize = 5, hideOnMouseOut = FALSE) %>%
+  dyOptions(colors = RColorBrewer::brewer.pal(3, "Set2"),  drawGrid = FALSE) %>%
+  dyLegend(showZeroValues = TRUE)
+xyplot(R ~ F, pch = 16)
+```
+
+### Embedding Lag {-}
+
+Determine the embedding lag for optimal reconstruction. Use *average mutual information* of Rabbits or Foxes as the criterion for selecting a delay. 
+```{r findLag}
+lagR <- timeLag(R, method = "mutual", plot.data = TRUE)
+```
+
+### False Nearest Neighbours {-}
+
+Determine how many points in the state space turn out to be neigbours if embedding dimension $n$ is added to the state space $R(t), R(t + \tau), \ldots, R(t + n*\tau)$.
+
+```{r findDim, cache=FALSE, fig.align='center'}
+(fnnR <- FNN(R, tlag = lagR))
+plotRP.fnn(fnnR)
+```
+
+### Plot the reconstructed phase space {-}
+
+Objects of the class `embedSeries` generated by `embedSeries()` have a special `plot` function:
+```{r}
+(lRR <- embedSeries(R,dimension = 2, tlag = lagR))
+plot(lRR, pch=".", col = "black", type = "l")
+```
+
+# **Recurrence Quantification Analysis** 
+
+
+## RQA of the Lorenz system {#RQAsol}
+
+[| Jump to assignment |](#RQA)
+
+* Perform an RQA on the reconstructed state space of the Lorenz system.
+    + You'll need a radius (also called: threshold) in order to decide which points are close together (recurrent).
+        - `crqa` provides a function which will automatically select the best parametersettings: `optimizeParam()`
+        - Best way to ensure you are using the same parameters in each function is to create some lists with parametersettings (check the `crqa` manual to figure out what these parameters mean):
+
+```{r, eval=TRUE, tidy = FALSE}
+# General settings for `crqa()`
+par0 <- list(rescale = 1,
+             normalize = 0,
+             mindiagline = 2,
+             minvertline = 2,
+             tw = 0,
+             whiteline = FALSE,
+             recpt = FALSE,
+             side = "lower",
+             checkl = list(do = FALSE, thrshd = 3, datatype = "categorical",pad = TRUE)
+             )
+
+# Settings for `optimizeParam()`
+par <- list(lgM =  20, steps = seq(1, 6, 1),
+           radiusspan = 100, radiussample = 40,
+           normalize = par0$normalize, 
+           rescale = par0$rescale, 
+           mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+           tw = par0$tw, 
+           whiteline = par0$whiteline, 
+           recpt = par0$recpt, 
+           fnnpercent = 10, typeami = "mindip")
+```
+
+* Get the optimal parameters using a radius which will give us 2\%-5\% recurrent points.
+
+```{r}
+(ans <- optimizeParam(ts1 = lxyz$X, ts2 = lxyz$X, par = par, min.rec = 2, max.rec = 5))
+```
+
+* Run the RQA analysis using the same settings with which the parameters were found.
+
+```{r, tidy=FALSE}
+crqaOutput <- crqa(ts1 = lxyz$X, ts2 = lxyz$X,  
+                  delay = ans$delay, 
+                  embed = ans$emddim, 
+                  radius = ans$radius, 
+                  normalize = par0$normalize,
+                  rescale = par0$rescale, 
+                  mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+                  tw = par0$tw, 
+                  whiteline = par0$whiteline, 
+                  recpt = par0$recpt, 
+                  side = par0$side, checkl = par0$checkl
+                  )
+```
+
+* The output of `crqa` is a list with recurrence measures, the last entry is the recurrence plot. It is represented as a so-called `sparse-matrix`. 
+    + This representation severely decreases the amount of memory occupied by the recurrence matrix. It is basically a list of indices of cells that contain a $1$. The $0$ do not need to be stored.
+    + In order to plot this matrix you could use `image()`, but this does not produce the recurrence plot as they are usually displayed, the y-axis needs to be flipped.
+    + We created a function which will take as input the list output of `crqa`, together with `lattice::levelplot` the recurrence matrix can be created. If you have loaded (or sourced) the `nlRtsa` package you can call `plotRP.crqa(crqaOutput)`.
+    
+```{r}
+plotRP.crqa(crqaOutput)
+```
+
+
+## RQA of the Circle Tracing Task
+
+Get the data generated during the lecture.
+```{r, eval=TRUE, tidy = FALSE}
+library(rio)
+xy <- import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/RQA_circletrace/mouse_circle_xy.csv") 
+```
+
+
+### Embedding lag {-}
+Determine the embedding lag.
+```{r}
+(lagXc <- timeLag(xy$x, method = "mutual", plot.data = TRUE))
+```
+
+### False Nearest Neighbours {-}
+Run FNN to figure out the number of dimensions ... we should get at least 2 (x and y, but maybe some other factors influenced the dynamics).
+
+In this case (as is the case with all `real world` data) we have to rescale the timeseries. A z-score transform (`normalise`) is usually ok, but sometimes a unit-scale transform ($0 \cdots 1$ may be necessary).
+```{r, cache=FALSE, fig.align='center'}
+(fnnXc <- FNN(scale(xy$x), tlag = lagXc))
+plotRP.fnn(fnnXc)
+```
+
+We got a lag of `r lagXc` and an embedding dimension of $3$ or $4$. Three is actually not so strange, although we have recorded just 2 coordinates, there's acceleration differences due to the biomechanics of the arm and hand, or resistance of the mouse on the surface, etc. 
+
+Let's see what package `crqa` tells us to choose automagically. 
+We got a lag/delay of $86$, let's set the maximum lags to consider to $100$ (`lgM`).
+```{r}
+# General settings for `crqa()`
+par0 <- list(rescale = 1,
+             normalize = 0,
+             mindiagline = 2,
+             minvertline = 2,
+             tw = 0,
+             whiteline = FALSE,
+             recpt = FALSE,
+             side = "lower",
+             checkl = list(do = FALSE, thrshd = 3, pad = TRUE)
+             )
+
+# Settings for `optimizeParam()`
+par <- list(lgM =  100, steps = seq(1, 6, 1),
+           radiusspan = 100, radiussample = 40,
+           normalize = par0$normalize, 
+           rescale = par0$rescale, 
+           mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+           tw = par0$tw, 
+           whiteline = par0$whiteline, 
+           recpt = par0$recpt, 
+           fnnpercent = 10, typeami = "mindip")
+
+(ansCircle <- optimizeParam(ts1 = xy$x, ts2 = xy$x, par = par, min.rec = 2, max.rec = 5))
+```
+
+The suggested embedding dimension is $3$, the delay (lag) is somewhat higher, $94$ than `r lagXc`. These different values for the embedding lag shouldn't influence the global pattern of the resuts.
+
+### Run the RQA {-}
+
+Run RQA with the optimal parameters.
+```{r, tidy=FALSE, cache=TRUE}
+crqaOutput <- crqa(ts1 = xy$x, ts2 = xy$x,  
+                  delay = ansCircle$delay, 
+                  embed = ansCircle$emddim, 
+                  radius = ansCircle$radius, 
+                  normalize = par0$normalize,
+                  rescale = par0$rescale, 
+                  mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+                  tw = par0$tw, 
+                  whiteline = par0$whiteline, 
+                  recpt = par0$recpt, 
+                  side = par0$side, checkl = par0$checkl
+                  )
+
+plotRP.crqa(crqaOutput)
+```
+
+Run RQA with embedding lag `r lagXc` to check if the resulta will be very different.
+
+```{r, tidy=FALSE, cache=TRUE}
+crqaOutput2 <- crqa(ts1 = xy$x, ts2 = xy$x,  
+                  delay = lagXc, 
+                  embed = ansCircle$emddim, 
+                  radius = ansCircle$radius, 
+                  normalize = par0$normalize,
+                  rescale = par0$rescale, 
+                  mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+                  tw = par0$tw, 
+                  whiteline = par0$whiteline, 
+                  recpt = par0$recpt, 
+                  side = par0$side, checkl = par0$checkl
+                  )
+
+plotRP.crqa(crqaOutput2)
+```
+
+{#RQA}
+
+<!-- ### Surrogate analysis {-} -->
+
+<!-- Create constrained realisations of the data: -->
+
+<!-- * random order - $H_0$: the original data come from a process that generates random numbers. -->
+<!-- * phase - $H_0$: the original data come from a linear Gaussian process. -->
+<!-- * AAFT -  $H_0$: the observed time series is a monotonic nonlinear transformation of a Gaussian process. -->
+
+<!-- ```{r, cache=TRUE} -->
+<!-- rand.sur  <- xy$x[sample(length(xy$x))] -->
+<!-- phase.sur <- surrogate(xy$x, method = "phase")  -->
+<!-- aaft.sur  <- surrogate(xy$x, method = "aaft")  -->
+<!-- ``` -->
+
+<!-- Let's plot the different realisations of the data. -->
+<!-- ```{r, cache=TRUE} -->
+<!-- surplots <- data.frame(X=c(xy$x,rand.sur,phase.sur,aaft.sur), -->
+<!--                        t = rep(1:3500,4), -->
+<!--            type=factor(c(rep("Original",length(xy$x)), -->
+<!--                   rep("Random order",length(rand.sur)), -->
+<!--                   rep("Phase randomised",length(phase.sur)), -->
+<!--                   rep("AAFT",length(aaft.sur)))) -->
+<!--            ) -->
+
+<!-- xyplot(X~t | type, data=surplots, type="l") -->
+<!-- ``` -->
+
+
+<!-- ```{r, cache=TRUE} -->
+<!-- crqaOutput.sur <- llply(list(xy$x,rand.sur,phase.sur,aaft.sur), function(s){  -->
+<!--   crqa(ts1 = s, ts2 = s,   -->
+<!--                   delay = lagXc,  -->
+<!--                   embed = ansCircle$emddim,  -->
+<!--                   radius = ansCircle$radius,  -->
+<!--                   normalize = par0$normalize, -->
+<!--                   rescale = par0$rescale,  -->
+<!--                   mindiagline = par0$mindiagline, minvertline = par0$minvertline, -->
+<!--                   tw = par0$tw,  -->
+<!--                   whiteline = par0$whiteline,  -->
+<!--                   recpt = par0$recpt,  -->
+<!--                   side = par0$side, checkl = par0$checkl -->
+<!--                   ) -->
+<!-- }) -->
+
+<!-- l_ply(crqaOutput.sur,plotRP.crqa) -->
+
+<!-- ``` -->
+
+<!-- ### A statistical test of the surrogate hypotheses {-} -->
+
+<!-- The code below creates $99$ RQA analyses based on `AAFT` surrogates. This takes a while, so we saved the reults, you can download the data from GitHub.  -->
+<!-- ```{r, cache=TRUE} -->
+<!-- crqaOutput.sur.aaft <- llply(1:99, function(s){  -->
+<!--   xx <- surrogate(xy$x, method = "aaft")  -->
+<!--   crqa(ts1 = xx, ts2 = xx,   -->
+<!--                   delay = lagXc,  -->
+<!--                   embed = ansCircle$emddim,  -->
+<!--                   radius = ansCircle$radius,  -->
+<!--                   normalize = par0$normalize, -->
+<!--                   rescale = par0$rescale,  -->
+<!--                   mindiagline = par0$mindiagline, minvertline = par0$minvertline, -->
+<!--                   tw = par0$tw,  -->
+<!--                   whiteline = par0$whiteline,  -->
+<!--                   recpt = par0$recpt,  -->
+<!--                   side = par0$side, checkl = par0$checkl -->
+<!--                   ) -->
+<!--   }) -->
+
+<!-- # Get the measures into a data.frame -->
+<!-- df <- ldply(1:99, function(s) data.frame(crqaOutput.sur.aaft[[s]][1:9])) -->
+
+<!-- # Add the original -->
+<!-- df[100,] <- data.frame(crqaOutput2[1:9]) -->
+<!-- export(df,"crqaOutput_aaft.csv")  -->
+<!-- ``` -->
+
+<!-- Now lets compare the original RQA measures to to the surrogate measures by rank order. -->
+
+<!-- ```{r,cache=TRUE} -->
+<!-- df <- import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/RQA_circletrace/crqaOutput_aaft.csv") -->
+<!-- dotplot(1:100~sort(DET), data=df) -->
+<!-- # Our observed determinism was the largest value -->
+<!-- (max(df$DET)==crqaOutput2$DET) -->
+<!-- ``` -->
+
+<!-- For *Determinism*, the nullhypothesis that the observed time series is a monotonic nonlinear transformation of a Gaussian process, can be rejected at $p <.01$. -->
+
+<!-- Here's a summary of all measures, not all of them have the highest rank: -->
+<!-- ```{r,cache=TRUE} -->
+<!-- rbind.data.frame(maxSurrogate=colwise(max)(df[1:99,]), original= df[100,]) -->
+
+<!-- ``` -->
+
+<!-- # **Categorical and Cross-RQA (CRQA)**  -->
+
+```{r, echo=FALSE}
+SOLUTION = TRUE
+```
+
+<!-- If you haven't done so already, look at the solutions to the [auto-RQA assignments](#RQAsol) -->
+
+## Assignment: Cross Recurrence Quantification Analysis {#CRQAsol}
+
+[| Jump to assignment |](#CRQA)
+
+1. Create two variables for CRQA analysis:
+```{r}
+y1 <- sin(1:900*2*pi/67)
+y2 <- sin(.01*(1:900*2*pi/67)^2)
+```
+
+2. You have just created two sine waves. We’ll examine if and how they are coupled in a shared phase space. As a first step plot them.
+
+
+3. Find an embedding delay (using mutual information) and an embedding dimension (if you calculate an embedding dimension using package `fractal` for each signal seperately, as a rule of thumb use the highest embedding dimension you find in further analyses).
+
+```{r, tidy=FALSE, cache=TRUE}
+# General settings for `crqa()`
+par0 <- list(rescale = 0,
+             normalize = 0,
+             mindiagline = 2,
+             minvertline = 2,
+             tw = 0,
+             whiteline = FALSE,
+             recpt = FALSE,
+             side = "both",
+             checkl = list(do = FALSE, thrshd = 3, datatype = "categorical",pad = TRUE)
+             )
+
+# Settings for `optimizeParam()`
+par <- list(lgM =  20, steps = seq(1, 6, 1),
+           radiusspan = 100, radiussample = 40,
+           normalize = par0$normalize, 
+           rescale = par0$rescale, 
+           mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+           tw = par0$tw, 
+           whiteline = par0$whiteline, 
+           recpt = par0$recpt, 
+           fnnpercent = 10, typeami = "mindip")
+```
+
+
+4. We can now create a cross recurrence matrix. Fill in the values you decided on. You can choose a radius automatically, look in the `crqa` manual.  
+
+> Note: There is no rescaling of data, the sines were created in the same range. You can plot a matrix using `image()`. You could also check package `nonlinearTseries`. If you sourced the `nlRtsa` library, use `plotRP.crqa()`
+
+* Get the optimal parameters using a radius which will give us 2\%-5\% recurrent points.
+
+```{r, eval=SOLUTION}
+(ans <- optimizeParam(ts1 = y1, ts2 = y2, par = par, min.rec = 2, max.rec = 5))
+```
+
+5. Run the CRQA.
+
+```{r, tidy=FALSE, echo=SOLUTION, eval=SOLUTION,cache=TRUE}
+crqaOutput <- crqa(ts1 = y1, ts2 = y2,  
+                  delay = ans$delay, 
+                  embed = ans$emddim, 
+                  radius = ans$radius, 
+                  normalize = par0$normalize,
+                  rescale = par0$rescale, 
+                  mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+                  tw = par0$tw, 
+                  whiteline = par0$whiteline, 
+                  recpt = par0$recpt, 
+                  side = par0$side, checkl = par0$checkl
+                  )
+```
+
+6. Can you understand what is going on? Explain the the lack of recurrent points at the beginning of the time series.
+
+```{r, echo=SOLUTION, eval=SOLUTION,cache=TRUE}
+plotRP.crqa(crqaOutput)
+```
+
+7. Examine the synchronisation under the diagonal LOS. Look in the manual of `crqa` or  [Coco & Dale (2014)](http://journal.frontiersin.org/Journal/10.3389/fpsyg.2014.00510/abstract). 
+
+8. Make a plot of the diagonal profie. How far is the peak in RR removes from 0 (Line of Synchronisation)?
+
+This is based on the timeseries (without embedding)
+```{r, echo=SOLUTION, eval=SOLUTION,cache=TRUE}
+win <- 50
+(res <-  drpdfromts(y1, y2, ws = win, datatype = 'continuous', radius = ans$radius))[2:3]
+plot(-win:win,res$profile,type = "l", lwd = 5, xlab = "Delays", ylab = "Recurrence")
+abline(v=0)
+```
+
+To get the diagonal profile from the recurrence plot, use `spdiags()`.
+```{r, echo=SOLUTION, eval=SOLUTION,cache=TRUE}
+dprofile <- spdiags(crqaOutput$RP)
+plot(-win:win,colMeans(dprofile$B[, between(dprofile$d, -win,win)]), type="l", 
+     lwd = 5, xlab = "Delays", ylab = "Recurrence")
+abline(v=0)
+```
+
+9. Perform the same steps with a shuffled version (or use surrogate analysis!) of the data of timeseries $y1$. You can use the embedding parameters you found earlier. 
+
+
+## Assignment: Categorical CRQA {#catCRQAsol}
+
+The solutions are basically in the paper by [Coco & Dale](), the purpose here is to introduce the parametersettings used for `CRQA`.
+
+[| Jump to assignment |](#catCRQA)
+
+
+<!-- # **The Cusp Catasrophe  Model & Warning Signs** {#cuspsol} -->
+
+
+<!-- ## Cusp in SPSS -->
+
+<!-- The `SPSS` syntax (also available [on Github](https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Potential_Catastrophe/Cusp%20attitude%20solution.SPS)): -->
+<!-- ``` -->
+<!-- GRAPH -->
+<!--   /HISTOGRAM=dZY . -->
+
+<!-- *Linear regression. -->
+
+<!-- REGRESSION -->
+<!--   /MISSING LISTWISE -->
+<!--   /STATISTICS COEFF OUTS R ANOVA -->
+<!--   /CRITERIA=PIN(.05) POUT(.10) -->
+<!--   /NOORIGIN -->
+<!--   /DEPENDENT dZY -->
+<!--   /METHOD=ENTER Alpha. -->
+
+<!-- *Flags 1. -->
+
+<!-- SORT CASES BY Beta . -->
+<!-- SPLIT FILE -->
+<!--   SEPARATE BY Beta . -->
+
+<!-- GRAPH -->
+<!--   /HISTOGRAM=dZY . -->
+
+<!-- SPLIT FILE -->
+<!--   OFF. -->
+
+<!-- *Flags 2. -->
+
+<!-- GRAPH -->
+<!--   /SCATTERPLOT(BIVAR)=dZY WITH Alpha -->
+<!--   /MISSING=LISTWISE . -->
+
+<!-- *Cusp with nonlinear regression. -->
+
+<!-- MODEL PROGRAM Intercept=0.01 B1=0.01 B2=0.01 B3=0.01 B4=0.01 . -->
+<!-- COMPUTE PRED_ = Intercept + B1 * Beta * ZY1 + B2 * Alpha + B3 * ZY1 ** 2 + B4 * ZY1 ** 3. -->
+<!-- NLR dZY -->
+<!--   /PRED PRED_ -->
+<!--   /CRITERIA SSCONVERGENCE 1E-8 PCON 1E-8 . -->
+
+<!-- *Cusp with linear regression. -->
+
+<!-- COMPUTE BetaZY1 = Beta*ZY1 . -->
+<!-- COMPUTE ZY1_2 = ZY1 ** 2 . -->
+<!-- COMPUTE ZY1_3 = ZY1 ** 3 . -->
+<!-- EXECUTE . -->
+
+<!-- REGRESSION -->
+<!--   /MISSING LISTWISE -->
+<!--   /STATISTICS COEFF OUTS R ANOVA -->
+<!--   /CRITERIA=PIN(.05) POUT(.10) -->
+<!--   /NOORIGIN -->
+<!--   /DEPENDENT dZY -->
+<!--   /METHOD=ENTER Alpha BetaZY1 ZY1_2 ZY1_3  . -->
+
+<!-- *3-D scatter. -->
+
+<!-- IGRAPH /VIEWNAME='Scatterplot' /X1 = VAR(Beta) TYPE = SCALE /Y = VAR(dZY) TYPE = SCALE /X2 = VAR(Alpha) TYPE = SCALE -->
+<!--  /COORDINATE = THREE  /FITLINE METHOD = LLR NORMAL BANDWIDTH = FAST X1MULTIPLIER = 1.00  X2MULTIPLIER = 1.00 LINE = TOTAL -->
+<!--   SPIKE=OFF /X1LENGTH=3.0 /YLENGTH=3.0 /X2LENGTH=3.0 /CHARTLOOK='D:\Program Files\SPSS\Looks\dots.clo' /SCATTER COINCIDENT = -->
+<!--   NONE. -->
+<!-- EXE. -->
+
+<!-- ``` -->
+
+<!-- ## Solution in `R` -->
+
+
+
+
+# **Complex Networks** {#netssol}
+
+[| Jump to assignment |](#nets)
+
+To complete these assignments you need:
+```{r,message=FALSE, warning=FALSE}
+library(igraph)
+library(qgraph)
+library(devtools)
+source_url("https://raw.githubusercontent.com/FredHasselman/DCS/master/functionLib/nlRtsa_SOURCE.R")
+```
+
+Great resources for learning about the different measures:
+
+* [Strogatz, S. H. (2001). Exploring complex networks. Nature, 410(6825), 268-276.](http://www.math.wsu.edu/math/faculty/schumaker/Math415/Strogatz01.pdf)
+
+* [Bullmore, E., & Sporns, O. (2009). Complex brain networks: graph theoretical analysis of structural and functional systems. Nature reviews. Neuroscience, 10(3), 186-98. doi:10.1038/nrn2575 ](https://www.researchgate.net/profile/Olaf_Sporns/publication/222712673_Complex_brain_networks_Graph_theoretical_analysis_of_structural_and_functional_systems_Nature_Reviews_Neuroscience_2009_10_186-198/)
+
+
+
+## Basic graphs
+
+```{r}
+# Create a small graph and plot it
+g <- graph.ring(20)
+plot(g)
+# Get the degree of each node
+degree(g)
+# Get the average path length
+average.path.length(g)
+```
+
+```{r}
+# Create a "Small world" graph
+g <- watts.strogatz.game(1, 20, 5, 0.05)
+# Get the degree of each node
+degree(g)
+# Get the average path length
+average.path.length(g)
+# Get the transitivity
+transitivity(g)
+
+plot(g)
+
+```
+
+```{r}
+# Directed "scale free" graph
+set.seed(456)
+g <- barabasi.game(20)
+plot(g)
+# Get the degree of each node
+degree(g)
+# Get the average path length
+average.path.length(g)
+# Get the transitivity
+transitivity(g)
+```
+
+To check for a power-law, remember what the scaling relation is supposed to represent: *A relation between number of nodes of a particular size, with the size of those nodes.*
+
+The following produces an unsorted graph:
+```{r}
+plot(log(1:20),log(degree(g)))
+```
+
+So, we need to sort:
+```{r}
+plot(log(1:20),sort(log(degree(g)), decreasing = TRUE))
+```
+
+Or even better, sort and bin it:
+```{r}
+d <- degree(g)
+y <- hist(d,breaks=0.5:(max(d)+0.5),plot=TRUE, xlab = "Node degree")$counts
+op <-par("xlog","ylog")
+plot(1:length(y),rev(y), xlim = c(length(y),1), xlab = "Node degree (log)", ylab = "Frequency of Node degree (log)", log= c("xy"))
+par(op)
+
+(alpha=coef(lm(rev(log1p(y)) ~ log1p(1:length(y)))))
+
+```
+
+## Social Networks 
+
+Social network of friendships between 34 members of a karate club at a US university in the 1970s.
+
+> See W. W. Zachary, An information flow model for conflict and fission in small groups, *Journal of Anthropological Research 33*, 452-473 (1977).
+
+```{r}
+# Community membership
+karate <- graph.famous("Zachary")
+wc <- walktrap.community(karate)
+plot(wc, karate)
+modularity(wc)
+membership(wc)
+```
+
+```{r}
+# What does this matrix look like?
+get.adjacency(karate)
+```
+
+34 people sre in the karate class, a 1 is printed if they know each other.
+You can do a clustering analysis for any 0-1 matrix!
+
+
+## Small World Index and Degree Distribution 
+
+Select and run all the code below
+This will compute the *Small World Index* and compute the *Power Law slope Fit* of Small world networks and Scale-free networks
+
+Compare the measures!
+
+```{r, message=FALSE, warning=FALSE, collapse=TRUE, cache=FALSE}
+# Initialize
+set.seed(660)
+layout1=layout.kamada.kawai
+k=3
+n=50
+
+# Setup plots
+par(mfrow=c(2,3))
+# Strogatz rewiring probability = .00001
+p   <- 0.00001
+p1  <- plotSW(n=n,k=k,p=p)
+PLF1<- PLFsmall(p1)
+p11 <- plot(p1,main="p = 0.00001",
+            layout = layout1,
+            xlab=paste("FON = ",round(mean(neighborhood.size(p1,order=1)), digits=1), "\nSWI = ", round(SWtestE(p1,N=100)$valuesAV$SWI,digits=2), "\nPLF = NA", sep=""))
+
+# Strogatz rewiring probability = .01
+p   <- 0.01
+p2  <- plotSW(n=n,k=k,p=p)
+PLF2<- PLFsmall(p2)
+p22 <- plot(p2,main="p = 0.01",
+            layout = layout1,
+            xlab = paste("FON = ",round(mean(neighborhood.size(p2,order=1)),digits=1),"\nSWI = ", round(SWtestE(p2,N=100)$valuesAV$SWI, digits=2),"\nPLF = ",round(PLF2,digits=2),sep=""))
+
+# Strogatz rewiring probability = 1
+p   <- 1
+p3  <- plotSW(n=n,k=k,p=p)
+PLF3<- PLFsmall(p3)
+p33 <- plot(p3,main="p = 1",
+            layout = layout1, 
+            xlab = paste("FON = ", round(mean(neighborhood.size(p3,order=1)), digits=1), "\nSWI = ", round(SWtestE(p3,N=100)$valuesAV$SWI, digits=2), "\nPLF = ", round(PLF3,digits=2), sep=""))
+
+set.seed(200)
+# Barabasi power = 0
+p4  <- plotBA(n=n,pwr=0,out.dist=hist(degree(p1,mode="all"),breaks=(0:n),plot=FALSE)$density)
+PLF4<- PLFsmall(p4)
+p44 <- plot(p4,main="power = 0",layout = layout1, xlab = paste("FON = ", round(mean(neighborhood.size(p4, order=1)), digits=1),"\nSWI = ", round(SWtestE(p4, N=100)$valuesAV$SWI, digits=2), "\nPLF = ", round(PLF4, digits=2),sep=""))
+
+# Barabasi power = 2
+p5  <- plotBA(n=n,pwr=2,out.dist = hist(degree(p2,mode="all"),breaks=(0:n),plot=FALSE)$density)
+PLF5<- PLFsmall(p5)
+p55 <- plot(p5,main="power = 2", layout = layout1, xlab=paste("FON = ", round(mean(neighborhood.size(p5, order=1)), digits=1), "\nSWI = ", round(SWtestE(p5, N=100)$valuesAV$SWI, digits=2), "\nPLF = ", round(PLF5, digits=2), sep=""))
+
+# Barabasi power = 4
+p6  <- plotBA(n=n,pwr=4, out.dist = hist(degree(p3,mode="all"), breaks=(0:n),plot=FALSE)$density)
+PLF6<- PLFsmall(p6)
+p66 <- plot(p6,main="power = 4",layout = layout1, xlab = paste("FON = ", round(mean(neighborhood.size(p6, order=1)), digits=1), "\nSWI = ", round(SWtestE(p6,N=100)$valuesAV$SWI, digits = 2),"\nPLF = ",round(PLF6, digits=2), sep=""))
+
+par(mfrow=c(1,1))
+```
+
+
+The PLF fit is unreliable, there are not enough nodes and different values for degree.
+the SWI does seem to follow the small-wordledness / scale-free topology quite closely.

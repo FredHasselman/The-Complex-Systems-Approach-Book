@@ -1,0 +1,552 @@
+# (PART) Notes {-} 
+
+# PREPARATION {#prep} {-}
+
+## New to `R`? {-}
+
+You have probably heard many people say they should invest more time and effort to learn to use the `R` software environment for statistical computing... *and they were right*. However, what they probably meant to say is: "I tried it, but it's so damned complicated, I gave up"... *and they were right*. That is, they were right to note that this is not a point and click tool designed to accommodate any user. It was built for the niche market of scientists who use statistics, but in that segment it's actually the most useful tool I have encountered so far. Now that your struggles with getting a grip on `R` are fully acknowledged in advance, let's try to avoid the 'giving up' from happening. Try to follow these steps to get started:   
+
+1. **Get `R` and add some user comfort:** Install the latest [`R` software](http://www.r-project.org) *and* install a user interface like [RStudio](http://www.rstudio.com)... *It's all free!* An R interface will make some things easier, e.g., searching and installing packages from repositories. RStudio will also add functionality, like git/svn version control, project management and more, like the tools to create html pages like this one (`knitr` and `Rmarkdown`). Another source of user comfort are the `packages`. `R` comes with some basic packages installed, but you'll soon need to fit generalised linear mixture models, or visualise social networks using graph theory and that means you'll be searching for packages that allow you to do such things. A good place to start *package hunting* are the [CRAN task view](http://cran.r-project.org/web/views/) pages.
+
+2. **Learn by running example `code`:** Copy the commands in the `code` blocks you find on this page, or any other tutorial or help files (e.g., Rob Kabacoff's [Quick R](http://www.statmethods.net)). Paste them into an `.R` script file in the script (or, source) editor. In RStudio You can run code by pressing `cmd` + `enter` when the cursor is on a single single line, or you can run multiple lines at once by selecting them first. If you get stuck remember that there are expert `R` users who probably have answered your question already when it was posted on a forum. Search for example through the Stackoverflow site for [questions tagged with `R`](http://stackoverflow.com/questions/tagged/r))
+
+3. **Examine what happens... when you tell `R` to make something happen:** `R` stores variables (anything from numeric data to functions) in an `Environment`. There are in fact many different environments, but we'll focus on the main workspace for the current `R` session. If you run the command `x <- 1+1`, a variable `x` will appear in the `Environment` with the value `2` assigned to it. Examining what happens in the `Environment` is not the same as examining the output of a statistical analysis. Output in `R` will appear in the `Console` window. Note that in a basic set-up each new `R` session starts with an empty `Environment`. If you need data in another session, you can save the entire `Environment`, or just some selected variables, to a file (`.RData`).
+
+4. **Learn about the properties of `R` objects:** Think of objects as containers designed for specific content. One way to characterize the different objects in `R` is by how picky they are about the content you can assign it. There are objects that hold `character` and `numeric` type data, a `matrix` for numeric data organised in rows and columns, a `data.frame` is a matrix that allows different data types in columns, and least picky of all is the `list` object. It can carry any other object, you can have a `list` of which item 1 is an entire `data.frame` and item 2 is just a `character` vector of the letter `R`. The most difficult thing to master is how to efficiently work with these objects, how to assign values and query contents.
+
+5. **Avoid repeating yourself:** The `R` language has some amazing properties that allow execution of many repetitive algorithmic operations using just a few lines of code at speeds up to warp 10. Naturally, you'll need to be at least half Vulcan to master these features properly and I catch myself copying code when I shouldn't on a daily basis. The first thing you will struggle with are the `apply` functions. These functions pass the contents of a `list` object to a function. Suppose we need to calculate the means of column variables in 40 different SPSS `.sav` files stored in the folder `DAT`. With the `foreign` package loaded we can execute the following commands:   
+`data <- lapply(dir("/DAT/",pattern=".sav$"),read.spss)`        
+`out  <- sapply(data,colMeans)`       
+The first command applies read.spss to all files with a `.sav` extension found in the folder `/DAT`. It creates a dataframe for each file which are all stored as elements of the list `data`. The second line applies the function `colMeans` to each element of `data` and puts the combined results in a matrix with dataset ID as columns (1-40), dataset variables as rows and the calculated column means as cells. This is just the beginning of the `R` magic, wait 'till you learn how to write functions that can create functions.
+
+## Not new to `R`? {-}
+
+If you have been using `R` for a while, but do not consider yourself a master yet, I recommend learning to use the [**tidyverse**](http://tidyverse.org) packages and the accompanying web-book [**R for data scientists**](http://r4ds.had.co.nz).
+
+
+## The `time series` object {#tsPlot} {-}
+
+The time series object is expected to have a time-dimension on the x-axis. This is very convenient, because `R` will generate the time axis for you by looking at the *t*ime *s*eries *p*roperties attribute of the object. Even though we are not working with measurement ourcomes, consider a value at a time-index in a time series object a **sample**:
+
+* `Start` -  The value of time at the first sample in the series (e.g., $0$, or $1905$)
+* `End` - The value of time at the last sample in the series (e.g., $100$, or $2005$)
+* `Frequency` - The amount of time that passed between two samples, or, the sample rate (e.g., $0.5$, or $10$)
+
+Examples of using the time series object.
+```{r, eval=TRUE, include=TRUE}
+Y <- ts(sin(1:100))
+plot(Y, type="l")
+# Get sample rate info
+tsp(Y)
+# Extract the time vector
+time(Y)
+```
+
+For now, these values are in principle all arbitrary units (`a.u.`). These settings only make sense if they represent the parameters of an actual measurement procedure.
+
+It is easy to adjust the time vector, by assigning new values using `tsp()` (values have to be possible given the timeseries length). For example, suppose the sampling frequency was $0.1$ instead of $1$ and the Start time was $10$ and End time was $1000$.
+```{r, eval=TRUE, include=TRUE}
+# Assign new values
+tsp(Y) <- c(10, 1000, .1)
+# Time axis is automatically adjusted 
+time(Y)
+```
+
+### Plotting a `ts` object as a time series {-}
+
+Depending on which packages you use, there will be different settings applied to time series objects created by `ts()`. Below are some examples of differences between plotting routines.
+
+```{r, eval=TRUE, message=FALSE, warning=FALSE, collapse=TRUE, include=TRUE, tidy=FALSE}
+require(lattice)       # Needed for plotting
+require(latticeExtra)  # Needed for plotting
+
+# stats::plot.ts
+plot(growth.ac(r = -.9), lwd = 2, main = "stats::plot.ts")
+# lattice::xyplot.ts
+xyplot(growth.ac(r = -.9), lwd = 2, main = "lattice::xyplot.ts")
+```
+
+### Plotting multiple time series in one figure {-}
+
+Plot multiple timeseries in frames with `plot.ts()` in `package::stats`.
+This function takes a matrix as input, here we use `cbind( ... )`.
+```{r, eval=TRUE, include=TRUE, tidy = FALSE, collapse = TRUE}
+# stats::plot.ts  
+plot(cbind(growth.ac(r =  0.9),
+           growth.ac(r =  1.0), 
+           growth.ac(r = -0.8)
+           ), 
+     yax.flip = TRUE, ann = FALSE, col = "blue", frame.plot = TRUE) 
+title(main = expression(paste("Unrestricted Growth: ",Y[t+1]==r*Y[t])), 
+      ylab = "|  r = -0.8  |  r = 1  |  r = 0.9  |", 
+      xlab = "time (a.u.)")
+```
+
+Plot multiple timeseries in one graph with `ts.plot()` in `package::graphics`.
+This function can handle multiple `ts` objects as arguments.
+```{r, eval=TRUE, include=TRUE, tidy = FALSE, collapse = TRUE}
+# graphics::ts.plot
+ts.plot(growth.ac(r = 0.9), 
+        growth.ac(r = 1), 
+        growth.ac(r = -.8), 
+        gpars = list(xlab = "time (a.u.)",
+                     ylab = expression(Y(t)),
+                     main = expression(paste("Unrestricted Growth: ",Y[t+1]==r*Y[t])),
+                     lwd = rep(2,3),
+                     lty = c(1:3),
+                     col = c("darkred","darkblue","darkgreen")
+                     )
+        )
+legend(70, -0.015, c("r = 0.9","r = 1.0", "r = -0.8"), lwd = rep(2,3), lty = c(1:3), col = c("darkred","darkblue","darkgreen"), merge = TRUE)
+```
+
+Use `xyplot()` in `package::lattice` to create a plot with panels. The easiest way to do this is to create a dataset in so-called "long" format. This means the variable to plot is in 1 column and other variables indicate different levels, or conditions under which the variable was observed or simulated.
+
+Function `ldply()` is used to generate $Y$ for three different settings of $r$. The values of $r$ are passed as a **l**ist and after a function is applied the result is returned as a **d**ataframe. 
+```{r, eval=TRUE, include=TRUE,  tidy = FALSE, collapse = TRUE}
+require(plyr)          # Needed for function ldply()
+
+# Create a long format dataframe for various values for `r`
+data <- ldply(c(0.9,1,-0.8), function(r){
+  Y <- as.numeric(growth.ac(r = r))
+  cbind.data.frame(Y    = Y,
+                   time = seq_along(Y),
+                   r    = paste0("r = ", r))
+  })
+# Plot using the formula interface
+xyplot(Y ~ time | r, data = data, type = "l", main = expression(paste("Unrestricted Growth: ",Y[t+1]==r*Y[t])), scales = c(relation = "free"))
+```
+
+One can also have different panels represent different growth functions. 
+```{r, eval=TRUE, include=TRUE, tidy = FALSE, collapse = TRUE}
+# Create a long format dataframe for combinations of `type` and `r`
+param <- list(driving  = 1.1,
+              damping  = 0.1,
+              logistic = 3.6,
+              vanGeert = 2.0)
+# Use the `names()` function to pass the `type` string as an argument.
+data <- ldply(seq_along(param), function(p){
+    cbind.data.frame(Y    = as.numeric(growth.ac(r = param[[p]], type = names(param[p]))),
+                     time = as.numeric(time(growth.ac(r = param[[p]], type = names(param[p])))),
+                     type = paste0(names(param[p]), " | r = ", param[p]))
+    })
+# Plot using the formula interface
+xyplot(Y ~ time | factor(type), data = data, type = "l", scales = c(relation = "free"),
+       main = "Four Autocatalytic Growth Models")
+```
+
+A popular package for creating graphs is `ggplot2` the code is very similar to `lattice`, in my opinion `ggplot2` will be more flexible and user friendly when your plots become more complex.
+```{r, eval=TRUE, include=TRUE, tidy = FALSE, collapse = TRUE, cache=FALSE}
+library(ggplot2)
+# Create a long format dataframe for combinations of `type` and `r`
+param <- list(driving  = 1.1,
+              damping  = 0.1,
+              logistic = 3.6,
+              vanGeert = 2)
+# Use the `names()` function to pass the `type` string as an argument.
+data <- ldply(seq_along(param), function(p){
+    Y    = as.numeric(growth.ac(r = param[[p]], type = names(param[p])))
+    cbind.data.frame(Y    = Y,
+                     time = seq_along(Y),
+                     type = paste0(names(param[p]), " | r = ", param[p])
+                     )
+    })
+# Plot using the formula interface
+ggplot(data, aes(x= time, y = Y)) +
+  geom_path() +
+  facet_wrap(~type, scales = "free") +
+  labs(title = "Four Autocatalytic Growth Models")
+```
+
+
+# PART I {-}
+
+## Modelling (nonlinear) growth and Deterministic Chaos {-}
+
+The simplest non-trivial *iterative change process* can be described by the following *difference equation*: 
+
+\begin{equation}
+Y_{t+1} = Y_{t=0} + a*Y_t
+(\#eq:lin)
+\end{equation} 
+
+Equation \@ref(eq:lin) describes the way in which the value of $Y$ changes [between two adjacent, discrete moments in time](https://en.wikipedia.org/wiki/Discrete_time_and_continuous_time) 
+(hence the term [difference equation, or recurrence relation](https://en.wikipedia.org/wiki/Recurrence_relation)). There are two parameters resembling an intercept and a slope:
+
+1. The starting value $Y_0$ at $t=0$, also called the *starting value*, or the *initial conditions*.
+2. A rule for incrementing time, here the change in $Y$ takes place over a discrete time step of 1: $t+1$.    
+    
+The values taken on by variable $Y$ are considered to represent the states  quantifiable observable  leAlternative ways to describe the change of states :
+
+* A dynamical rule describing the propagation of the states of a system observable measured by the values of variable `Y` through discrete time.
+* A dynamic law describing the time-evolution of the states of a system observable measured by the variable `Y`.   
+    
+These descriptions all refer to the change processes that govern system observables (properties of dynamical systems that can be observed through measurement).     
+
+### **It's a line! It's a plane!** {-}
+The formula resembles the equation of a line. There is a constant value $Y_{0}$ which is added to a proportion of the value of $Y$ at time $t$, given by parameter $a$. This is equivalent to the slope of a line. However, in a $(X,Y)$ plane there are two 'spatial' (metric) dimensions representing the values two variables $X$ and $Y$ can take on (see figure).
+
+```{r, eval=TRUE, include=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+set.seed(12346)
+y1 = cumsum(rnorm(n=21,mean=5,sd=100))
+x1 = -10:10
+plot(x1,y1, type="p", lwd=2, xlim=c(-12,12), yaxt="n", xlab="X", ylab="Y", main = "2D Euclidean Space")
+abline(h=0,v=0,lty=2)
+l1 <- lm(y1~x1)
+lines(x1,coef(l1)[1]+x1*coef(l1)[2],type="l",lwd=3)
+text(1.5, y1[11], expression(Y[X==0]),col="grey60")
+text(11.5, y1[21], expression(Y[X==10]),col="grey60")
+text(-11.5, y1[1], expression(Y[X==-10]),col="grey60")
+```
+
+The best fitting straight line would be called a statistical model of the linear relationship between the observed values of $X$ and $Y$. It can be obtained by fitting a General Linear Model (GLM) to the data. If $X$ were to represent repeated measurements the multivariate GLM for repeated measures would have to be fitted to the data. This can be very problematic, because statistical models rely on [Ergodic theory](https://en.wikipedia.org/wiki/Ergodic_theory): 
+
+> "... it is the study of the long term average behavior of systems evolving in time." [^ergodic]
+
+ need to assume independence of measurements within and between subjects. These assumptions can be translated to certain conditions that must hold for the model to be valid, known as *Compound Symmetry* and *Sphericity*:    
+
+> The compound symmetry assumption requires that the variances (pooled within-group) and covariances (across subjects) of the different repeated measures are homogeneous (identical). This is a sufficient condition for the univariate F test for repeated measures to be valid (i.e., for the reported F values to actually follow the F distribution). However, it is not a necessary condition. The sphericity assumption is a necessary and sufficient condition for the F test to be valid; it states that the within-subject "model" consists of independent (orthogonal) components. The nature of these assumptions, and the effects of violations are usually not well-described in ANOVA textbooks; [^assumptions]   
+
+As you can read in the quoted text above, these conditions must hold in order to be able to identify unique independent components as the sources of variation of $Y$ over time within a subject. This is the a clear example of:
+
+> It is the theory that decides what we may observe [^einstein]
+
+If you choose to use GLM repeated measures to model change over time, you will only be able to infer independent components that are responsible for the time-evolution of $Y$. As is hinted in the last sentence of the quote, the validity of such inferences is not a common topic of discussion statistics textbooks.
+
+### **No! ... It's a time series!** {-}
+The important difference between a regular 2-dimensional Euclidean plane and the space in which we model change processes is that the $X$-axis represents the physical dimension **time**. In the case of the Linear Map we have a 1D space with one 'spatial' dimension $Y$ and a time dimension $t$. This  is called [time series](https://en.wikipedia.org/wiki/Time_series) if $Y$ is sampled as a continuous process, or a trial series if the time between subsequent observations is not relevant, just the fact that there was a temporal order (for example, a series of response latencies to trials in a psychological experiment in the order in which they were presented to the subject).
+
+```{r, echo=FALSE}
+plot(0:20,y1, type="b", lwd=2, xlim=c(-2,22), yaxt="n", xlab="Time / Trial series", ylab="Y", main = "1D Euclidean Space")
+abline(h=0,v=0,lty=2)
+x2 <- (x1+10)
+l2 <- lm(y1~x2)
+lines(x2,coef(l2)[1]+x2*coef(l2)[2],type="l",lwd=3)
+text(-1.2, y1[1], expression(Y[t==0]),col="grey60")
+text(21.5, y1[21], expression(Y[t==20]),col="grey60")
+```
+
+Time behaves different from a spatial dimension in that it is directional (time cannot be reversed), it cannot take on negative values, and, unless one is dealing with a truly random process, there will be a temporal correlation across one or more values of $Y$ seperated by an amount of time. In the linear difference equation this occurs because each value one step in the future is calculated based on the current value. If the values of $Y$ represent an observable of a dynamical system, the system can be said to have a history, or a memory. Ergodic systems do not have a history or a memory that extends across more than one time step. This is very convenient, because one can calculate the expected value of a system observable given infinite time, by making use of of the laws of probabilities of random events (or random fields). This means: The average of an observable of an Ergodic system measured across infinite time (its entire history, the **time-average**), will be the be the same value as the average of this observable measured at one instance in time, but in an infinite amount of systems of the same kind (the population, the **spatial average**) [^dice]. 
+
+The simple linear difference equation will have a form of *perfect memory' across the smallest time scale (i.e., the increment of 1, $t+1$). This 'memory' concerns a correlation of 1 between values at adjacent time points (a short range temporal correlation, SRC), because the change from $Y_t$ to $Y_{t+1}$ is exactly equal to $a * Y_t$ at each iteration step. This is the meaning of deterministic, not that each value of $Y$ is the same, but that the value of $Y$ now can be perfectly explained form the value of $Y$ one moment in the past.
+
+Summarising, the most profound difference is not the fact that the equation of linear change is a deterministic model and the GLM is a probabilistic model with parameters fitted from data, this is something we can (and will) do for $a$ as well. The profound difference between the models is the role given to the passage of time: 
+
+* The linear difference equation represents changes in $Y$ as a function of the physical dimension *time* and $Y$ itself.
+* The GLM represents changes in $Y$ as a function of a [linear predictor](https://en.wikipedia.org/wiki/Linear_predictor_function) composed of additive components that can be regarded as independent sources of variation that sum up to the observed values of $Y$.
+
+[^assumptions]: [Retreived from www.statsoft.com](https://www.statsoft.com/Textbook/ANOVA-MANOVA#sphericity)
+[^einstein]: Einstein as quoted by Heisenberg.
+[^ergodic]: See  Dajani &  Dirksin (2008, p. 5, ["A simple introduction to Ergodic Theory"](http://www.staff.science.uu.nl/~kraai101/lecturenotes2009.pdf))
+[^dice]: In other words: If you throw 1 die 100 times in a row, the average of the 100 numbers is the **time-average** of one of the observables of die-throwing systems. If this system is ergodic, then its **time-average** is expected to be similar to the average of the numbers that turn up if you throw 100 dice all at the same instance of time. The dice layed out on the table represent a spatial sample, a snapshot frozen in time, of the possible states the system can be in. Taking the average would be the **spatial average** this observable of die-throwing systems. This ergodic condiciotn is often implicitly assumed in Behavioural Science when studies claim to study change by taking different samples of individuals (snapshots of system states) and comparing if they are the same. 
+
+
+## Numerical integration to simulate continuous time {-}
+
+In order to 'solve' a differential equation for continuous time using a method of numerical integration, one could code it like in the spreadsheet assignment below. For `R` and `Matlab` there are so-called *solvers* available, functions that will do the integration for you. For `R` look at the [Examples in package `deSolve`](http://desolve.r-forge.r-project.org).
+
+
+### Euler's method and more... {-}
+
+The result of applying a method of numerical integration is called a **numerical solution** of the differential equation. The **analytical solution** is the equation which will give you a value of $Y$ for any point in time, given an initial value $Y_0$. Systems which have an analytical solution can be used to test the accuracy of **numerical solutions**.
+
+
+### Analytical solution {-}
+Remember that the analytical solution for the logistic equation is:
+
+$$
+Y(t)  =  \frac{K}{1 + \left(\frac{K}{Y_{0} - 1}\right) * e^{-r*t} }
+$$
+
+If we want to know the growth level $Y_t$ at $t=10$, with $Y_0=.0001$, $r=1.1$ and $K=4$, we can just `fill it in`:
+```{r, echo=TRUE, include=TRUE}
+# Define a function for the solution
+logSol <- function(Y0, r, K, t){K/(1+(K/Y0-1)*exp(-r*t))}
+
+# Call the function
+logSol(Y0=.0001, r=1.1, K=4, t=10)
+
+```
+
+We can pas a vector of timepoints to create the exact solution, the same we would get if we were to iterate the differential/difference equation.
+```{r, echo=TRUE, include=TRUE}
+# Plot from t=1 to t=100
+plot(logSol(Y0=.0001, r=1.1, K=4, t=seq(1,20)), type = "b", 
+     ylab = expression(Y[t]), xlab = "t")
+# Plot t=10 in red
+points(10,logSol(Y0=.0001, r=1.1, K=4, t=10), col="red", pch=16)
+```
+
+### Numerical solution (discrete) {-}
+
+If we would iterate the differential equation ...
+
+$$
+\frac{dY}{dt} = Y_t * (1 + r - r * \frac{Y_t}{K})
+$$
+
+... as if it were a difference equation, that is, *not* simulating continuous time.
+
+```{r, echo=TRUE, include=TRUE}
+logIter <-  function(Y0,r,K,t){
+  N <- length(t)
+  Y <- as.numeric(c(Y0, rep(NA,N-2)))
+  sapply(seq_along(Y), function(t){ Y[[t+1]] <<- Y[t] * (1 + r - r * Y[t] / K)})
+  }
+
+# Plot from t=1 to t=100
+plot(logIter(Y0=.0001, r=1.1, K=4, t=seq(1,20)), type = "b", 
+     ylab = expression(Y[t]), xlab = "t")
+# Plot t=10 in red
+points(10,logSol(Y0=.0001, r=1.1, K=4, t=10), col="red", pch=16)
+```
+
+
+## Modeling interactions between processes and agents {#advmodels}
+
+### The Competetive Lottka-Volterra Equations {-}
+
+The coupled predator-prey dynamics in the previous assignment are not a very realistic model of an actual ecological system. Both equations are exponential growth functions, but **R**abbits for example, also have to eat! One way to increase realism is to consider coupled logistic growth by introducing a carrying capacity.   
+
+* Follow the link to the [Wiki page](https://en.wikipedia.org/wiki/Competitive_Lotka???Volterra_equations) and try to model the system!
+
+
+> This is what *interaction dynamics* refers to, modeling mutual dependiencies using the `if ... then` conditional rules isn't really about interaction, or coupling between processes.
+
+
+### Predator-Prey (and other) dynamics as Agent Based Models {-}
+
+Agent-Based models are an expansion of the idea of "connected growers" that includes a spatial location  of the things that is subject to change over time.
+
+Have a look at some of the [NETlogo](http://ccl.northwestern.edu/netlogo/) demo's:
+
+* [Rabbits Weeds Grass](http://www.netlogoweb.org/launch#http://www.netlogoweb.org/assets/modelslib/Sample%20Models/Biology/Rabbits%20Grass%20Weeds.nlogo)
+* [Wolf Sheep Grass](http://www.netlogoweb.org/launch#http://www.netlogoweb.org/assets/modelslib/Sample%20Models/Biology/Wolf%20Sheep%20Predation.nlogo)
+
+
+# PART II {-}
+
+It will become increasingly difficult to use software like Excel and SPSS. Perhaps now is a good time to switch to `R` or `Matlab`. We do have a spreadsheet example of Standardised Dispersion Anaysis. 
+
+### Using R: Install functions in nlRtsa_SOURCE.R {-}
+
+First, download (from blackboard) and `source('nlRtsa_SOURCE.R')`, or source it directly from Github if you have package `devtools` installed.
+```{r L4.1, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+library(devtools)
+source_url("https://raw.githubusercontent.com/FredHasselman/DCS/master/functionLib/nlRtsa_SOURCE.R")
+```
+
+We need packages `signal` and `pracma`
+Among `nlRtsa` functions is `in.IT()`, which will load a list of packages and install them, but only if they are not present on your system.
+```{r L4.2, echo=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+in.IT(c("signal","pracma"))
+```
+You can of course also use `install.packages()` or the GUI.
+
+## Examples: Fast Fourier transform and Power Spectrum {-}
+
+Below is an example of a signal built from sine components (`y`) whose relative amplitudes are recovered in the powerspectrum.
+The amplitudes are differently scaled sinewaves which are summed or subtracted form one another.
+```{r L4.3, include=TRUE}
+# Sawtooth
+x <- seq(-3.2,3.2, length.out = 256)
+y <- 2*sin(10*x) - 1*sin(20*x) + (2/3)*sin(30*x) - (1/2)*sin(40*x) + (2/5)*sin(50*x) - (1/4)*sin(60*x)
+
+# Plot the sawtooth wave as constructed by the Fourier series above
+plot(x,y, xlab ='Time (a.u.)', ylab = 'Variable (a.u.)', main ='Sawtooth wave', type = "l")
+
+# Perform a Fast Fourier Transform and calculate the Power and Frequency (you don't have to know how this works)
+Y   <- fft(y)
+Pyy <- Y*Conj(Y)/256
+f <- 1000/256*(0:127)
+
+# Plot the power spectrum of the sawtooth wave
+plot(f[1:50],Pyy[1:50], type="b",xlab='Frequency (a.u.)', ylab ='Power (a.u.)', pch=21, bg='grey60', main = 'Power Spectrum')
+```
+
+* The $6$ peaks with an amplitude > $0$ are the $6$ sine components used to construct the signal:   
+```{r, tidy=FALSE, include=TRUE, eval=FALSE}
++   2  *sin(10*x) 
+-   1  *sin(20*x) 
++ (2/3)*sin(30*x) 
+- (1/2)*sin(40*x) 
++ (2/5)*sin(50*x) 
+- (1/4)*sin(60*x)
+```
+
+
+Now we do the same for a very noisy signal into which we insert one dominant frequency and two smaller ones.
+```{r L4.5, include=TRUE}
+# A time vector
+t <- pracma::linspace(x1 = 0, x2 = 50, n = 256)
+# There are three sine components
+x <- sin(2*pi*t/.1) + sin(2*pi*t/.3) + sin(2*pi*t/.5)
+# Add random noise!
+y <- x + 1*randn(size(t))
+
+# Plot the noise.
+plot(t, y, type = "l", xlab = 'Time (a.u.)', ylab = 'Variable (a.u.)', main = 'A very noisy signal')
+
+# Get the frequency domain
+Y <- fft(y)
+Pyy <- Y*Conj(Y)/256
+f <- 1000/256*(0:127)
+
+# Plot the power spectrum of this noise
+plot(f[1:50],Pyy[1:50], type="b",xlab='Frequency (a.u.)', ylab='Power (a.u.)', pch=21, bg='grey60', main = 'Power Spectrum')
+```
+
+* The $3$ peaks with an amplitude > $0$ are the $3$ sine components used to construct the signal to which random noise was added:   
+```{r, tidy=FALSE, include=TRUE, eval=FALSE}
++ sin(2*pi*t/.1) 
++ sin(2*pi*t/.3) 
++ sin(2*pi*t/.5)
+```
+
+More information about the [Fourier transform](https://en.wikipedia.org/wiki/Fourier_transform) and [how to use `R` functions](http://www.di.fc.ul.pt/~jpn/r/fourier/fourier.html). 
+
+## Data considerations {-}
+
+> “If you have not found the fractal pattern, you have not taken enough data” 
+> -- Machlup, 1977)
+  
+* **All analyses**:
+    + Data points: $2^n$, minimum 1024 ($2^{10}$) 
+      + Remove 3SD only if this is absolutely necessary
+
+* **Spectral analysis**: 
+    + Normalize the data (z-score transform: (X-mean(X))/SD(X)
+    + Remove linear trend if necessary (detrend)
+    + Decide number of frequencies to estimate, min. 512
+   
+* **SDA**:
+    + Normalize the data (z-score transform: (X-mean(X))/SD(X)
+   
+* **DFA**:
+    + Nothing extra, analysis integrates and detrends the signal
+
+
+# PART III {-}
+
+
+
+## Creating fractals from random processes
+
+Below are examples of so-called Iterated Function Systems, copy the code and run it in `R`
+
+Try to understand what is going on in the two examples below.
+    - How does the structure come about? We are drawing random numbers!
+    - What's the difference between the Siepinsky Gasket and the Fern?
+
+### A Triangle {-}
+
+```{r siepinsky, echo=TRUE, include=TRUE, eval=TRUE}
+# Sierpinski Gasket using Iterated Function Systems
+#
+# RM-course Advanced Data Analysis
+# Module Dynamical and Nonlinear Data analysis and Modeling 
+# 
+# May 2008
+# Fred Hasselman & Ralf Cox
+
+require(dplyr)
+
+x = 0                  # Starting points
+y = 0
+
+# Emppty plot
+plot(x,y, xlim=c(0,2), ylim=c(0,1))
+
+for(i in 1:20000){      # This takes some time: 20.000 iterations
+  
+    coor=runif(1)       # coor becomes a random number between 0 and 1 drawn from the uniform distribution
+    
+    # Equal chances (33%) to perform one of these 3 transformations of x and y
+    if(coor<=0.33){     
+        x=0.5*x
+        y=0.5*y
+        points(x,y,pch=".", col="green") #plot these points in green
+    }
+
+    if(between(coor,0.33,0.66)){
+        x=0.5*x+0.5
+        y=0.5*y+0.5
+        points(x,y, pch=".", col="blue") # plot these points in blue
+    }
+
+    if(coor>0.66){
+        x=0.5*x+1
+        y=0.5*y
+        points(x,y, pch=".", col="red") #plot these points in red
+    }
+} # for ...
+```
+
+
+### A Fern {-}
+
+```{r fern, echo=TRUE, eval=TRUE, include=TRUE}
+# Barnsley's Fern using Iterated Function Systems
+#
+# RM-course Advanced Data Analysis
+# Module Dynamical and Nonlinear Data analysis and Modeling 
+# 
+# May 2008
+# Fred Hasselman & Ralf Cox
+
+require(dplyr)
+
+x = 0                  # Starting points
+y = 0
+
+# Emppty plot
+plot(x,y, pch=".", xlim=c(-3,3), ylim=c(0,12))
+
+for(i in 1:50000){      # This takes some time: 20.000 iterations
+  
+    coor=runif(1)       # coor becomes a random number between 0 and 1 drawn from the uniform distribution
+    
+    if(coor<=0.01){                  #This transformation 1% of the time
+        x = 0
+        y = 0.16 * y
+        points(x,y, pch=".", col="green3") 
+    }
+    
+    if(between(coor,0.01, 0.08)){   #This transformation 7% of the time
+        x = 0.20 * x - 0.26 * y
+        y = 0.23 * x + 0.22 * y + 1.6
+        points(x,y, pch=".", col="green2") 
+    }
+    
+    if(between(coor,0.08,0.15)){   #This transformation 7% of the time
+        x = -0.15 * x + 0.28 * y
+        y =  0.26 * x + 0.24 * y + 0.44
+       points(x,y, pch=".", col="springgreen3")
+    }
+    
+    if(coor>0.15){      #This transformation 85% of the time
+        x =  0.85 * x + 0.04 * y
+        y=  -0.04 * x + 0.85 * y + 1.6 
+        points(x,y, pch=".", col="springgreen2")
+    }
+    
+} # for ...
+```
+
+### The fractal / chaos game {-}
+
+These [Iterated Function Systems](https://en.wikipedia.org/wiki/Iterated_function_system) also go by the name of 'the fractal game' and are used in computer science, the gaming industry, graphic design, etc.
+
+EXTRA-EXTRA: This Wikipedia page on [Barnsley's fern](https://en.wikipedia.org/wiki/Barnsley_fern) has some good info on the topic. At the end they display *Mutant varieties*. Try to implement them!
+
+
+You can by now probably guess that the these simple rules can be described as constraints on the degrees of freedom of the system. Like with the models of growth we simulated, the rules of the fractal game can be made dependent on other processes or events. A great example are the so-called [fractal flames](https://en.wikipedia.org/wiki/Fractal_flame) implemented in a screen-saver called [*electric sheep*](http://www.electricsheep.org), which combines genetic algorithms, distributed computind and user input ("likes") to create intruiging visual patterns on your computer screen.^[Use at your own risk! You will find yourself silently staring at the screen for longer periods of time.]
+
+
+# Lecture 6 {-}
+
+# Lecture 7 {-}
+
+# Lecture 8 {-}
+
+# Lecture 9 {-}

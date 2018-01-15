@@ -48,9 +48,10 @@ getOutFormat <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 
 
 
-```{r cover, fig.align='center',echo=FALSE}
-knitr::include_graphics("images/foundations.png", dpi = NA)
+```{r fig.align='center', fig.cap= 'From [Grip on Complexity](http://www.nwo.nl/en/about-nwo/media/publications/ew/paper-grip-on-complexity.html)', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
+knitr::include_graphics('images/foundations.png', dpi = NA)
 ```
+
 
 
 # **Course guide** {-}

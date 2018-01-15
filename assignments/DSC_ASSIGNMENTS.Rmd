@@ -1,0 +1,1134 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(include=TRUE)
+```
+
+# **Assignments: How to ... ** {-}
+
+These assignments were designed to prepare you for "real world" modelling and data analysis problems. That is, after completing the assignments you should be able to decide whether the phenomenon you study could benefit from a complex systems approach and which type of analyses would be a good place to start. The models and techniques discussed here are **not** a definite collection of available techniques, this is really just the tip of the iceberg.
+
+### General Guidelines {-}
+
+* Read the instructions carefully.
+* Do not skip any of the steps.
+* Do not copy-paste from the assignment text into a spreadsheet or syntax editor (except for text in `code blocks`).
+* Study the solutions and lecture notes.
+
+
+# (PART) Introduction to the mathematics of change {-}
+
+# **Modelling (nonlinear) growth**  {#moc1ass} 
+
+In this assignment you will build two (relatively) simple one-dimensional maps in `R`, based on an example in a spreadsheet. 
+Go to the followin [GoogleSheet](https://docs.google.com/spreadsheets/d/10PpXKHHcbuwtWsTWvBKPFj2TqwpCH_BGxtRZhtMo71E/edit#gid=1744375290) and save a copy on your computer, you can use your favourite spreadsheet software (e.g., Excel, Numbers), or, copy it to a new GoogleSheet if you prefer Google.  
+
+We will start with the *Linear Map* and then proceed to the slightly more complicated *Logistic Map* (aka *Quadratic map*). 
+
+```{block2, useR, type='rmdimportant'}
+Be sure to check [the solutions of the assigment](#moc1Rsol) and the examples of [different ways to visualize the time series in `R`](#tsPlot)
+```
+
+## The Linear Map in a Spreadsheet
+
+Equation \@ref(eq:linmap) is the ordinary difference equation (ODE) discussed on the slides and is called the *Linear Map*:
+
+\begin{equation}
+Y_{t+1} = Y_{t=0} + r*Y_t
+(\#eq:linmap)
+\end{equation}
+
+In these excersises you will *simulate* time series produced by the change process in equation \ref@(eq:linmap) for different parameter settings of the growth-rate parameter $r$ (the *control parameter*) and the initial conditions $Y_0$. Simulation is obvioulsy different from a statistical analysis in which parameters are estimated from a data set. The goal of these assignments is to get a feeling for what a dynamical model is, and how it is different from a linear statistical regression model like GLM.
+
+```{block2, spreadset, type='rmdcaution'}
+Before you begin, be sure to check the following settings: 
+
+* Open a Microsoft Excel worksheet, a [Google sheet](https://www.google.com/docs/about/), or other spreadsheet.
+* Check whether the spreadsheet uses a 'decimal-comma' ($0,05$) or 'decimal-point' ($0.05$) notation. 
+    + The numbers given in the assignments of this course all use a 'decimal-point' notation.
+* Check if the `$` symbol fixes rows and columns when it used in a formula in your preferred spreadsheet program. 
+    + This is the default setting in Microsoft Excel, Numbers and Google. If you use one of those programs you are all set, otherwise you will have to replace the `$` used in the assignments with the one used by your software.
+```
+
+* Open the spreadsheet and look at the **Linear map** tab.
+* The `r` in cell `A5` is the *control parameter*. It currently has the value $1.08$ in cell`B5`.
+* The cell labelled $Y_0$ in `A6` is the *initial value* at $t=0$. It has the value $0.1$ in cell `B6`.   
+* The `A` column also contains $Y_t$, the output of the linear map. 
+    + Click on `A10`, in the fomula bar you can see this refers to the initial value `B6`.
+    + Click on `A11`, in the fomula bar you can see the very simple implementation of the linear map.
+    + The value of cell `A11` (i.e. $Y_{t=1}$) will be calculated by multiplying the value of cell `B5` (parameter `r`) with the value of cell `A10` (the previous value, here: $Y_{t=0}$).
+* Remember what it is we are doing! We are calculating $Y_{t=2}$ (i.e. 'behaviour' in the future) and this is completely determined by $Y_{t=1}$ (i.e., the previous step) and the parameter `r`. 
+
+
+### The control parameter {-}
+
+* If you change the values in cells `B5` and `B6` you will see an immediate change in the graph. To study model behaviour, try the following growth parameters:
+
+    + $r = -1.08$
+    + $r = 1,08$
+    + $r = 1$
+    + $r = -1$
+
+### Dependence on initial conditions? {-}
+
+* Change the initial value $Y_0$ in cell `B6` to $10$.
+* Subsequently give the growth parameter in cell `B5` the following values:
+
+    + $0.95$
+    + $-0.95$.
+
+
+## The Logistic Map in a spreadsheet
+
+The Logistic Map takes the following functional form: 
+
+\begin{equation}
+Y_{t+1} = r*Y_t*(1-Y_t)
+(\#eq:logmap)
+\end{equation}
+
+* Open the spreadsheet and look at the **Logistic map** tab.
+* The setup is the same as for the linear map, except of course the change process that is implemented.
+* The `A` column also contains $Y_t$, the output of the Logistic map, currently the behaviour looks a lot like an S-curve, a logistic function. 
+    + Click on `A10`, in the fomula bar you can see this refers to the initial value `B6`.
+    + Click on `A11`, in the fomula bar you can see the very simple implementation of the Logistic map.
+    + Again, the value of cell `A11` ($Y_{t=1}$) is calculated by multiplying the value of cell `B5` (parameter `r`) with the value of cell `A10` (the current value $Y_t$, in this case $Y_{t=0}$). The only difference is we are also multiplying by $(1-Y_t)$.
+
+```{block2, QLinMap, type='rmdimportant'}
+We established that `r` controls growth, what could be the function of $(1-Y_t)$?
+```
+
+
+### The control parameter {-}
+
+To study the behavior of the Logistic Map you can start playing around with the values in `B5`. 
+
+* Try the following settings for $r$:
+    + $r = 0.9$
+    + $r = 1.9$
+    + $r = 2.9$
+    + $r = 3.3$
+    + $r = 3.52$
+    + $r = 3.9$
+
+
+### The return plot {-}
+
+* Set $r$ at $4.0$:
+    + Now copy `A10:A310` to `B9:B309` (i.e., move it one cell to the right, and one cell up)
+    + Select both columns (`A10` to `B309`!) and make a scatter-plot
+
+The plot you just produced is a so called **return plot**, in which you have plotted $Y_{t+1}$ against $Y_t$. 
+
+```{block2, QReturnPlot, type='rmdimportant'}
+Can you explain the pattern you see (a 'parabola') by looking closely at the functional form of the Logistic Map? (hint: it's also called **Quadratic Map**)
+```
+
+* What do you expect the return plot of the Linear Map will look like? Go back and try it!
+
+
+### Sensitive dependence on initial conditions
+
+Go to the following [GoogleSheet](https://docs.google.com/spreadsheets/d/1pKFhe5JcXXo6vK-Nx-GvxafaYkEZx31ya57I6xpWWMA/edit?usp=sharing) and download or copy it.
+
+This sheet displays the extreme sensitivity on initial conditions of systems displaying chaotic behaviour, more commonly known as: **The Butterfly Effect**
+
+* Imagine these are observed timseries from two subjects in a response time experiment. These subjects are perfect 'twins':
+   + The formula describing their behaviour is exactly the same (it's the Quadratic Map, check it!)
+   + The control parameter, controlling the behavioural mode is exactly the same ($r=4$).
+   + The only difference is that they have a tiny discrepancy in intitial conditions in cell `D6` of $0.01$.
+* Not tiny enough? Change it to become even smaller:
+   + $0.001$
+   + $0.0001$
+   + $0.00001$
+   + etc.
+* What happens as you make the discrepency smaller and smaller?
+
+
+## Using `R` or `Matlab` to simulate these maps. {#moc1R}
+
+The best (and easiest) way to simulate these simple models is to create a function which takes as input the parameters ($Y_0$, $r$) and a variable indicating the length of the time series.
+
+For example for the Linear Map:
+```{r, eval=FALSE, include=TRUE, tidy=FALSE}
+# A function with three arguments
+linearMap <- function(Y0 = 0, r = 1, N = 100){
+    
+    # Initialize Y as vector of Y0, followed by N-1 empty slots (NA).
+    Y <- c(Y0, rep(NA,N-1))
+    
+    # Then, you need create the iteratation
+    for(i in 1:(N-1)){
+        
+    Y[i+1] <- # !!Implement the linear map here!!
+        
+    }
+    
+    return(Y)
+}
+```
+
+
+* Copy the code and implement the linear map.
+* When you are done, you need to initialize the function, select the code and run it. 
+    + The environment will now contain a function called `linearMap`
+    + Generate some data by calling the function using $Y0=0.1$, $r=1.08$ and $N=100$ and store the result in a variable. 
+
+
+### Plot the timeseries
+
+Creating the time series graphs and the return plot should be easy if the function `linearMap` returns the time series.  `R` and `Matlab` have specialized objects to represent timeseries, and functions and packages for timeseries analysis. They are especially convenient for plotting time and date information on the X-axis. See the notes on the [time series object](#tsPlot) for more information.
+
+
+# **EXTRA** {#moc2ass}
+
+In this assignment you'll build a more sophisticated growth model and look at its properties. The model will be the growth model by Van Geert (1991). You can try to code the models following the hints in section \@ref(moc1R).
+
+[| jump straight to the solutions |](#tvpar)
+
+
+## The growth model by Van Geert (1991) {-}
+
+The growth model by Van Geert has the following form: 
+
+\begin{equation}
+L_{t+1} = L_t * (1 + r - r * \frac{L_t}{K})
+(\#eq:vanG)
+\end{equation}
+
+Note the similarities to Equation \@ref(eq:logmap), the (stylized) logistic map.
+
+
+### The growth model in a spreadsheet
+
+```{block2, spreadset2, type='rmdimportant'}
+Before you begin, be sure to check the following settings (same as first asignment): 
+
+* Open a Microsoft Excel worksheet or a [Google sheet](https://www.google.com/docs/about/)
+* Check whether the spreadsheet uses a 'decimal-comma' ($0,05$) or 'decimal-point' ($0.05$) notation. 
+    + The numbers given in the assignments of this course all use a 'decimal-point' notation.
+* Check if the `$` symbol fixes rows and columns when it used in a formula in your preferred spreadsheet program. 
+    + This is the default setting in Microsoft Excel and Google Sheets. If you use one of those programs you are all set.
+```
+
+To build it take the sheet in assignment \@ref(moc1ass) as a template. 
+
+* Define the appropriate constants ($r$ in `A5`, $L_0$ in `A6`) and prepare the necessary things you need for building an iterative process. 
+* In particular, add the other parameter that appears in Van Geert's model:
+    + Type $K$ in cell `A7`. This is the *carrying capacity*. It receives the value $1$ in cell `B7`.
+* Start with the following values:
+    + $r = 1.2$
+    + $L_0 = 0.01$
+
+Take good notice of what is constant (parameters $r$ and $K$), for which the `$` must be used, and what must change on every iterative step (variable $L_t$). Take about $100$ steps.
+
+* Create the graphs
+* You can start playing with the values for the parameters and the initial values in cells `B5`, `B6` and `B7`. To study its behavior, be sure to try the following growth parameters:
+    + $r = 1.2$
+    + $r = 2.2$
+    + $r = 2.5$
+    + $r = 2.7$
+    + $r = 2.9$
+    
+* For the carrying capacity $K$ (cell `B7`) you can try the following values:
+    + $K = 1.5$
+    + $K = 0.5$. (Leave $r = 2.9$. Mind the value on the vertical axis!)
+    
+* Changes in the values of $K$ have an effect on the height of the graph. The pattern itself also changes a bit. 
+    + Can you explain why this is so?
+
+## Conditional growth: Jumps and Stages 
+
+### Auto-conditional jumps {-}
+
+Suppose we want to model that the growth rate $r$ increases after a certain amount has been learned. In general, this is a very common phenomenon, for instance: when becoming proficient at a skill, growth (in proficiency) is at first slow, but then all of a sudden there can be a jump to the appropriate (and sustained) level of proficiency.
+
+* Take the model you just built as a starting point with $r = 0.1$ (`B5`)
+    + Type $0.5$ in `C5`. This will be the new parameter value for $r$. 
+    + Build your new model in column `B` (leave the original in `A`).
+    
+*  Suppose we want our parameter to change when a growth level of $0.2$ is reached. We???ll need an `IF` statement which looks something like this: `IF` $L > 0.2$ then use the parameter value in `C5`, otherwise use the parameter value in `B5`. 
+    + Excel has a built in `IF` function (may be `ALS` in Dutch). 
+    + In the first cell in which calculations should start, press $=$ and then from the formula list choose the `IF` function, or just type it. 
+    + Try to figure out what you have to do. In the Logical_test box you should state something which expresses $L > 0.2$.
+    + The other fields tell Excel what to do when this statement is `TRUE` (then use parameter value in `C5`) or when it is `FALSE` (then use paramter value in `B5`).
+    + __Note:__ the word *value* might be misleading; you can also input new statements.
+* Make a graph in which the old and the new conditional models are represented by lines.
+    + Try changing the value of $r$ in `C5` into: $1, 2, 2.8, 2.9, 3$. 
+
+### Auto-conditional stages {-}
+
+Another conditional change we might want to explore is that when a certain growth level is reached the carrying capacity K increases, reflecting that new resources have become available to support further growth.
+
+* Now we want $K$ to change, so type $1$ in `B7`, $2$ in `C7`.
+* Build your model in column C. Follow the same steps as above, but now make sure that when $L > 0.99$, $K$ changes to the value in `C7`. Keep $r = 0.2$ (`B5`).
+
+* If all goes well you should see two stages when you create a graph of the timeseries in column `C`. Change $K$ in `C7` to other values.
+    + Try to also change the growth rate r after reaching $L > 0.99$ by referring to `C5`. Start with a value of $0.3$ in `C5`. Set $K$ in `C7` to $2$ again. 
+    + Also try $1, 2.1, 2.5, 2.6, 3$.
+
+### Connected growers {-}
+
+You can now easly model coupled growth processes, in which the values in one series serve as the trigger for for parameter changes in the other process. Try to recreate the Figure of the connected growers printed in the chapter by Van Geert.
+
+#### Demonstrations of dynamic modeling using spreadsheets
+
+See the website by [Paul Van Geert](http://www.paulvangeert.nl/research.htm), scroll down to see models of:
+
+* Learning and Teaching
+* Behaviour Modification
+* Connected Growers
+* Interaction during Play
+
+
+# **Predator-Prey dynamics**
+
+In this assignment we will look at a 2D coupled dynamical system: **the Predator-Prey model** (aka [Lotka-Volterra equations](https://en.wikipedia.org/wiki/Lotka???Volterra_equations)).
+
+## Predator-prey model 
+
+The dynamical system is given by the following set of first-order differential equations, one represents changes in a population of predators, (e.g., **F**oxes: $f_F(R_t,F_t)$ ), the other represents changes in a population of prey, (e.g., **R**abbits: $f_R(R_t,F_t)$ ).
+
+
+\begin{align}
+\frac{dR}{dt}&=(a-b*F)*R \\
+\\
+\frac{dF}{dt}&=(c*R-d)*F
+(\#eq:lv)
+\end{align}
+
+
+This is not a *difference* equation but a *differential* equation, which means building this system is not as straightforward as was the case in the previous assignments. Simulation requires a numerical method to 'solve' this differential equation for time, which means we need a method to approach, or estimate continuous time in discrete time. Below you will receive a speed course in one of the simplest numerical procedures for integrating differential equations, the [Euler method](https://en.wikipedia.org/wiki/Euler_method).    
+
+
+### Euler Method
+
+A general differential equation is given by:
+
+\begin{equation}
+\frac{dx}{dt} = f(x)
+(\#eq:diff)
+\end{equation}
+
+Read it as saying: "_a change in $x$ over a change in time is a function of $x$ itself_". This can be approximated by considering the change to be over some constant, small time step $\Delta$:
+
+\begin{equation}
+\frac{(x_{t+1} = x_t)}{\Delta} = f(x_t)
+(\#eq:Euler)
+\end{equation}
+
+
+After rearranging the terms a more familiar form reveals itself:
+
+\begin{align}
+x_{t+1} &= x_t &= f(x_t) * \Delta \\
+x_{t+1} &= f(x_t) * \Delta + x_t
+(\#eq:Euler2)
+\end{align}
+
+
+This looks like an ordinary iterative process, $\Delta$ the *time constant* determines the size of time step taken at every successive iteration. For a 2D system with variables **R** and **F** on would write:
+
+
+\begin{align}
+R_{t+1} &= f_R(R_t,Ft) * \Delta + R_t \\
+F_{t+1} &= f_F(R_t,F_t) * \Delta + F_t
+(\#eq:EulerRF)
+\end{align}
+
+
+### Coupled System in a spreadsheet
+
+Implement the model in a spreadsheet by substituting $f_R(R_t,Ft)$ and $f_F(R_t,F_t)$ by the differential equations for Foxes and Rabbits given above.
+
+* Start with $a = d = 1$ and $b = c = 2$ and the initial conditions $R_0 = 0.1$ and $F_0 = 0.1$. Use a time constant of $0.01$ and make at least $1000$ iterations.
+* Visualize the dynamics of the system by plotting:
+    + $F$ against $R$ (i.e., the state space)
+    + $R$ and $F$ against time (i.e., the timeseries) in one plot.
+* Starting from the initial predator and prey population represented by the point $(R, F) = (0.1, 0.1)$, how do the populations evolve over time?
+* Try to get a grip on the role of the time constant by increasing and decreasing it slightly (e.g. $\Delta = 0.015$) for fixed parameter values. (You might have to add some more iterations to complete the plot). What happens to the plot? 
+    + Hint: Remember that $\Delta$ is not a fundamental part of the dynamics, but that it is only introduced by the numerical integration (i.e., the approximation) of the differential equation. It should not change the dynamics of the system, but it has an effect nonetheless.
+    
+[| jump to solution |](#ppdsol)
+
+
+### Tip of the iceberg
+
+There is much more to tell about dynamic modelling, see [the notes](#advmodels) for some more advanced topics. 
+
+
+
+# **Basic Timeseries Analysis** 
+
+Most of the basic timeseries analyses can be performed in `SPSS`, because many of you will be familiar with the software we present the first assignments mainly as `SPSS` instructions, but you can go ahead an try your preferred environment for (statistical) computing.
+
+
+## Time series analysis in SPSS (17 and higher) 
+
+### Nonlinear Growth curves in SPSS {#bta}
+
+ * Open the file [Growthregression.sav](https://github.com/FredHasselman/DCS/blob/master/assignmentData/BasicTSA_nonlinreg/GrowthRegression.sav), it contains two variables: `Time` and `Y(t)`. 
+
+This is data from an iteration of the logistic growth differential equation you are familiar with by now, but let’s pretend it’s data from one subject measured on 100 occasions.
+
+1. Plot Y(t) against Time Recognize the shape?
+2. To get the growth parameter we’ll try to fit the solution of the logistic flow with SPSS nonlinear regression
+     - Select nonlinear… from the `Analysis` >> `Regression` menu.
+     - Here we can build the solution equation. We need three parameters:
+            a. **Yzero**, the initial condition.
+            b. *K*, the carrying capacity.
+            c. *r*, the growth rate.
+    - Fill these in where it says `parameters` give all parameters a starting value of  $0.01$
+
+4.	Take a good look at the analytic solution of the (stilized) logistic flow:
+
+$$
+Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K-Y_{0}\right) * e^{(-K*r*t)} }
+$$
+
+Tr to build this equation, the function fo $e$ is called `EXP` in `SPSS` (`Function Group` >> `Arithmetic`)
+Group terms by using parentheses as shown in the equation.
+
+5. If you think you have built the model correctly, click on `Save` choose `predicted values`. Then paste your syntax and run it!
+    - Check the estimated parameter values.
+    - Check $R^2$!!!
+
+6. Plot a line graph of both the original data and the predicted values. (Smile)
+
+7. A polynomial fishing expedition:
+     - Create time-varying covariates of $Y(t)$:
+```
+COMPUTE T1=Yt * Time.
+COMPUTE T2=Yt * (Time ** 2). 
+COMPUTE T3=Yt * (Time ** 3). 
+COMPUTE T4=Yt * (Time ** 4). 
+EXECUTE.
+```
+    - Use these variables as predictors of $Y(t)$ in a regular linear regression analysis. This is called a *polynomial regression*: Fitting combinations of curves of different shapes on the data.
+    -  Before you run the analysis: Click `Save` Choose `Predicted Values: Unstandardized`
+
+8. Look at $R^2$. This is also almost 1. Which model is better? Think about this: Based o the results o the linear regression what can yo tell about the *growth rate*, the *carrying capacity* or the *initial condition*?
+
+9.	Create a line graph of $Y(t)$, plot the predicted values of the nonlinear regression and the unstandardized predicted values of the linear polynomial regression against `time` in one figure.
+
+10. Now you can see that the shape is approximated by the polynomials, but it is not quite the same. Is this really a model of a growth process as we could encounter it in nature?
+
+[| jump to solution |](#btasol)
+
+### Correlation functions and AR-MA models {#pacf}
+
+1. Download the file [`series.sav`](https://github.com/FredHasselman/DCS/blob/master/assignmentData/BasicTSA_arma/series.sav) from blackboard. It contains three time series `TS_1`, `TS_2` and `TS_3`. As a first step look at the mean and the standard deviation (`Analyze` >> `Descriptives`).  Suppose these were time series from three subjects in an experiment, what would you conclude based on the means and SD’s?  
+
+2. Let’s visualize these data. Go to `Forecasting` >> `Time Series` >> `Sequence Charts`. Check the box One chart per variable and move all the variables to Variables. Are they really the same?  
+
+3. Let’s look at the `ACF` and `PCF`
+    * Go to `Analyze` >> `Forecasting` >> `Autocorrelations`. 
+    * Enter all the variables and make sure both *Autocorrelations* (ACF) and *Partial autocorrelations* (PACF) boxes are checked. Click `Options`, and change the `Maximum Number of Lags` to `30`. 
+    * Use the table to characterize the time series:  
+
+
+|                    SHAPE                | INDICATED MODEL |
+|-----------------------------------------|-------------------------------------------------------------------------------------------------|
+|       Exponential, decaying to zero     | Autoregressive model. Use the partial autocorrelation plot to identify the order of the autoregressive model|
+| Alternating positive and negative, decaying to zero  | Autoregressive model. Use the partial autocorrelation plot to help identify the order.|
+| One or more spikes, rest are essentially zero | Moving average model, order identified by where plot becomes zero. |
+| Decay, starting after a few lags | Mixed autoregressive and moving average model.|
+All zero or close to zero  | Data is essentially random.|
+| High values at fixed intervals | Include seasonal autoregressive term. |
+| No decay to zero  | Series is not stationary. |
+
+
+4. You should have identified just one time series with autocorrelations: `TS_2`. Try to fit an `ARIMA(p,0,q)` model on this time series. 
+    - Go to `Analyze` >> `Forecasting` >> `Create Model`, and at `Method` (Expert modeler) choose `ARIMA`. 
+    - Look back at the `PACF` to identify which order (`p`) you need (last lag value at which the correlation is still significant). This lag value should go in the Autocorrelation p box. 
+    - Start with a Moving Average `q` of one. The time series variable `TS_2` is the `Dependent`. 
+    - You can check the statistical significance of the parameters in the output under `Statistics`, by checking the box `Parameter Estimates`. 
+    - This value for `p` is probably too high, because not all AR parameters are significant. 
+    - Run ARIMA again and decrease the number of AR parameters by leaving out the non-significant ones.  
+
+5. By default `SPSS` saves the predicted values and 95% confidence limits (check the data file). We can now check how well the prediction is: Go to `Graphs` >> `Legacy Dialogs` >> `Line.` Select `Multiple` and `Summaries of Separate Variables`. Now enter `TS_2`, `Fit_X`, `LCL_X` and `UCL_X` in `Lines Represent`. `X` should be the number of the last (best) model you fitted, probably 2. Enter `TIME` as the `Category Axis`.  
+
+6. In the simulation part of this course we have learned a very simple way to explore the dynamics of a system: The return plot. The time series is plotted against itself shifted by 1 step in time. 
+    - Create return plots (use a Scatterplot) for the three time series. Tip: You can easily create a `t+1` version of the time series by using the LAG function in a `COMPUTE` statement. For instance: 
+```
+COMPUTE TS_1_lag1 = LAG(TS_1)
+``` 
+    - Are your conclusions about the time series the same as in 3. after interpreting these return plots? 
+
+[| jump to solution |](#pacfsol)
+
+## Notes on TSA in `R` {#bTSAinR}
+
+If you use `R` the command below will install all the packages we will use during the entire course on you private computer. This might take too long on a university PC, just install the packages you need for an assignment each session.
+
+### Importing data in `R`
+
+If you have package `rio` installed in `R`, you can load the data directly into the local environment.
+
+1. Follow the link, e.g. for [`series.sav`](https://github.com/FredHasselman/DCS/blob/master/assignmentData/BasicTSA_arma/series.sav).
+2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
+3. Copy the `url` associated with the **Download**  button on Github (right-clik).
+4. The copied path should contain the word 'raw' somewhere in the url.
+5. Call `import(url)`:
+```{r, include=TRUE, eval=FALSE}
+series <- import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/BasicTSA_arma/series.sav")
+```
+
+You can use the function `arima()`, `acf()` and `pacf()` in `R` (`Matlab` has functions that go by slightly different names, check the [Matlab Help pages](https://nl.mathworks.com/help/econ/autocorr.html)). 
+
+There are many extensions to these linear models, check the [`CRAN Task View` on `Time Series Analysis`](https://cran.r-project.org/web/views/TimeSeries.html) to learn more (e.g. about package `zoo` and `forecast`).
+
+
+[| jump to solution |](#bTSAinRsol)
+
+
+<!-- ## Heartbeat dynamics {#hrv} -->
+<!-- Download three different time series of heartbeat intervals (HBI) [here](https://github.com/FredHasselman/DCS/tree/master/assignmentData/RelativeRoughness). If you use `R` and have package `rio` installed you can run this code and the load the data into a `data.frame` directly from `Github`.  -->
+<!-- ```{r, echo=TRUE, eval=FALSE, include=TRUE} -->
+<!-- library(rio) -->
+<!-- TS1 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS1.xlsx", col_names=FALSE) -->
+<!-- TS2 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS2.xlsx", col_names=FALSE) -->
+<!-- TS3 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS3.xlsx", col_names=FALSE) -->
+<!-- ``` -->
+
+<!-- The Excel files did not have any column names, so let's create them in the `data.frame` -->
+<!-- ```{r, eval=FALSE, include=TRUE} -->
+<!-- colnames(TS1) <- "TS1" -->
+<!-- colnames(TS2) <- "TS2" -->
+<!-- colnames(TS3) <- "TS3" -->
+<!-- ``` -->
+
+<!-- ### The recordings -->
+<!-- These HBI’s were constructed from the R-R intervals in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).  -->
+
+<!-- ```{r RRf1, fig.cap="Definition of Heart Beat Periods.", fig.align='center',echo=FALSE, include=TRUE} -->
+<!-- knitr::include_graphics('images/RRfig1.png') -->
+<!-- ``` -->
+
+
+<!--  * One HBI series is a sample from a male adult, 62 years old (called *Jimmy*). Approximately two years before the recording, the subject has had a coronary artery bypass, as advised by his physician following a diagnosis of congestive heart failure. *Jimmy* used antiarrhythmic medicines at the time of measurement. -->
+
+<!--  * Another HBI series is a sample from a healthy male adult, 21 years old (called *Tommy*). This subject never reported any cardiac complaint. Tommy was playing the piano during the recording. -->
+
+<!--  * A third supposed HBI series is fictitious, and was never recorded from a human subject (let’s call this counterfeit *Dummy*).  -->
+<!-- Your challenge -->
+
+<!-- The assignment is to scrutinise the data and find out which time series belongs to *Jimmy*, *Tommy*, and *Dummy* respectively. ^[The HBI intervals were truncated (not rounded) to a multiple of 10 ms (e.g., an interval of 0.457s is represented as 0.450s), and to 750 data points each. The means and standard deviations among the HBI series are approximately equidistant, which might complicate your challenge.] -->
+
+
+<!-- ### First inspection -->
+<!-- The chances that you are an experienced cardiologist are slim. We therefore suggest you proceed your detective work as follows: -->
+
+<!-- *	Construct a graphical representation of the time series, and inspect their dynamics visually (use the code examples provided in the [solutions to previous sessions](#moc1Rsol) to plot your time series).  -->
+<!-- * Write down your first guesses about which time series belongs to which subject. Take your time for this visual inspection (i.e., which one looks more like a line than a plane, which one looks more 'smooth' than 'rough').  -->
+<!-- *	Next, explore some measures of central tendency and dispersion, etc. -->
+<!-- *	Third, compute the Relative Roughness for each time series, use Equation \@ref(eq:RR) -->
+
+<!-- \begin{equation} -->
+<!-- RR = 2\left[1−\frac{\gamma_1(x_i)}{Var(x_i)}\right] -->
+<!-- (\#eq:RR) -->
+<!-- \end{equation} -->
+
+<!-- The numerator in the formula stands for the `lag 1` autocovariance of the HBI time series $x_i$. The denominator stands for the (global) variance of $x_i$. Most statistics packages can calculate these variances, `R` and `Matlab` have built in functions. Alternatively, you can create the formula yourself. -->
+
+<!-- *	Compare your (intuitive) visual inspection with these preliminary dynamic quantifications, and find out where each of the HIB series are positions on the ‘colorful spectrum of noises’ (i.e., line them up with Figure \@ref(fig:RRf3)). -->
+
+<!-- ```{r RRf3, fig.cap="Coloured Noise versus Relative Roughness", fig.align='center',echo=FALSE, include=TRUE} -->
+<!-- knitr::include_graphics('images/RRfig3.png') -->
+<!-- ``` -->
+
+
+<!-- ### What do we know now, that we didn’t knew before? -->
+<!-- Any updates on Jimmy’s, Tommy’s and Dummy’s health? You may start to wonder about the 'meaning' of these dynamics, and not find immediate answers.  -->
+
+<!-- Don’t worry; we’ll cover the interpretation over the next two weeks in further depth. Let’s focus the dynamics just a little further for now. It might give you some clues. -->
+
+<!-- * Use the `randperm` function (in `Matlab` or in package  [`pracma`](http://www.inside-r.org/packages/cran/pracma) in `R`) to randomize the temporal ordering of the HBI series. -->
+<!-- * Visualize the resulting time series to check whether they were randomized successfully -->
+<!-- * Next estimate the Relative Roughness of the randomized series. Did the estimates change compared to your previous outcomes (if so, why)? -->
+
+<!-- * Now suppose you would repeat what you did the previous, but instead of using shuffle you would integrate the fictitious HBI series (i.e., normalize, then use `x=cumsum(x))`. You can look up `cumsum` in `R` or `Matlab`’s Help documentation). Would you get an estimate of Relative Roughness that is approximately comparable with what you got in another HBI series? If so, why? -->
+
+<!-- [| jump to solution |](#hrvsol) -->
+
+
+
+<!-- # **Fluctuation and Disperion analyses I** {#fda1} -->
+
+<!-- ```{block2, L5, type='rmdimportant'} -->
+<!-- Before you begin, look at the notes for [Lecture 4](#lecture-4). -->
+<!-- ``` -->
+
+<!-- ## The Spectral Slope {#psd} -->
+
+<!-- We can use the power spectrum to estimate a **self-affinity parameter**, or scaling exponent. -->
+
+<!-- * Download `ts1.txt`, `ts2.txt`, `ts3.txt` [here](https://github.com/FredHasselman/DCS/tree/master/assignmentData/Fluctuation_PSDslope). If you use `R` and have package `rio` installed you can run this code. It loads the data into a `data.frame` object directly from `Github`.  -->
+<!-- ```{r, echo=TRUE, eval=FALSE, include=TRUE} -->
+<!-- library(rio) -->
+<!-- TS1 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts1.txt") -->
+<!-- TS2 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts2.txt") -->
+<!-- TS3 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts3.txt") -->
+
+<!-- # These objects are now data.frames with one column named V1.  -->
+<!-- # If you want to change the column names -->
+<!-- colnames(TS1) <- "TS1" -->
+<!-- colnames(TS2) <- "TS2" -->
+<!-- colnames(TS3) <- "TS3" -->
+<!-- ``` -->
+
+<!-- * Plot the three 'raw' time series. -->
+
+<!-- ### Basic data checks and preparations -->
+
+<!-- For spectral analysis we need to check some data assumptions (see [notes on data preparation, Lecture 4](#data-considerations)). -->
+
+<!-- #### Normalize {-} -->
+<!-- 1. Are the lengths of the time series a power of 2? (Use `log2(length of var)` ) -->
+<!--   + Computation of the frequency domain is greatly enhanced if data length is a power (of 2). -->
+<!-- 2. Are the data normalized? (we will *not* remove datapoints outside 3SD) -->
+<!--     + To normalize we have to subtract the mean from each value in the time series and divide it by the standard deviation, the function `scale()` can do this for you, but you could also use `mean()` and `sd()` to construct your own function. -->
+<!-- 3. Plot the normalized time series. -->
+
+<!-- #### Detrend {-} -->
+<!-- Before a spectral analysis you should remove any linear trends (it cannot deal with nonstationary signals!) -->
+
+<!-- 1. Detrend the normalized data (just the linear trend).  -->
+<!--     + This can be done using the function `pracma::detrend()`.  -->
+<!--     + Extra: Try to figure out how to detrend the data using `stats::lm()` or `stats::poly()` -->
+<!-- 2. Plot the detrended data. -->
+
+<!-- #### Get the log-log slope in Power Spectral Density {-} -->
+<!-- The function `fd.psd()` will perform the spectral slope fitting procedure.  -->
+
+<!-- 1. Look at the manual pages to figure out how to call the function. The manual is on blackboard and [Github](https://github.com/FredHasselman/DCS/blob/master/functionLib/) -->
+<!--     + Remember, we have already normalized and detrended the data. -->
+<!--     + You can also look at the code itself by selecting the function name in`R` and pressing `F2`  -->
+<!-- 2. Calculate the spectral slopes for the three normalized and detrended time series. -->
+<!--     + Call with `plot = TRUE` -->
+<!--     + Compare the results... What is your conclusion? -->
+
+
+<!-- [| jump to solution |](#psdsol) -->
+
+<!-- ## DFA and SDA {#dfa} -->
+
+<!-- * Use the functions `fd.dfa()` and `fd.sda()` to estimate the self-affinity parameter and Dimension of the series.  -->
+<!--     + Check what kind of data preparation is required for SDA and DFA in [notes on data preparation, Lecture 4](#data-considerations). -->
+<!--     + Compare the results between the three different methods. -->
+
+<!-- [| jump to solution |](#dfasol) -->
+
+<!-- ## ACF/PACF, Relative Roughness {#pacfrel} -->
+
+<!-- * Also calculate the ACF, PACF ([see assignment](#pacf)) and [Relative Roughness](#relR) -->
+<!--     + Compare the results. -->
+
+<!-- [| jump to solution |](#pacfrelrsol) -->
+
+<!-- ## Heartbeat dynamics II {#hrv2} -->
+<!-- In the [previous assignment](#relR), you were presented with three different time series of heartbeat intervals (HBI), and you analyzed them using a measure of Relative Roughness (RR; cf. Marmelat & Delignières, 2012).  -->
+
+<!-- A logical step is to unleash the full force of your new analytic toolbox onto the HBI series.  -->
+
+<!-- * Keep track of the outcomes of each time series for 4 different analyses (RR, PSD, SDA, DFA).  -->
+<!--     + Do the outcomes of the different methods converge on the continuum of blue, white and pink, to Brownian and black noise? That is, do they indicate the same type of temporal structure? -->
+<!-- * As a final step, construct return plots for each time series and try to interpret what you observe, given the outcomes of the scaling parameter estimates. -->
+
+<!-- [| jump to solution |](#hrv2sol) -->
+
+<!-- ## Analysis of Deterministic Chaos {#chaos} -->
+
+<!-- * Generate a chaotic timeseries (e.g. $r = 4$ ) of equal length as the time series used above (use the function `growth.ac( ..., type = "logistic")` in `nlRtsa_SOURCE`, see the [solutions of Lecture 1 and 2](#linear-and-logistic-growth)) -->
+<!--     + This is in fact one of the series you analysed in a [previous assignment](#pacf). If you still have the results use them for the next part. -->
+<!-- * Get all the scaling quantities for this series as well as the ACF and PACF and [some return plots](#the-return-plot) just like in the previous assignments. -->
+<!--     + Compare the results to e.g. the heartbeat series.  -->
+
+<!-- [| jump to solution |](#chaossol) -->
+
+<!-- # Fluctuation and Disperion analyses II {#fda2} -->
+
+<!-- There were no assignments for this Lecture. -->
+
+
+# (PART) II. Quantifying Recurrences in State Space
+
+# **Phase Space Reconstruction and RQA** 
+
+You can use `R` to run `RQA` analyses. These assignments assume you'll use `R`, but you can also find a `Matlab` toolbox for `RQA` here: [CRP toolbox](http://tocsy.pik-potsdam.de/CRPtoolbox/)
+
+You'll need:
+```{r}
+library(rio)
+library(crqa)
+library(fractal)
+library(devtools)
+source_url("https://raw.githubusercontent.com/FredHasselman/DCS/master/functionLib/nlRtsa_SOURCE.R")
+```
+
+**R-packages for Phase Space Reconstruction**
+
+We'll use package `fractal` and `rgl` to reconstruct some phase spaces.
+
+* If you have sourced the functions in `nlRtsa_SOURCE.R` you can install and load these packages by running: `in.IT(c("fractal","rgl"))`. The function `in.IT()` will first check if the requested packages are installed on the machine and only install them if they are not present. 
+
+## Reconstruct the Lorenz attractor {#RQA} 
+
+* Package `fractal` includes the 3 dimensions of the Lorenz system in the chaotic regime. 
+    + Run this code `rgl::plot3d(lorenz)` with both packages loaded to get an interactive 3D plot ^[You'll need the [X Window System](http://www.x.org/wiki/) for interactive 3D plotting. This Linux desktop system comes installed in some way or form on most Mac and Windows systems.You can test if it is present by running `rgl::open3d()`, which will try to open an interactive plotting device]
+ of this strange attractor.
+
+
+We'll reconstruct the attractor based on just dimension `X` of the system using functions from package `fractal`, be sure to look at the manual pages of these functions.
+
+```{block2, samepack, type='rmdimportant'}
+Package `fractal` and package `nonlinearTseries` use functions with similar names, do not load them together.
+```
+
+* Use `lx <- lorenz[1:2048,1]` to reconstruct the phase space based on `lx`. 
+    + Find an optimal embedding lag using `timeLag()`, use `method = "mutual"`.
+    + Find the embedding dimension, using `FNN()`
+    + Embed the timeseries using `embedSeries()`.
+    + Plot the reconstructed phase space. (You'll need to use `as.matrix()` on the object created by `embedSeries()`)
+        - Use  `rgl::plot3d()` to plot the reconstructed space.
+
+## Reconstruct the Predator-Prey model
+
+Use the same procedure as above to reconstruct the state space of the predator-prey system. (Look [at the solutions](#ppdsol) to get a `Foxes` or `Rabbit` series).
+
+ * You should get a 2D state space, so 3D plotting might be a bit too much for this system.
+
+
+## (auto-) Recurrence Quantification Analysis
+There are several packages which can perform (C)RQA analysis, we'll use [`crqa`](https://cran.r-project.org/web/packages/crqa/index.html) because it can perform both continuous and categorical analyses. If you only have continuous data, you migh be better off using package [`nonlinearTseries`](https://cran.r-project.org/web/packages/nonlinearTseries/index.html), in this course we will only use package `crqa`.
+
+```{block2, crqa, type='rmdimportant'}
+ Package `crqa()` was designed to run categorical Cross-Recurrence Quantification Analysis (see [Coco & Dale (2014)](http://journal.frontiersin.org/Journal/10.3389/fpsyg.2014.00510/abstract) and for R code see appendices in [Coco & Dale (2013)](http://arxiv.org/abs/1310.0201)). We can trick it to run auto-RQA by providing the same timeseries for `ts1` and `ts2` and setting the parameter `side` to either `"upper"` or `"lower"`
+```
+
+ * Perform an RQA on the reconstructed state space of the Lorenz system.
+    + You'll need a radius (also called: threshold) in order to decide which points are close together (recurrent).
+        - `crqa` provides a function which will automatically select the best parameter settings: `optimizeParam()`
+        - Best way to ensure you are using the same parameters in each function is to create some lists with parameter settings (check the `crqa` manual to figure out what these parameters mean):
+
+
+```{r, eval=FALSE, tidy = FALSE}
+# General settings for `crqa()`
+par0 <- list(rescale = 1,
+             normalize = 0,
+             mindiagline = 2,
+             minvertline = 2,
+             tw = 0,
+             whiteline = FALSE,
+             recpt = FALSE,
+             side = "lower",
+             checkl = list(do = FALSE, thrshd = 3, datatype = "categorical",pad = TRUE)
+             )
+
+# Settings for `optimizeParam()`
+par <- list(lgM =  20, steps = seq(1, 6, 1),
+           radiusspan = 100, radiussample = 40,
+           normalize = par0$normalize, 
+           rescale = par0$rescale, 
+           mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+           tw = par0$tw, 
+           whiteline = par0$whiteline, 
+           recpt = par0$recpt, 
+           fnnpercent = 10, typeami = "mindip")
+```
+
+* Get the optimal parameters using a radius which will give us 2\%-5\% recurrent points.
+
+```{r, eval=FALSE}
+ans <- optimizeParam(ts1 = lx, ts2 = lx, par = par, min.rec = 2, max.rec = 5)
+```
+
+* Run the RQA analysis using the same settings with which the parameters were found.
+
+```{r, eval=FALSE, tidy=FALSE}
+crqaOutput <- crqa(ts1 = lx, ts2 = lx, 
+                  delay = ans$delay, 
+                  embed = ans$emddim, 
+                  radius = ans$radius, 
+                  normalize = par0$normalize,
+                  rescale = par0$rescale, 
+                  mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+                  tw = par0$tw, 
+                  whiteline = par0$whiteline, 
+                  recpt = par0$recpt, 
+                  side = par0$side, checkl = par0$checkl
+                  )
+```
+
+* The output of `crqa` is a list with recurrence measures, the last entry is the recurrence plot. It is represented as a so-called `sparse-matrix`. 
+    + This representation severely decreases the amount of memory occupied by the recurrence matrix. It is basically a list of indices of cells that contain a $1$. The $0$ do not need to be stored.
+    + In order to plot this matrix you could use `image()`, but this does not produce the recurrence plot as they are usually displayed, the y-axis needs to be flipped.
+    + We created a function which will take as input the list output of `crqa`, which wil be used to plot the recurrence matrix. If you have  sourced the `nlRtsa` functions you can call `plotRP.crqa(crqaOutput)`.
+    
+    
+[| Jump to solutions |](#PSRsol)
+
+
+## RQA of circle-tracing data
+
+* Analyse the [circle tracing data](https://github.com/FredHasselman/DCS/tree/master/assignmentData/RQA_circletrace) we recorded during the lecture.
+* Study what happens to the RQA measures if you shuffle the temporal order (see e.g. the solution to th [HRV assignments](#hrvsol)).
+* Package `fractal` contains a function `surrogate`. This will create so-called *constrained* realisations of the time series. Look at the help pages of the function, or study the *Surrogates Manual* of the [TISEAN software](http://www.mpipks-dresden.mpg.de/~tisean/Tisean_3.0.1/index.html) and create two surrogate series, one based on `phase` and one on `aaft`.
+     + Look at the RQA measures and think about which $H_0$ should probably be rejected.
+     + If you want to be more certain, you'll have to create a test (more surrogates). The [TISEAN manual](http://www.mpipks-dresden.mpg.de/~tisean/Tisean_3.0.1/docs/surropaper/node5.html#SECTION00030000000000000000) provides all the info you need to construct such a test:
+     
+     > "For a minimal significance requirement of 95\% , we thus need at least 19 or 39 surrogate time series for one- and two-sided tests, respectively. The conditions for rank based tests with more samples can be easily worked out. Using more surrogates can increase the discrimination power."
+  
+
+[| Jump to solutions |](#RQAsol)
+
+
+# **Categorical and Cross-RQA (CRQA)** 
+
+```{r, include=FALSE}
+SOLUTION = FALSE
+```
+
+You can use `R` or `Matlab` to run `RQA` analyses. These assignments assume you'll use `R`. You can find a `Matlab` toolbox for `RQA` here: [CRP toolbox](http://tocsy.pik-potsdam.de/CRPtoolbox/)
+
+For `R` you'll probably need:
+```{r, message=FALSE, warning=FALSE}
+library(rio)
+library(crqa)
+library(fractal)
+library(devtools)
+source_url("https://raw.githubusercontent.com/FredHasselman/DCS/master/functionLib/nlRtsa_SOURCE.R")
+```
+
+
+## Assignment: CRQA and Diagonal Profile {#CRQA}
+
+1. Create two variables for CRQA analysis, or use the $x$ and $y$ coordinates we roecorded during the lecture:
+```{r}
+y1 <- sin(1:900*2*pi/67)
+y2 <- sin(.01*(1:900*2*pi/67)^2)
+
+# Here are the circle trace data
+xy <- import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/RQA_circletrace/mouse_circle_xy.csv") 
+
+y1 <- xy$x
+y2 <- xy$y
+```
+
+2. You have just created two sine(-like) waves. We’ll examine if and how they are coupled in a shared phase space. As a first step plot them.
+
+3. Find an embedding delay (using mutual information) and an embedding dimension (if you calculate an embedding dimension using package `fractal` for each signal seperately, as a rule of thumb use the highest embedding dimension you find in further analyses).
+
+```{r, tidy=FALSE, eval=SOLUTION}
+# General settings for `crqa()`
+par0 <- list(rescale = 0,
+             normalize = 0,
+             mindiagline = 2,
+             minvertline = 2,
+             tw = 0,
+             whiteline = FALSE,
+             recpt = FALSE,
+             side = "both",
+             checkl = list(do = FALSE, thrshd = 3, datatype = "categorical",pad = TRUE)
+             )
+
+# Settings for `optimizeParam()`
+par <- list(lgM =  20, steps = seq(1, 6, 1),
+           radiusspan = 100, radiussample = 40,
+           normalize = par0$normalize, 
+           rescale = par0$rescale, 
+           mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+           tw = par0$tw, 
+           whiteline = par0$whiteline, 
+           recpt = par0$recpt, 
+           fnnpercent = 10, typeami = "mindip")
+```
+
+4. We can now create a cross recurrence matrix. Fill in the values you decided on. You can choose a radius automatically, look in the `crqa` manual.
+* Get the optimal parameters using a radius which will give us 2\%-5\% recurrent points.
+
+> Note: There is no rescaling of data, the sines were created in the same range. You can plot a matrix using `image()`. You could also check package `nonlinearTseries`. If you sourced the `nlRtsa` library, use `plotRP.crqa()`
+
+
+```{r, eval=SOLUTION}
+(ans <- optimizeParam(ts1 = y1, ts2 = y2, par = par, min.rec = 2, max.rec = 5))
+```
+
+5. Run the CRQA and produce a plot of the recurrence matrix.
+
+```{r, tidy=FALSE, echo=SOLUTION, eval=SOLUTION}
+crqaOutput <- crqa(ts1 = y1, ts2 = y2,  
+                  delay = ans$delay, 
+                  embed = ans$emddim, 
+                  radius = ans$radius, 
+                  normalize = par0$normalize,
+                  rescale = par0$rescale, 
+                  mindiagline = par0$mindiagline, minvertline = par0$minvertline,
+                  tw = par0$tw, 
+                  whiteline = par0$whiteline, 
+                  recpt = par0$recpt, 
+                  side = par0$side, checkl = par0$checkl
+                  )
+```
+
+6. Can you understand what is going on? 
+  * For the simulated data: Explain the the lack of recurrent points at the beginning of the time series.
+  * For the circle trace: How could one see these are not determisnistic sine waves?
+
+```{r, echo=SOLUTION, eval=SOLUTION}
+plotRP.crqa(crqaOutput)
+```
+
+7. Examine the synchronisation under the diagonal LOS. Look in the manual of `crqa` or  [Coco & Dale (2014)](http://journal.frontiersin.org/Journal/10.3389/fpsyg.2014.00510/abstract). 
+ * To get the diagonal profile from the recurrence plot, use `spdiags()`.
+ * Make a plot of the diagonal profile. How far is the peak in RR removed from 0 (Line of Synchronisation)? 
+
+```{r, echo=SOLUTION, eval=SOLUTION}
+win <- 50
+(res <-  drpdfromts(y1, y2, ws = win, datatype = 'continuous', radius = ans$radius))[2:3]
+plot(-win:win,res$profile,type = "l", lwd = 5, xlab = "Delays", ylab = "Recurrence")
+abline(v=0)
+```
+
+```{r, echo=SOLUTION, eval=SOLUTION}
+dprofile <- spdiags(crqaOutput$RP)
+plot(-win:win,colMeans(dprofile$B[, between(dprofile$d, -win,win)]), type="l", 
+     lwd = 5, xlab = "Delays", ylab = "Recurrence")
+abline(v=0)
+```
+
+8. Perform the same steps with a shuffled version (or use surrogate analysis!) of the data of timeseries $y1$. You can use the embedding parameters you found earlier. 
+
+> NOTE: If you generate surrogate timeseries, make sure the RR is the same for all surrogates. Try to keep the RR in the same range by using the `min.rec` and `max.rec` settings of `optimizeParam` for each surrogate.
+
+[| Jump to solutions |](#CRQAsol)
+
+
+## Categorical CRQA {#catCRQA}
+
+1. Package CRQA contains two categorical trial series from the "Friends"study.
+   * Lookup `RDts1` and `RDts2` in the help file. 
+   * Also lookup the articles discussing the study to get an idea about these series [here](http://cognaction.org/rdmaterials/php.cv/pdfs/article/richardson_dale_2005.pdf) and [here](http://cognaction.org/rdmaterials/php.cv/pdfs/article/richardson_dale_kirkham.pdf))  
+
+2.  In the paper accompanying the package by [Coco & Dale (2014)](http://journal.frontiersin.org/Journal/10.3389/fpsyg.2014.00510/abstract) demonstrate the analysis of these series. 
+    * Recreate this analysis, e.g. Figure 10 in the article including the CRQA measures.
+
+[| Jump to solutions |](#catCRQAsol)
+
+# Potential and Catastrophe Models {#cusp}
+
+
+* The nonlinear regression assignment is written for `SPSS`, but you can try to use 'R' as well. Be sure to look at the solutions of the [Basic Time Series Analysis](#bta)) assignments.
+* Using the `cusp` package 
+
+## Fitting the cusp catastrophe in `SPSS`
+
+In the file [Cusp Attitude.sav](https://github.com/FredHasselman/DCS/raw/master/assignmentData/Potential_Catastrophe/Cusp%20attitude.sav), you can find data from a (simulated) experiment. Assume the experiment tried to measure the effects of explicit predisposition and [affective conditioning](http://onlinelibrary.wiley.com/doi/10.1002/mar.4220110207/abstract) on attitudes towards Complexity Science measured in a sample of psychology students using a specially designed Implicit Attitude Test (IAT).
+
+1. Look at a Histogram of the difference score (post-pre) $dZY$. This should look quite normal (pun intended).
+   -	Perform a regular linear regression analysis predicting $dZY$ (Change in Attitude) from $\alpha$ (Predisposition). 
+   - Are you happy with the $R^2$?
+2. Look for Catastrophe Flags: Bimodality. Examine what the data look like if we split them across the conditions.
+  - Use $\beta$ (Conditioning) as a Split File Variable (`Data >> Split File`). And again, make a histogram of $dZY$.
+  - Try to describe what you see in terms of the experiment.
+  -	Turn Split File off. Make a Scatterplot of $dZY$ (x-axis) and $\alpha$ (y-axis). Here you see the bimodality flag in a more dramatic fashion. 
+   - Can you see another flag?
+3. Perhaps we should look at a cusp Catastrophe model:
+   - Go to `Analyse >> Regression >> Nonlinear` (also see [Basic Time Series Analysis](#bta)). First we need to tell SPSS which parameters we want to use, press `Parameters.` 
+    - Now you can fill in the following: 
+        + `Intercept` (Starting value $0.01$)
+        + `B1` through `B4` (Starting value $0.01$)
+        + Press `Continue` and use $dZY$ as the dependent. 
+    - Now we build the model in `Model Expression`, it should say this: 
+    ```
+    Intercept + B1 * Beta * ZY1 + B2 * Alpha + B3 * ZY1 ** 2 + B4 * ZY1 ** 3
+    ```
+    - Run! And have a look at $R^2$.
+4. The model can also be fitted with linear regression in SPSS, but we need to make some extra (nonlinear) variables using `COMPUTE`:
+
+```
+BetaZY1 = Beta*ZY1	*(Bifurcation, splitting parameter).
+ZY1_2 = ZY1 ** 2	*(ZY1 Squared).
+ZY1_3 = ZY1 ** 3	*(ZY1 Cubed).
+```
+  - Create a linear regression model with $dZY$ as dependent and $Alpha$, $BetaZY1$ and $ZY1_2$ en $ZY1_3$ as predictors. 
+  - Run! The parameter estimates should be the same.
+5. Finally try to can make a 3D-scatterplot with a smoother surface to have look at the response surface.
+  - HINT: this is a lot easier in `R` or `Matlab` perhaps you can export your `SPSS` solution.
+
+6. How to evaluate a fit? 
+   - Check the last slides of lecture 8 in which the technique is summarised. 
+   - The cusp has to outperform the `pre-post` model.
+
+
+## The `cusp` package in `R`
+
+
+Use this tutorial paper to fit the cusp in 'R' according to a maximum likelihood criterion.
+
+[Grasman, R. P. P. P., Van der Maas, H. L. J., & Wagenmakers, E. (2007). Fitting the Cusp Catastrophe in R: A cusp-Package.](https://cran.r-project.org/web/packages/cusp/vignettes/Cusp-JSS.pdf)
+
+1. Start R and install package `cusp` 
+
+2. Work through the *Example I* (attitude data) in the paper (*Section 4: Examples*, p. 12).
+
+3. *Example II* in the same section is also interesting, but is based on simulated data.
+    * Try to think of an application to psychological / behavioural science.
+
+
+# **Complex Networks** {#nets}
+
+To complete these assignments you need:
+```{r, message=FALSE, warning=FALSE}
+library(igraph)
+library(qgraph)
+library(devtools)
+source_url("https://raw.githubusercontent.com/FredHasselman/DCS/master/functionLib/nlRtsa_SOURCE.R")
+```
+
+## Basic graphs
+
+1. Create a small ring graph in `igraph` and plot it.
+
+```{r}
+g <- graph.ring(20)
+```
+
+    - Look in the manual of `igraph` for a function that will get you the degree of each node.
+    - ALso, get the average path length.
+
+
+2. Create a "Small world" graph and plot it.
+     - Get the degree, average path length and transitivity
+
+
+```{r}
+g <- watts.strogatz.game(1, 20, 5, 0.05)
+```
+
+
+3. Directed scale-free  graph
+     - Get the degree, average path length and transitivity
+
+```{r}
+g <- barabasi.game(20)
+```
+
+     - There should be a power law relation between nodes and degree ... (but this is a very small network)
+```{r, eval=FALSE}
+plot(log(1:20),log(degree(g)))
+```
+
+## Social Networks 
+
+The package igraph contains data on a Social network of friendships between 34 members of a karate club at a US university in the 1970s.
+
+> See W. W. Zachary, An information flow model for conflict and fission in small groups, *Journal of Anthropological Research 33*, 452-473 (1977).
+
+
+1. Get a graph of the cpmmunities within the social network. 
+    - Check the manual, or any online source to figure out what these measures mean and how they are calulated.
+
+```{r, eval=FALSE}
+# Community membership
+karate <- graph.famous("Zachary")
+wc <- walktrap.community(karate)
+plot(wc, karate)
+modularity(wc)
+membership(wc)
+```
+
+
+2. It is also possible to get the adjacency matrix
+
+```{r, eval=FALSE}
+get.adjacency(karate)
+```
+
+     - What do the columns, rows and 0s and 1s stand for?
+
+
+## Small World Index and Degree Distribution 
+
+Select and run all the code below
+This will compute the *Small World Index* and compute the Power Law slope of Small world networks and Scale-free networks
+
+1. Compare the measures!
+
+2. Try to figure out how these graphs are constructed by looking at the functions in `nlRtsa_SOURCE.R`
+
+```{r, eval = FALSE}
+# Initialize
+set.seed(660)
+layout1=layout.kamada.kawai
+k=3
+n=50
+
+# Setup plots
+par(mfrow=c(2,3))
+# Strogatz rewiring probability = .00001
+p   <- 0.00001
+p1  <- plotSW(n=n,k=k,p=p)
+PLF1<- PLFsmall(p1)
+p11 <- plot(p1,main="p = 0.00001",layout=layout1,xlab=paste("FON = ",round(mean(neighborhood.size(p1,order=1)),digits=1),"\nSWI = ", round(SWtestE(p1,N=100)$valuesAV$SWI,digits=2),"\nPLF = NA",sep=""))
+
+# Strogatz rewiring probability = .01
+p   <- 0.01
+p2  <- plotSW(n=n,k=k,p=p)
+PLF2<- PLFsmall(p2)
+p22 <- plot(p2,main="p = 0.01",layout=layout1,xlab=paste("FON = ",round(mean(neighborhood.size(p2,order=1)),digits=1),"\nSWI = ", round(SWtestE(p2,N=100)$valuesAV$SWI,digits=2),"\nPLF = ",round(PLF2,digits=2),sep=""))
+# Strogatz rewiring probability = 1
+p   <- 1
+p3  <- plotSW(n=n,k=k,p=p)
+PLF3<- PLFsmall(p3)
+p33 <- plot(p3,main="p = 1",layout=layout1,xlab=paste("FON = ",round(mean(neighborhood.size(p3,order=1)),digits=1),"\nSWI = ", round(SWtestE(p3,N=100)$valuesAV$SWI,digits=2),"\nPLF = ",round(PLF3,digits=2),sep=""))
+
+set.seed(200)
+# Barabasi power = 0
+p4  <- plotBA(n=n,pwr=0,out.dist=hist(degree(p1,mode="all"),breaks=(0:n),plot=F)$density)
+PLF4<- PLFsmall(p4)
+p44 <- plot(p4,main="power = 0",layout=layout1,xlab=paste("FON = ",round(mean(neighborhood.size(p4,order=1)),digits=1),"\nSWI = ", round(SWtestE(p4,N=100)$valuesAV$SWI,digits=2),"\nPLF = ",round(PLF4,digits=2),sep=""))
+
+# Barabasi power = 2
+p5  <- plotBA(n=n,pwr=2,out.dist=hist(degree(p2,mode="all"),breaks=(0:n),plot=F)$density)
+PLF5<- PLFsmall(p5)
+p55 <- plot(p5,main="power = 2",layout=layout1,xlab=paste("FON = ",round(mean(neighborhood.size(p5,order=1)),digits=1),"\nSWI = ", round(SWtestE(p5,N=100)$valuesAV$SWI,digits=2),"\nPLF = ",round(PLF5,digits=2),sep=""))
+
+# Barabasi power = 4
+p6  <- plotBA(n=n,pwr=4,out.dist=hist(degree(p3,mode="all"),breaks=(0:n),plot=F)$density)
+PLF6<- PLFsmall(p6)
+p66 <- plot(p6,main="power = 4",layout=layout1,xlab=paste("FON = ",round(mean(neighborhood.size(p6,order=1)),digits=1),"\nSWI = ", round(SWtestE(p6,N=100)$valuesAV$SWI,digits=2),"\nPLF = ",round(PLF6,digits=2),sep=""))
+par(mfrow=c(1,1))
+```
+
+
+[| Jump to solutions |](#netssol)
+
+
+## Package `qgraph`
+
+Learn about the functionality of the `qgraph` frm its author Sacha Epskamp.
+
+Try running the examples, e.g. of the `Big 5`: 
+
+[http://sachaepskamp.com/qgraph/examples](http://sachaepskamp.com/qgraph/examples)
+
+
+## `qgraph` tutorials / blog
+
+Great site by Eiko Fried:
+[http://psych-networks.com ](http://psych-networks.com )
+
+
+## EXTRA - early warnings
+
+Have a look at the site [Early Warning Systems](http://www.early-warning-signals.org/home/)
+
+There is an accompanying [`R` package `earlywarnings`](https://cran.r-project.org/web/packages/earlywarnings/index.html)
+
+
+
