@@ -1,7 +1,7 @@
 # The Complex Systems Approach to Behavioural Science
 
 
-## **Four main topics** {-}
+## **Four main topics**
 
 **I. Introduction to the mathematics of change**
 
