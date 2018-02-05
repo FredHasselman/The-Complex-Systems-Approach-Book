@@ -148,7 +148,24 @@ We als provide links to online materials on specific topics (*Study Materials*) 
 The texts in the chapters of this book are intended as a rough introductory guide to accompany the lectures. An essential part of the course are [the assignments that are available online]()
 
 ```{block2, imp, type='rmdimportant'}
- The text inside these blocks 
+ The text inside these blocks provides important information about the course, or the assignments.
+```
+
+```{block2, ken, type='rmdkennen'}
+ The text inside these blocks provides examples, or, information about a topic you should pay close attentiont to and try to understand.
+```
+
+```{block2, note, type='rmdnote'}
+ The text inside these blocks provides a note, a comment, or observation.
+```
+
+```{block2, imp, type='rmdselfThink'}
+ The text inside these blocks contains questions about a topic, or suggests connections between different topics discussed in the book or in the assignments. You should decide for yourself if you need to discuss the information. One way to do this is by opening a discussion thread on the discussion forum on Blackboard.
+```
+
+
+```{block2, imp, type='rmdentertain'}
+ The content in these boxes is provided as entertainment :) 
 ```
 
 

@@ -35,13 +35,14 @@ knitr::opts_chunk$set(include=TRUE)
 
 # **Modelling (nonlinear) growth and Deterministic Chaos**
 
-In this assignment you will build two (relatively) simple one-dimensional maps. You can use `R`, `Matlab`, `Python`^[Unless otherwise noted, we will assume you'll use `R` complete the assignments.], or, just start in a spreadsheet if you are more familiar with such an environment. You can use the following [GoogleSheet](https://docs.google.com/spreadsheets/d/1BL_oKoCFH3NQ3qKLBQ-WbkPg_ppSZsyDNl2nS9oPGcM/edit?usp=sharing) as a template, save a copy to your computer, or, copy it to a new on-line Google Sheet, or, use your favourite spreadsheet software (e.g., Excel, Numbers).  
+In this assignment you will build two (relatively) simple one-dimensional maps. You can use `R`, `Matlab`, `Python`^[Unless otherwise noted, we will assume you'll use `R` complete the assignments.], based on the model implemented in a spreadsheet. You can copy the Google Sheet to a new on-line Google Sheet, or,  save it to your computer and use your favourite spreadsheet software (e.g., Excel, Numbers).  
 
 We will start modelling the *Linear Map* and then proceed to the slightly more complicated *Logistic Map* (aka *Quadratic map*). 
 
 ```{block2, useR, type='rmdnote'}
 Be sure to check the solutions of the assigments **after** you tried to do them on your own!    
-Also, if you want to use `R` to do the assignments, have a look at the examples in [Chapter 2](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html) on different ways to visualize time series in `R`
+  
+Also, have a look at the examples in [Chapter 2](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html) on different ways to visualize time series in `R`.
 ```
 
 ## **The Linear Map**
@@ -53,13 +54,12 @@ Y_{t+1} = Y_{t=0} + r*Y_t
 (\#eq:linmap)
 \end{equation}
 
-In these exercises you will *simulate* time series produced by the change process in equation \@ref(eq:linmap) for different parameter settings of the growth-rate parameter $r$ (the *control parameter*) and the initial conditions $Y_0$. Simulation is obviously different from a statistical analysis in which parameters are estimated from a data set. The goal of these assignments is to get a feeling for what a dynamical model is, and how it is different from a linear statistical regression model like GLM.
-
+In these exercises you will *simulate* time series produced by the change process in equation \@ref(eq:linmap) for different parameter settings of the growth-rate parameter $r$ (the *control parameter*) and the initial conditions $Y_0$. *Simulation* is obviously different from a statistical analysis in which parameters are estimated from a data set. The goal of these assignments is to get a feeling for what a dynamical model is, and in what way it is different from a linear statistical regression model like GLM.
 
 ### Growth in a Spreadsheet
 
 ```{block2, spreadset1, type='rmdimportant'}
-Before you begin, be sure to check the following settings (same as first asignment): 
+If you want to modify the spreadsheets and use them as a template for other assignments, be sure to check the following settings: 
 
 * Open a Microsoft Excel worksheet or a [Google sheet](https://www.google.com/docs/about/)
 * Check whether the spreadsheet uses a 'decimal-comma' ($0,05$) or 'decimal-point' ($0.05$) notation. 
@@ -68,15 +68,21 @@ Before you begin, be sure to check the following settings (same as first asignme
     + This is the default setting in Microsoft Excel and Google Sheets. If you use one of those programs you are all set.
 ```
 
+First study the behaviour of the **Linear map** in a spreadsheet and then try to implement it in `R`.
 
-* Open the [GoogleSheet](https://docs.google.com/spreadsheets/d/1BL_oKoCFH3NQ3qKLBQ-WbkPg_ppSZsyDNl2nS9oPGcM/edit?usp=sharing) and look at the **Linear map** tab.
+* Open the [GoogleSheet](https://docs.google.com/spreadsheets/d/1EEpUFxEmelJDPDT61jyT_xfntLo_MYBTW0MZuRSC770/edit?usp=sharing) and look at the **Linear map** tab.
 * The `r` in cell `A5` is the *control parameter*. It currently has the value $1.08$ in cell`B5`.
-* The cell labelled $Y_0$ in `A6` is the *initial value* at $t=0$. It has the value $0.1$ in cell `B6`.   
-* The `A` column also contains $Y_t$, the output of the linear map. 
-    + Click on `A10`, in the formula bar you can see this refers to the initial value `B6`.
+* The cell labelled $Y_0$ in `A6` is the *initial value* at $i=0$. It has the value $0.1$ in cell `B6`.   
+* The `A` column also contains $Y_i$, the output of the linear map. 
+    + Click on `A10`, in the formula bar you can see this refers to the initial value in `B6`. This will be the first input to the iterative process.
     + Click on `A11`, in the formula bar you can see the very simple implementation of the linear map.
-    + The value of cell `A11` (i.e. $Y_{t=1}$) will be calculated by multiplying the value of cell `B5` (parameter `r`) with the value of cell `A10` (the previous value, here: $Y_{t=0}$).
-* Remember what it is we are doing! We are calculating $Y_{t=2}$ (i.e. 'behaviour' in the future) and this is completely determined by $Y_{t=1}$ (i.e., the previous step) and the parameter `r`. 
+    + The value of cell `A11` (i.e. $Y_{i=1}$) will be calculated by multiplying the value of cell `B5` (parameter `r`) with the value of cell `A10` (the previous value, which jappens to be: $Y_{i=0}$).
+
+```{block2, type="rmdkennen"}
+Remember what it is we are doing here!     
+We are calculating $Y_{i+1}$ (i.e. 'behaviour' in the future) and this value is *completely determined* by $Y_{t=0}$ (i.e., the first step) and the control parameter `r`.
+There are no stochastic components involved in generating the behaviour.
+```
 
 
 ### Vary the control parameter
@@ -108,7 +114,7 @@ Y_{t+1} = r*Y_t*(1-Y_t)
 ### Chaos in a spreadsheet 
 
 * Open the [GoogleSheet](https://docs.google.com/spreadsheets/d/1BL_oKoCFH3NQ3qKLBQ-WbkPg_ppSZsyDNl2nS9oPGcM/edit?usp=sharing) and look at the **Logistic map** tab.
-* The set-up is the same as for the linear map, except of course the change process that is implemented.
+* The set-up is the same as for the linear map, except of course the change process that we have to implement.
 * The `A` column also contains $Y_t$, the output of the Logistic map, currently the behaviour looks a lot like an S-curve, a logistic function. 
     + Click on `A10`, in the formula bar you can see this refers to the initial value `B6`.
     + Click on `A11`, in the formula bar you can see the very simple implementation of the Logistic map.
