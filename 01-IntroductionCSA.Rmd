@@ -1,67 +1,73 @@
 # (PART) Introduction {-}
 
+<!-- # HOW TO CITE -->
+<!-- # -->
+<!-- # Citations go inside square brackets and are separated by semicolons. Each citation must have a key, composed of ‘@’ + the citation identifier from the database, and may optionally have a prefix, a locator, and a suffix. Here are some examples: -->
 
-# **It's about time!**
+<!-- # Blah blah [see @doe99, pp. 33-35; also @smith04, ch. 1]. -->
+<!-- # Blah blah [@doe99, pp. 33-35, 38-39 and *passim*]. -->
+<!-- # Blah blah [@smith04; @doe99]. -->
+
+<!-- # A minus sign (-) before the @ will suppress mention of the author in the citation. This can be useful when the author is already mentioned in the text: -->
+
+<!-- # Smith says blah [-@smith04]. -->
+
+<!-- # You can also write an in-text citation, as follows: -->
+
+<!-- # @smith04 says blah. -->
+<!-- # @smith04 [p. 33] says blah. -->
+
+# **A Quick Guide to Scientific Rigour**
 
 > "All science is either physics or stamp collecting."
 >
 > --- Ernest Rutherford (1872-1937)
 
 
-Before we can begin our introduction to the wonderful world of Complex Adaptive Systems and Complex Networks, we briefly discuss the perspective on scientific inquiry that is used throughout this book. This will not only allow us to highlight some differences between the **Complex Systems Approach (CSA)** we propose for the scientific study of human nature and the classical perspective we will call the **Machine Metaphor Approach (MMA)**.
+Before we can begin our introduction to the wonderful world of Complex Adaptive Systems and Complex Networks, we briefly discuss the philosophy of science and perspective on the goal of scientific inquiry that is used throughout this book. This will allow us to highlight some differences between the **Complex Systems Approach (CSA)** we propose for the scientific study of human nature and the classical, often implicit perspective used in most disciplines of the social and life sciences, we will call the **Machine Metaphor Approach (MMA)**.
+
+Use of the scientific method [**scientific method**](https://en.wikipedia.org/wiki/Scientific_method) is what seperates scientific from non-scientific claims about the structure of reality. It consists of all philosophical, theoretical and empirical tools, procedures and methods that can be used to systematically evaluate the veracity of such explanatory claims. The repeated application of the scientific method to study scientific questions promises to generate **valid** (accurate) inferences and **reliable** (precise) facts about a certain explanatory domain, but it is important to note it does not guarantee that any kind of absolute 'truth' will be discovered. The veracity of scientific inferences is always conditional on the quality of the body of scientific knowledge from which the inferences were deduced, induced or abducted. For example, when a *crisis of confidence* about the trustworthiness of the facts in the scientific record of some subdisciplines of psychological science was suggested [@pashler2012a], the immediate consequence was that the veracity of all claims by psychological science was called into question.   
+
+### Rigorous Science {-}
+Less tangible, but not less important for the perceived veracity of scientific knowledge are concepts such as *intellectual honesty* and *scientific integrity* of the scientists laying explanatory claim on some observable phenomena. So the 'mere' application the scientific method to any problem in science does not fully grasp all the characteristics that would lead to a solid body of knowledge. We will use the term [**rigorous science**](http://mbio.asm.org/content/7/6/e01902-16.full) [@casadevall2016a] to denote the ideal set of conditions that should be in place to allow us to distinguish scientific claims that are likely to be false, from claims that are likely to be true, given the perceived veracity of the scientific record.
 
 
-# **A Quick Guide to Scientific Rigour**
-
-
-
-
-The [**scientific method**](https://en.wikipedia.org/wiki/Scientific_method) consists of all philosophical, theoretical and empirical tools, procedures and methods that can be used to systematically evaluate the veracity of explanatory claims about the structure of reality. The repeated application of the scientific method to study scientific questions promises to generate **valid** inferences and **reliable** facts about a certain explanatory domain.
-
-The validity of scientific inferences is of course always conditional on the perceived veracity of the body of scientific knowledge from which the inferences were derived. Less tangible, but not less important for the perceived veracity of scientific knowledge are concepts such as  *intellectual honesty* en *scientific integrity* of scientists laying explanatory claim on some observable phenomena. Simply applying the scientific method to any problem in science doe not fully grasp all the characteristic that constitute a solid body of scientific knowledge. We will use the term [**rigorous science**](http://mbio.asm.org/content/7/6/e01902-16.full) [@Casadevall2016] to denote the ideal set of conditions to allow the scientific method to separate claims that are likely to be false, from claims that are likely to be true (given the current scientific record).
-
-
-```{r rigorous, echo=FALSE, fig.cap="Rigorous Science according to @Casadevall2016."}
+```{r rigorous, echo=FALSE, fig.cap="Rigorous Science according to @casadevall2016a."}
 knitr::include_graphics("images/F1_large.jpg")
 ```
 
-When a claim is based on **Scientific Rigor**, we refer to the fact there has been:
+When a claim is based on **Scientific Rigour**, we mean it was posited based on the following:
 
 1. **Experimental Redundancy** - The claim has been examined by all methodological and analytical tools that are available and are appropriate given the context. Rigorous Science does not rely on one type of experimental design or one type of statistical analysis.
 2. **Recognition of Error** - Without failure there can be no progress, therefore we should carefully study failures and not just report success stories. Any sources of error should be carefully studied and reported to the scientific community.
-3. **Sound Probability & Statistics** - Use of the most recent and appropriate statistical theories, models and analytical techniques. Statistical models become more realistic and often the models that were taught in undergraduate statistics courses have long been replaced and should not be used any more.
-4. **Efforts to Avoid Logical Traps** - When generating theories, defining constructs and laws, make sure logical inconsistencies are avoided. When making inferences, avoid the common logical traps such as *The Effect = Structure Fallacy* in null hypothesis significance testing: If a predicted effect is observed (i.e. a statistically significant test result leads to a rejection of the null hypothesis), it is not valid to infer that the existence of the assumed cause was evidenced.
+3. **Sound Probability & Statistics** - Use of the most recent and appropriate statistical theories, models and analytical techniques. Statistical modelling techniques become more realistic over time and often the models that were taught in undergraduate statistics courses have long been replaced and should not be used any more.
+4. **Efforts to Avoid Logical Traps** - When generating theories and defining constructs and laws, make sure logical inconsistencies are avoided. When making inferences, avoid the common logical traps such as *The Effect = Structure Fallacy* in null hypothesis significance testing (NHST).
 5. **Intellectual Honesty** - Rigorous science is ethical, has integrity and thrives on critical reflection on scientific practice. The right mindset is *"Prove yourself wrong!"*, not *"Prove yourself right!"*
 
-
-
-```{r xkcd1a, echo=FALSE, fig.cap="[xkcd](http://xkcd.com/435/) on the 'purity' of scientific disciplines."}
-knitr::include_graphics("images/purityXKCD1.png")
-```
-
-----
 
 
 ## **Formalism, Ontology and Epistemology**
 
 > A difficulty of much psychological theorizing is vagueness in the terms employed. In this work, the above ideas have been studied in mathematical form throughout, the definitions and proofs being given corresponding precision.
 >
-> ---W. R. Ashby (1945, p. 13)
+> ---W. R. Ashby in 'The Physical Origin of Adaptation by Trial adn Error' (-@ashby1945a, p. 13)
 
 
-
-
+@[Meehl1990a,Meehl1997a]
 
 ## **Phenomena, theories, facts and laws**
 
 
-### Properties of theories
+### Properties of theories {-}
 
 
 ## **Appraising and amending theories**
 
 
-### Strong Inference
+### Strong Inference {-}
+
+*The Effect = Structure Fallacy* refers to the logical error that occurs a predicted effect is observed (i.e. a statistically significant test result leads to a rejection of the null hypothesis), it is not valid to infer the existence of the assumed cause was evidenced. NHST is based on *the falsification principle*, which means the perceived veracity of a scientific claim will increase only if it has resist many rigorous attempts to prove it is wrong. If a scientific claim has a large track-record of resisting falsification 
+
 
 
 ```{r stronInf, echo=FALSE}
@@ -95,12 +101,12 @@ knitr::kable(df,
 > 
 
 
-Welke bewerkingen, beschrijvende statistieken, toetsende analyses en onderzoeksvragen je mag loslaten op gegevens van een bepaald meetniveau is weergegeven in Tabel \@ref(tab:meetniv).^[De analyse technieken hoef je niet te kennen.] 
+
 
 ```{r meetniv, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 #dft <-read.csv("~/Library/Mobile Documents/com~apple~CloudDocs/GitHub/Cursusboek IWO/1718/docs/meetniveaus.csv")
-dft <- t(data.frame(A= c("Determineren van (on)gelijkheid","Determineren van 'meer' of 'minder'","Determineren van de gelijkheid van intervallen of verschillen","Determineren van de gelijkheid van ratios"),
-                        B= c("$ =\\ \\neq $","$\\leq\\ \\geq $", "$ + \\ - $", "$ \\times\\ \\div $"),
+dft <- t(data.frame(A= c("Determination of (in)equality","Determination of 'more' or 'less'","Determination of  equality of intervals of differences","Determination of equality of ratios"),
+                        B= c("$=\\ \\neq$","$\\leq\\ \\geq$", "$+ \\ -$", "$\\times\\ \\div$"),
                         C = c("Groeperen; Classificeren; Indiceren", "Sorteren; Vergelijken; Niveau bepalen", "Relatieve vergelijkingsbasis (meetlat): Relatief verschil of gelijkenis; relatief nulpunt", "Absolute vergelijkingsbasis (meetschaal): Verhoudingen van magnitudes / hoeveelheden; absoluut nulpunt"),
                         D = c("Modus; Frequentie", "Mediaan; Percentielen", "Rekenkundig gemiddelde; Standaarddeviatie", "Geometrisch gemiddelde; Variatiecoëfficiën [note]"),
                         E = c("Nominale associatie (Contingentie coefficient, Phi, Kramer's V, Lambda, $\\chi^2$)", "Directionele nominale associatie (Kendall's tau a-c, Gamma, Somer's D)", "Rangorde correlatie en Product-Moment correlatie (Spearman en Pearson correlatie)", "Kansverdelingen en informatie theorie (K-L divergence, Average Mutual Information)")))
@@ -113,7 +119,7 @@ kbt <- knitr::kable(dft,
       booktabs = TRUE, 
       format = getOutFormat, 
       escape = ifelse(all(getOutFormat%in%c("html","docx")),TRUE,FALSE),
-      caption = "Kenmerken van toevalsvariabelen gemeten op de meetniveaus van Stevens (1962)")
+      caption = "Properties of Random Variables at Stevens' Levels of Measurement (1962)")
 
 if(all(getOutFormat%in%c("html","docx"))){
   kable_styling(kable_input = kbt,
@@ -200,9 +206,9 @@ The goal of this article is to introduce a number of physical principles and exp
 \footnote{To be clear, a sketch of a formalism implies positing candidate conjectures to be raised as postulates. It refers to providing novel perspectives on old questions or the re-framing of existing claims in order to enable the unification or formal similarity of competing theories. The (to be developed) formalism itself is not a theory. It is a definition of a domain in reality from which different theories can depart and compete for scientific credibility in explaining the phenomena included by the postulates of the formalism.} for complex adaptive behavior based a conception of computation that respects the physical medium of implementation~\citep*[][]{Maclennan2011a}. 
 A formalism for Radical Embodied Computation (REC++)
 \footnote{ The addition of ++ in REC++ not only allows easy discrimination from REC, but also refers to the popular computer programming language C++ in which ++ is an increment operator. The operation of incremental counting will be considered an important property of the biophysical realization of computation.} 
-should describe order generation inside brains nested in bodies that can explain phenomena of the mind departing from principles of Information Realism ~\citep*[][]{Floridi2003a}. REC++ can be described as an attempt to merge Radical Embodied Cognition ~\citep*[REC; cf.][]{Chemero2009a} and Physical Intelligence~\citep*[PI; cf.][]{Turvey2012a} with Natural Computation ~\citep*[NC; see][]{Wolfram2002a,Pfeifer2007a,Polani2007a,Maclennan2012a}. Potential issues with this objective are he explicit rejection of the use of information-theoretic constructs by REC in which: ``\textit{[âŠ] perception, cognition, and action as necessarily embodied phenomenon, using explanatory tools that do not posit mental representations}''  ~\citep*[][p. 29]{Chemero2009a} and the requirement by PI of information to become more than a measure of uncertainty ~\citep*[meaningful, specific, usable, scaled, see][]{Turvey2012a}. These and related issues will be discussed throughout the text.
+should describe order generation inside brains nested in bodies that can explain phenomena of the mind departing from principles of Information Realism ~\citep*[][]{Floridi2003a}. REC++ can be described as an attempt to merge Radical Embodied Cognition ~\citep*[REC; cf.][]{Chemero2009a} and Physical Intelligence~\citep*[PI; cf.][]{Turvey2012a} with Natural Computation ~\citep*[NC; see][]{Wolfram2002a,Pfeifer2007a,Polani2007a,Maclennan2012a}. Potential issues with this objective are he explicit rejection of the use of information-theoretic constructs by REC in which: ``\textit{[] perception, cognition, and action as necessarily embodied phenomenon, using explanatory tools that do not posit mental representations}''  ~\citep*[][p. 29]{Chemero2009a} and the requirement by PI of information to become more than a measure of uncertainty ~\citep*[meaningful, specific, usable, scaled, see][]{Turvey2012a}. These and related issues will be discussed throughout the text.
 
-First, I will follow Ashbyâs lead and test the explanatory boundaries of Radical Neuronal Reductionism (RNR) that is commonly used as a causal ontology for adaptive behavior in BCN science ~\citep*[][]{Majorek2012a}. 
+First, I will follow Ashby's lead and test the explanatory boundaries of Radical Neuronal Reductionism (RNR) that is commonly used as a causal ontology for adaptive behavior in BCN science ~\citep*[][]{Majorek2012a}. 
 
 
 ## **What is a Complex Dynamical System?**
@@ -222,7 +228,7 @@ A closed system cannot exchange any energy, matter or information with the exter
 
 
 ### Ergodic vs. Non-ergodic
-
+[@Molenaar2008a,@Molenaar2009a]
 
 ### Equilibrium vs. Far-from-equilibrium
 
@@ -243,12 +249,21 @@ The opposite of order, *disorder*, or randomness, must then refer to the absolut
 
 
 
-
 ## **A Causal Ontology of Interactions**
 
 
 
-## ** **
+## **State Space**
 
 
+## **Phase Space**
+
+
+## **The Attractor Ladscape**
+
+
+**Equilibrium State**
+It occurs when a dynamic system has a configuration C with the properties that
+a. if started at C and released, it does not move from C, and 
+b. if started at any configuration near C, the system changes in time towards C.
 

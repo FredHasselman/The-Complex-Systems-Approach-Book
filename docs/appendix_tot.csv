@@ -1,0 +1,304 @@
+### **Adaptive Behaviour** {- #Adap1}
+
++ System behaviour that appears to be (partially) coordinated by previously 'experienced events'
+
+### **Analytic solution** {- #Anal2}
+
++ The solution to a difference or differential equation allows one to find any state of the system without the need to iterate the model starting from some initial condition. There are very few (systems of) equations for which analytical solutions exist
+
+### **Attractor** {- #Attr3}
+
++ The status that a dynamic system eventually "settles down to". An attractor is a set of values in the phase space to which a system migrates over time, or iterations. Attractors can have as many dimensions as the number of variables that influence its system
+
+### **Basin of attraction** {- #Basi4}
+
++ A region in phase space associated with a given attractor. The basin of attraction of an attractor is the set of all (initial) points that eventually end up in that attractor
+
+### **Behaviour (of a dynamic system)** {- #Beha5}
+
++ The  temporal evolution of states of a system according to one or more rules (also known as state propagation rules, or, iterative processes). Models of the behaviour of dynamic systems use difference or differential equations to describe the iterative processes hypothesized to underly the temporal evolution
+
+### **Bifurcation** {- #Bifu6}
+
++ A clearly observable qualitative change in the behavioural mode (attractor state) of a dynamic system associated with continuous change in one or more control parameters  (also known as Phase-, State-, or Order- Transition). The value of a control parameter at which a bifurcation occurs is often non-specific, or trivial
+
+### **Bifurcation diagram** {- #Bifu7}
+
++ Visual summary of the succession of period-doubling bifurcations produced by gradual changes in the control parameter(s)
+
+### **Catasrophe theory** {- #Cata8}
+
++ Mathematical resreach program describing how gradual change in some parameters can lead to disprortionally large changes in another parameter, called catastrophes (similair to bifurcations, Phase-, State-, or Order-transitions). 'This kind of behavior has been summarized succinctly in the phrase "the straw that broke the camel's back".' (Gilmore, 1992). 
+
+### **Catastrophe flags** {- #Cata9}
+
++ Markers indicative for a physical system that is describe by a catastrophe. There are 5 'classical' flags and 3 'diagnostic' flags. Classical: bimodality, sudden jumps, inaccessibility, sensitivity & hyesteresis. Diagnostic: divergence from linear response, critical slowing down and critical  fluctuations. Diagnostic flags can be used as early-warning signals. 
+
+### **Complex Network** {- #Comp10}
+
++ A network with of many nodes and likely many substructures depending on thet nature and distribution of connections between nodes
+
+### **Complex system** {- #Comp11}
+
++ Spatially and/or temporally extended nonlinear systems characterized by emergent properties and self-organised behavioural modes at a global, or, macro-level (the system as a whole), that is often different from the characteristic behaviour at a local, or, micro-level (behaviour of the individual parts that constitute the whole)
+
+### **Complexity science** {- #Comp12}
+
++ Complexity science studies how systems that consist of many components can generate relatively simple and stable (nonrandom) behaviour. Important behavioural phenomena studied in Complexity Science are synchronisation, adaptation and coordination of behaviour across many different temporal and spatial scales, emergent properties and collective behaviour, holism and self-organisation
+
+### **Component dominant dynamics** {- #Comp13}
+
++ A causal ontology in which observed behaviour is explained by assuming it is the result of a chain of independent efficient causes (components)
+
+### **Control parameter** {- #Cont14}
+
++ A variable that controls the global behaviour of a dynamic system. For certain values of the parameter, transitions between qualitatively different behavioural modes (orders) can occur.
+
+### **Critical fluctuations** {- #Crit15}
+
++ An early warning signal for a phase transition that is characterised by an increase in fluctuations (variability) of the behaviour of the system. The increase occurs because the self-organised transition from one state to another relaxes the contraints on the degrees of freedom a system has available to generate its behaviour, allowing states and behavioural modes to appear that were previously inaccesible.
+
+### **Critical slowing down** {- #Crit16}
+
++ An early warning signal for a phase transition that is characterised by an increase in the duration of relaxation times. If it takes longer for the system to return to the state it was perturbed from, this implies the emergence of a new stable state is imminent
+
+### **Deterministic Chaos** {- #Dete17}
+
++ Behaviour of a dynamic system that "looks random, but is not" (Lorenz, 1973). The dynamics can be characterised as follows: 1) A-periodic, no point or trajectory in state space will exactly recur; 2) Sensitive dependence in initial conditions; 3) Bounded, not all theoretically possible degrees of freedom are available to the system; 4) The origin of this behaviour is deterministic, not stochastic
+
+### **Difference equation** {- #Diff18}
+
++ A function specifying the underlying change process in a variable from one discrete point in time to another
+
+### **Differential equation** {- #Diff19}
+
++ A function specifying the underlying change process of a variable in continuous  time
+
+### **Dimension** {- #Dime20}
+
++ See embedding dimension, box-counting dimension, correlation dimension, information dimension, dimension of a system
+
+### **Dimensions of a system** {- #Dime21}
+
++ The set of variables that define a system. Iterative processes operate on the dimensions of a system
+
+### **Dynamic system** {- #Dyna22}
+
++ A set of equations specifying how certain variables change over time. The equations specify how to determine (compute) the new values as a function of their current values and control parameters. The functions, when explicit, are either difference equations or differential equations. Dynamic systems may be stochastic or deterministic. In a stochastic system, new values come from a probability distribution. In a deterministic system, a single new value is associated with any current value
+
+### **Early warning signals** {- #Earl23}
+
++ Critical slowing down and critical fluctuations. Early-warning signals indicate instability in the existing state which may result in a qualitative shift towards a new state (phase transition / catastrophe). Early-warning signals are similair to diagnostic catastrophe flags. 
+
+### **Effective Complexity** {- #Effe24}
+
++ “The effective complexity of an entity is the length of a highly compressed description of its regularities.” (Gell-man & Lloyd, 2004)
+
+### **Embedding Dimension** {- #Embe25}
+
++ Successive N-tuples of points in a time series are treated as points in N dimensional space. The points are said to reside in embedding dimensions of size N, for N = 1, 2, 3, 4, ... etc.
+
+### **Emergence** {- #Emer26}
+
++ A complex system can generate emergent behaviour or display emergent properties that are novel and unexpected, that is, they are not predictable from the behaviour and proprties of the components of the system
+
+### **Entropy** {- #Entr27}
+
++ Relative absence of order/redundancy in a system. The degrees of freedom a system has available for generating its behavior: Possibility
+
+### **Epigenetic landscape (potential lanscape)** {- #Epig28}
+
++ A hypothetical landscape describing the relative stability of behavioural modes of a system over time
+
+### **Experienced event** {- #Expe29}
+
++ An interaction of a system with its environment that changed the internal structure/organization of the system such that it can be said to display adaptive behaviour. “Interaction with after-effects”. Random behavior is “Interaction without after-effects”.
+
+### **flow ~** {- #flow30}
+
++ A differential equation
+
+### **Fractal** {- #Frac31}
+
++ An irregular shape with self-similarity. It has infinite detail, and cannot be differentiated. "Wherever chaos, turbulence, and disorder are found, fractal geometry is at play" (Briggs and Peat, 1989).
+
+### **Fractal Dimension** {- #Frac32}
+
++ A measure of a geometric object that can take on fractional values. At first used as a synonym to Hausdorff dimension, fractal dimension is currently used as a more general term for a measure of how fast length, area, or volume increases with decrease in scale. (Peitgen, Jurgens, & Saupe, 1992a).
+
+### **Graph theory** {- #Grap33}
+
++ Models in which associations between mathematical objects are defined as edges (connections) between vertices (nodes)
+
+### **Hausdorff Dimension** {- #Haus34}
+
++ A measure of a geometric object that can take on fractional values. (see fractal dimension).
+
+### **Holism (epistemic)** {- #Holi35}
+
++ "some property of a whole would be holistic if, according to the theory in question, there is no way we can find out about it using only local means, i.e., by using only all possible non-holistic resources available to an agent.” (Seevinck, 2002)
+
+### **Idiographic approach** {- #Idio36}
+
++ Scientific explanation in which the goal is to generate knowledge about specific facts, events or entities. The goal is not to generalize to universal laws and first principles.
+
+### **Information (quantity)** {- #Info37}
+
++ A measurable quantity that resolves uncertainty about the state of a system by assigning a value to the uncertainty.
+
+### **Initial condition** {- #Init38}
+
++ The starting point of a dynamic system, the initial state of a system from which it evolved to the current state.
+
+### **Interaction dominant dynamics** {- #Inte39}
+
++ A causal ontology in which observed behaviour is explained by assuming it is the result of interactions between processes across many temporal and spatial scales
+
+### **Iteration** {- #Iter40}
+
++ The repeated application of a function, using its output from one application as its input for the next.
+
+### **Iterative function** {- #Iter41}
+
++ A function used to calculate the new state of a dynamic system.
+
+### **Iterative system** {- #Iter42}
+
++ A system in which one or more functions are iterated to define the system.
+
+### **Largest Lyapunov exponent** {- #Larg43}
+
++ The value of the largest exponent in a spectrum of exponents (the Lyapunov spectrum), coefficients of time, that reflect the rate of departure (divergence) of dynamic orbits of a system. The largest exponent indicates the extent to which the behaviour of a system is sensitive to initial conditions.
+
+### **Limit cycle** {- #Limi44}
+
++ An attractor that is periodic in time, that is, that cycles periodically through an ordered sequence of states.
+
+### **Limit points** {- #Limi45}
+
++ Points in phase space. There are three kinds: attractors, repellors, and saddle points. A system moves away from repellors and towards attractors. A saddle point is both an attractor and a repellor, it attracts a system in certain regions, and repels the system to other regions.
+
+### **Linear function of predictors** {- #Line46}
+
++ A linear equation is of predictors is of the form y=a*x(i)+b, in which variable y varies 'linearly' with other variables x(i). In this equation, 'a' determines the slope of the line and 'b' reflects the y-intercept, the value y obtains when all x(i) equal zero.
+
+### **Linear function of time** {- #Line47}
+
++ A linear function of time is of the form ŷ(t) = a*y(t) + b, in which variable y varies 'linearly' with time 't', that is, with itself at an earlier moment in time. In this equation 'a' determines the rate with which 'y' will change as time passes, 'b' reflects the initial condition, the value y obtains when t equals zero.
+
+### **map ...** {- #map48}
+
++ A difference equation
+
+### **Nonlinear dynamics** {- #Nonl49}
+
++ The study of dynamic systems whose functions specify that change is not a linear function of time.
+
+### **Orbit (trajectory)** {- #Orbi50}
+
++ A sequence of coordinates (a path) through the phase space of a system.
+
+### **Order** {- #Orde51}
+
++ “order is essentially the arrival of redundancy in a system, a reduction of possibilities”(Von Förster, 2003). Any form of nonrandom association or dependency that exists between parts of a system, its behaviour over time and/or its environment is a form of order. In scientific explanation of behaviour, the presence of order in non-artificial systems must be explained and should not be (implicitly) assumed.
+
+### **Order Parameter** {- #Orde52}
+
++ A nominal variable that indexes qualitatively different behavioural modes of a system, for example the phases of matter (gas, liquid, solid, plasma)
+
+### **Period-doubling** {- #Peri53}
+
++ The change in dynamics in which a N-point attractor is replaced by a 2N-point attractor.
+
+### **Phase portrait** {- #Phas54}
+
++ The collection of all trajectories from all possible starting points in the phase space of a dynamic system.
+
+### **Phase space** {- #Phas55}
+
++ An abstract space used to represent the behavior of a system. Its dimensions are the variables of the system. Thus a point in the phase space defines a potential state of the system. The points actually achieved by a system depend on its iterative function and initial condition (starting point).
+
+### **Phase transition** {- #Phas56}
+
++ A transition between qualitatively different behavioural modes
+
+### **Potential function** {- #Pote57}
+
++ A function that describes the order paremeter of a system, that is, it describes the relative stability of the potential end-states (attractor states) a system can settle into. The paramaters of the potential function include the control parameter.
+
+### **Power-law scaling** {- #Powe58}
+
++ A relationship between two variables that is linear on doubly logarithmic coordinates, meaning the law is experessed in increments that represent 'power'
+
+### **Recursive process** {- #Recu59}
+
++ For our purposes, "recursive" and "iterative" are synonyms. Thus recursive processes are iterative processes, and recursive functions are iterative functions.
+
+### **Relaxation time** {- #Rela60}
+
++ The time it takes for a system to return to a stable state after it was perturbed enough to leave that state. A characteristic warning signal of an imminent phase transition is an increase relaxation times, also known as critical slowing down.
+
+### **Repellors** {- #Repe61}
+
++ One type of limit point. A point in phase space that a system moves away from.
+
+### **Return map** {- #Retu62}
+
++ Plot of time series values vs.a delayed copy of itself. A return plot can be used to get an idea about the functional form of the iterative process, it is a simple variant of delay embedding.
+
+### **Saddle point** {- #Sadd63}
+
++ A point, usually in three dimensional state space, that both attracts and repels, attracting in one dimension and repelling to another.
+
+### **Scale free network** {- #Scal64}
+
++ A network in which the distribution of the number of connections of a node and their frequency of occurence follows a power-law in which there are just a few nodes with many connections and many nodes with just a few connections
+
+### **Self-affinity** {- #Self65}
+
++ An infinite nesting of characteristic structure on all scales. Strict self-affinity refers to a form of which all substructures are affine transformation, which means the different dimensions of the system can be scaled by their own exponent. Statistical self-affinity refers to an approximate equivalence of form at all scales.
+
+### **Self-similarity** {- #Self66}
+
++ An infinite nesting of characteristic structure on all scales. Strict self-similarity refers to a form of which all substructures can be considered scaling tranformations, larger or smaller copies scaled by a single exponent for all dimensions of the structure. Statistical self-similarity refers to an approximate equivalence of scaled structure.
+
+### **Sensitive dependence on initial conditions** {- #Sens67}
+
++ A property of chaotic systems. A dynamic system has sensitivity to initial conditions when very small differences in starting values result in very different behavior. If the orbits of nearby starting points diverge, the system has sensitivity to initial conditions.
+
+### **Small world network** {- #Smal68}
+
++ Many real-world networks have a small average shortest path length, but also a clustering coefficient that is significantly higher than expected by chance. These networks are extremely efficient, each node in a very large network can still be reach in just a few steps (the 'six degrees of seperation` phenomenon).
+
+### **State** {- #Stat69}
+
++ A coordinate in state space designating the current status of a dynamic system. The elements of the coordinates are values on the dimensions of the system that span the state space.
+
+### **State space** {- #Stat70}
+
++ A hypothetical space spanned by the dimensions of the system. Each combination of values of variables that represent the dimension is a state of the system, it is a coordinate in state space.
+
+### **State space (phase space)** {- #Stat71}
+
++ An abstract space used to represent the behaviour of a system. Its dimensions are the variables of the system. Thus a point in the phase space defines a potential state of the system.
+
+### **Strange attractor** {- #Stra72}
+
++ An attractor state representing chaotic dynamics: a-periodic, bounded, and sensitive dependence on initial conditions
+
+### **System** {- #Syst73}
+
++ An entity that can be described as a composition of components according to some organising principle. Organising principles describe how parts of the system relate to the whole and.
+
+### **Time series** {- #Time74}
+
++ A record of observations (data points) of behaviour over time.
+
+### **Trajectory (orbit)** {- #Traj75}
+
++ A sequence of positions (path) of a system in its phase space. The path from its starting point (initial condition) to and within its attractor.
+
+### **Transient time (transient behaviour)** {- #Tran76}
+
++ The time it takes for a system to transition from one stable state (behavioural mode, attractor state) into another, during which the system displays transient behaviour
+

@@ -1,12 +1,17 @@
 # (PART) Mathematics of Change {-} 
 
-# **Modeling 1 Dimensional Change Processes** {-}
+# **Introduction to the Mathematics of Change** 
+
+
+
+
+## **Stat(ist)ic versus Dynamic Models**
 
 The simplest non-trivial *iterative change process* can be described by the following *difference equation*: 
 
 $$ Y_{t+1} = Y_{t=0} + a*Y_t $$    
 
-The equation describes the way in which the value of $Y$ changes [between two adjacent, discrete moments in time](https://en.wikipedia.org/wiki/Discrete_time_and_continuous_time) 
+The equation describes the way in which the value of $Y$ changes [between two adjacent, **discrete** moments in time](https://en.wikipedia.org/wiki/Discrete_time_and_continuous_time) 
 (hence the term [difference equation, or recurrence relation](https://en.wikipedia.org/wiki/Recurrence_relation)). There are two parameters resembling an intercept and a slope:
 
 1. The starting value $Y_0$ at $t=0$, also called the *starting value*, or the *initial conditions*.
@@ -19,7 +24,7 @@ The values taken on by variable $Y$ are considered to represent the states  quan
     
 These descriptions all refer to the change processes that govern system observables (properties of dynamical systems that can be observed through measurement).     
 
-## **It's a line! It's a plane!** {-}
+### **It's a line! It's a plane!** 
 The formula resembles the equation of a line. There is a constant value $Y_{0}$ which is added to a proportion of the value of $Y$ at time $t$, given by parameter $a$. This is equivalent to the slope of a line. However, in a $(X,Y)$ plane there are two 'spatial' (metric) dimensions representing the values two variables $X$ and $Y$ can take on (see figure).
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -37,7 +42,14 @@ text(-11.5, y1[1], expression(Y[X==-10]),col="grey60")
 
 The best fitting straight line would be called a statistical model of the linear relationship between the observed values of $X$ and $Y$. It can be obtained by fitting a General Linear Model (GLM) to the data. If $X$ were to represent repeated measurements the multivariate GLM for repeated measures would have to be fitted to the data. This can be very problematic, because statistical models rely on [Ergodic theory](https://en.wikipedia.org/wiki/Ergodic_theory): 
 
-> "... it is the study of the long term average behavior of systems evolving in time." [^ergodic]
+> "... it is the study of the long term average behavior of systems evolving in time."
+
+
+```{block2, type="rmdkennen"}
+In other words: If you throw 1 die 100 times in a row, the average of the 100 numbers is the **time-average** of one of the observables of die-throwing systems. If this system is ergodic, then its **time-average** is expected to be similar to the average of the numbers that turn up if you throw 100 dice all at the same instance of time. The dice layed out on the table represent a spatial sample, a snapshot frozen in time, of the possible states the system can be in. Taking the average would be the **spatial average** this observable of die-throwing systems. This ergodic condiciotn is often implicitly assumed in Behavioural Science when studies claim to study change by taking different samples of individuals (snapshots of system states) and comparing if they are the same. 
+```
+
+
 
  need to assume independence of measurements within and between subjects. These assumptions can be translated to certain conditions that must hold for the model to be valid, known as *Compound Symmetry* and *Sphericity*:    
 
@@ -48,7 +60,7 @@ As you can read in the quoted text above, these conditions must hold in order to
 
 If you choose to use GLM repeated measures to model change over time, you will only be able to infer independent components that are responsible for the time-evolution of $Y$. As is hinted in the last sentence of the quote, the validity of such inferences is not a common topic of discussion statistics textbooks.
 
-## **No! ... It's a time series!**
+### **No! ... It's a time series!**
 
 The important difference between a regular 2-dimensional Euclidean plane and the space in which we model change processes is that the $X$-axis represents the physical dimension **time**. In the case of the Linear Map we have a 1D space with one 'spatial' dimension $Y$ and a time dimension $t$. This  is called time series if $Y$ is sampled as a continuous process, or a trial series if the time between subsequent observations is not relevant, just the fact that there was a temporal order (for example, a series of response latencies to trials in a psychological experiment in the order in which they were presented to the subject).
 
@@ -62,9 +74,11 @@ text(-1.2, y1[1], expression(Y[t==0]),col="grey60")
 text(21.5, y1[21], expression(Y[t==20]),col="grey60")
 ```
 
-Time behaves different from a spatial dimension in that it is directional (time cannot be reversed), it cannot take on negative values, and, unless one is dealing with a truly random process, there will be a temporal correlation across one or more values of $Y$ seperated by an amount of time. In the linear difference equation this occurs because each value one step in the future is calculated based on the current value. If the values of $Y$ represent an observable of a dynamical system, the system can be said to have a history, or a memory. Ergodic systems do not have a history or a memory that extends across more than one time step. This is very convenient, because one can calculate the expected value of a system observable given infinite time, by making use of of the laws of probabilities of random events (or random fields). This means: The average of an observable of an Ergodic system measured across infinite time (its entire history, the **time-average**), will be the be the same value as the average of this observable measured at one instance in time, but in an infinite amount of systems of the same kind (the population, the **spatial average**) [^dice]. 
+Time behaves different from a spatial dimension in that it is directional (time cannot be reversed), it cannot take on negative values, and, unless one is dealing with a truly random process, there will be a temporal correlation across one or more values of $Y$ seperated by an amount of time. In the linear difference equation this occurs because each value one step in the future is calculated based on the current value. If the values of $Y$ represent an observable of a dynamical system, the system can be said to have a history, or a memory.
 
-The simple linear difference equation will have a form of *perfect memory' across the smallest time scale (i.e., the increment of 1, $t+1$). This 'memory' concerns a correlation of 1 between values at adjacent time points (a short range temporal correlation, SRC), because the change from $Y_t$ to $Y_{t+1}$ is exactly equal to $a * Y_t$ at each iteration step. This is the meaning of deterministic, not that each value of $Y$ is the same, but that the value of $Y$ now can be perfectly explained form the value of $Y$ one moment in the past.
+Ergodic systems do *not* have a history or a memory that extends across more than one time step. This is very convenient, because one can calculate the expected value of a system observable given infinite time, by making use of of the laws of probabilities of random events (or random fields). This means: The average of an observable of an Ergodic system measured across infinite time (its entire history, the **time-average**), will be the be the same value as the average of this observable measured at one instance in time, but in an infinite amount of systems of the same kind (the population, the **spatial average**) [^dice]. 
+
+The simple linear difference equation will have a form of *perfect memory* across the smallest time scale (i.e., the increment of 1, $t+1$). This 'memory' just concerns a correlation of 1 between values at adjacent time points (a short range temporal correlation, SRC), because the change from $Y_t$ to $Y_{t+1}$ is exactly equal to $a * Y_t$ at each iteration step. This is the meaning of deterministic, not that each value of $Y$ is the same, but that the value of $Y$ now can be perfectly explained form the value of $Y$ one moment in the past.
 
 Summarising, the most profound difference is not the fact that the equation of linear change is a deterministic model and the GLM is a probabilistic model with parameters fitted from data, this is something we can (and will) do for $a$ as well. The profound difference between the models is the role given to the passage of time: 
 
@@ -75,4 +89,3 @@ Summarising, the most profound difference is not the fact that the equation of l
 [^assumptions]: [Retreived from www.statsoft.com](https://www.statsoft.com/Textbook/ANOVA-MANOVA#sphericity)
 [^einstein]: Einstein as quoted by Heisenberg.
 [^ergodic]: See  Dajani &  Dirksin (2008, p. 5, ["A simple introduction to Ergodic Theory"](http://www.staff.science.uu.nl/~kraai101/lecturenotes2009.pdf))
-[^dice]: In other words: If you throw 1 die 100 times in a row, the average of the 100 numbers is the **time-average** of one of the observables of die-throwing systems. If this system is ergodic, then its **time-average** is expected to be similar to the average of the numbers that turn up if you throw 100 dice all at the same instance of time. The dice layed out on the table represent a spatial sample, a snapshot frozen in time, of the possible states the system can be in. Taking the average would be the **spatial average** this observable of die-throwing systems. This ergodic condiciotn is often implicitly assumed in Behavioural Science when studies claim to study change by taking different samples of individuals (snapshots of system states) and comparing if they are the same. 

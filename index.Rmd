@@ -5,7 +5,7 @@ date: "2017 - 2018"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
-bibliography: [book.bib, packages.bib, Memory_Article.bib]
+bibliography: [refs.bib, packages.bib]
 biblio-style: apalike
 csl: apa.csl
 link-citations: true
@@ -48,10 +48,10 @@ getOutFormat <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 
 
 
-```{r fig.align='center', fig.cap= 'From [Grip on Complexity](http://www.nwo.nl/en/about-nwo/media/publications/ew/paper-grip-on-complexity.html)', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
+```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
 knitr::include_graphics('images/foundations.png', dpi = NA)
 ```
-
+*Image from [Grip on Complexity](http://www.nwo.nl/en/about-nwo/media/publications/ew/paper-grip-on-complexity.html)*
 
 
 # **Course guide** {-}
@@ -79,22 +79,12 @@ Each meeting starts with a lecture addressing the theoretical and methodological
 
 ### Preparation {-}
 
-To prepare for each lecture students read a contemporary research paper or watch a videolecture (e.g., [TED](http://www.ted.com)) featuring complexity theory and its application on a topic in behavioural science that will be discussed in the subsequent lecture. Students are required to formulate questions about each paper, and to initiate a discussion with their fellow-students on Blackboard.
-
-Before each lecture, students should:
-
-* Read (parts of) a scientific article, or watch a videolecture featuring a complex systems perspective and/or methodology.
-* Ask (or answer) a question about what they have read / seen in the appropriate discussion forum on Blackboard.
-    + The answers students provide will be discussed during the lecture.
+To prepare for each lecture students should read the assigned chapters in this book and contribute to the 7 discussion assignments. Participating in the discussion assignments is a required part of this course. At the end of the course we will check whether each student has posted at least one question or answer for each assignment. We will not judge the content of the posts, but in order to pass, we need at least 7 posts, one for each assignment. The answers will be discussed during the subsequent lecture.
 
 ### Using Cerego {-}
 
+We have to introduce a lot of new terminology and to help students get acquainted with these terms, they can use [Cerego](https://www.cerego.com). An invitation will be sent to all participants of the course. The list of term is also included as [Appendix A](). 
 
-
-```{block2, synoniemen0, type='rmdimportant'}
- <span style="font-size:80%;">Je zult in deze tekst en in andere bronnen zul je vaak synoniemen tegenkomen voor bepaalde begrippen, zoals *inferentie*, *gevolgtrekking* en de Engelse vertaling *inference*. Soms kunnen begrippen net iets anders gedefinieerd zijn en een bredere of juist engere betekenis hebben dan in dit boek wordt gebruikt.</br></br>In de begrippenlijst die je ook via [Cerego](https://www.cerego.com) zult bestuderen is geprobeerd om maximaal onderscheid te maken tussen de verschillende definities. Houd altijd de definities uit de begrippenlijst aan.</span>
-
-```
 
 ### Test information {-}
  
@@ -150,7 +140,17 @@ Selected chapters from these books will be made available to make a personal cop
 
 A list of required and optional literature related to the topic discussed in each session will be available on Blackboard.
 
-We als provide links to online materials on specific topics that may provide additional explanation and information about key concepts. These materials are not obligatory, but highly recommended to study at least once.
+We als provide links to online materials on specific topics (*Study Materials*) that may provide additional explanation and information about key concepts. These materials are not obligatory, but highly recommended to study at least once.
+
+
+### Note about the book and assignments
+
+The texts in the chapters of this book are intended as a rough introductory guide to accompany the lectures. An essential part of the course are [the assignments that are available online]()
+
+```{block2, imp, type='rmdimportant'}
+ The text inside these blocks 
+```
+
 
 
 ## **Schedule** {-}

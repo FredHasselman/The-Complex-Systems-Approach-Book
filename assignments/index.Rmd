@@ -1,20 +1,24 @@
 ---
-title: "An Introduction to the Complexity Toolbox"
+title: "An Introduction to the Analytic Toolbox of Complexity Science"
 author: "Fred Hasselman & Maarten Wijnants"
 date: "1/14/2018"
 output: 
-  html_document: 
+  bookdown::html_document2: 
     fig_caption: yes
     highlight: pygments
     keep_md: yes
-    number_sections: no
+    number_sections: yes
     theme: spacelab
     toc: yes
     toc_float: true
     collapsed: false
     smooth_scroll: true
     code_folding: show
-
+    bibliography: [refs.bib, packages.bib]
+    biblio-style: apalike
+    csl: apa.csl
+    includes:
+        before_body: assignmentstyle.html
 ---
 
 
@@ -30,7 +34,7 @@ knitr::opts_chunk$set(include=TRUE)
 * [Assignments Part 4: Complex Networks](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)
 
 
-# **Assignments for the Complex Systems Approach**
+# **Assignments for the Complex Systems Approach Book** {-}
 
 These assignments were designed to prepare you for "real world" modelling and data analysis problems. That is, after completing the assignments you should be able to decide whether the phenomenon you study could benefit from a complex systems approach and which type of analyses would be a good place to start. The models and techniques discussed here are **not** a definite collection of available techniques, this is really just the tip of the iceberg.
 
@@ -71,27 +75,28 @@ library(DT)
 
 **I. Introduction to the mathematics of change**
 
- *	Modelling (nonlinear) growth and Deterministic Chaos
- *	Multivariate systems: Predator-Prey dynamics
- *  Potential theory, Agent-based models, Dynamic field models 
- 
+- Modelling (nonlinear) growth and Deterministic Chaos (Lecture 1 - Assignments [Part 1]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1.html)))
+- Multivariate systems: Predator-Prey dynamics (Lecture 2 - Assignments [Part 1]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1.html)))
+- Potential theory, Agent-based models, Dynamic field models (Lecture 2 - Assignments [Part 1]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1.html)))
+
 **II. Time Series Analysis: Temporal Correlations and Fractal Scaling**
 
- * Nonlinear regression: Fitting analytic solutions and Catastrophe Theory
- * Basic timeseries analysis
- * Scaling phenomena: Fluctuation analyses and (multi-)fractal geometry
- 
+- Nonlinear regression: Fitting analytic solutions and Catastrophe Theory (Lecture 3 - Assignments [Part 2]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)))
+- Basic timeseries analysis: Quantifying temporal correlations and order transitions (Lecture 4 - Assignments [Part 2]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)))
+- Scaling phenomena: Fluctuation analyses and (multi-)fractal geometry (Lecture 5 - Assignments [Part 2]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)))
+
 **III. Quantifying Recurrences in State Space**
 
- *	Takens' Theorem and State-Space reconstruction
- *	Recurrence Quantification Analysis of continuous and categorical data
- *	Cross-Recurrence Quantification Analysis of dyadic interaction
- 
+- Takens’ Theorem and State-Space reconstruction (Lecture 6 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
+- Recurrence Quantification Analysis of continuous and categorical data (Lecture 6 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
+- Cross-Recurrence Quantification Analysis of dyadic interaction (Lecture 7 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
+- Early Warning Signals of order transitions (Lecture 7 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
+
 **IV. Complex Networks**
 
- * Small-world and Scale-free networks
- * Symptom networks and Networks of Quantified Recurrences
- * Early Warning Signals in clinical interventions
+- Small-world and Scale-free networks (Lecture 8 - Assignments [Part 4]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)))
+- Symptom networks and Networks of Quantified Recurrences (Lecture 8 - Assignments [Part 4]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)))
+- Early Warning Signals of order transitions in clinical settings (Lecture 8 - Assignments [Part 4]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)))
 
 
 ## Using `R`! {-}
@@ -100,7 +105,9 @@ We recommend installing the latest version of [**R**](https://www.r-project.org)
 
 ### Packages needed for the assignments {-}
 
-You'll need to install the following packages, just copy and paste the command in `R`. Depending on your computer and internet connection, this might take a while to complete. If you run into any errors, skip the package and try the others, e.g. by adding them through the user interface of **Rstudio** (`Tools >> Installl Packages...`).
+If you are working from a private computer, you'll need to install the packages below, just copy and paste the command in `R`. Depending on your computer and internet connection, this might take a while to complete. If you run into any errors, skip the package and try the others, e.g. by adding them through the user interface of **Rstudio** (`Tools >> Installl Packages...`).
+
+These packages are already installed in the computer rooms at the university, except for our custom package `casnet`.
 
 ```{r, eval=FALSE, include=TRUE}
 install.packages(c("devtools", "rio","plyr", "tidyverse","Matrix", "ggplot2", "lattice", "latticeExtra", "grid", "gridExtra", "scales", "dygraphs","rgl", "plot3D","fractal", "nonlinearTseries", "crqa","signal", "sapa", "ifultools", "pracma", "nlme", "lme4", "lmerTest", "minpack.lm", "igraph","qgraph","graphicalVAR","bootGraph","IsingSampler","IsingFit"), dependencies = TRUE)
@@ -136,9 +143,5 @@ There are many different ways to handle and plot timeseries data in `R`, I summa
 
 ### This document {-}
 
-This text was transformed to `HTML`, `PDF` en `ePUB` using `bookdown`[@R-bookdown] in [**RStudio**](https://www.rstudio.com), the graphical user interface of the statistical language [**R**](https://www.r-project.org) [@R-base]. `bookdown` makes use of the `R` version of [markdown](https://en.wikipedia.org/wiki/Markdown) called [Rmarkdown](http://rmarkdown.rstudio.com) [@R-rmarkdown], together with [knitr](http://yihui.name/knitr/) [@R-knitr] and [pandoc](http://pandoc.org). 
-
-We'll use some web applications made in [Shiny](http://shiny.rstudio.com) [@R-shiny] 
-
-Other `R` packages used are: `DT` [@R-DT], `htmlTable` [@R-htmlTable], `plyr` [@R-plyr], `dplyr` [@R-dplyr],`tidyr` [@R-tidyr], `png` [@R-png], `rio` [@R-rio].
+This text was transformed to `HTML`, `PDF` using `bookdown`[@R-bookdown] in [**RStudio**](https://www.rstudio.com), the graphical user interface of the statistical language [**R**](https://www.r-project.org) [@R-base]. `bookdown` makes use of the `R` version of [markdown](https://en.wikipedia.org/wiki/Markdown) called [Rmarkdown](http://rmarkdown.rstudio.com) [@R-rmarkdown], together with [knitr](http://yihui.name/knitr/) [@R-knitr] and [pandoc](http://pandoc.org). 
 
