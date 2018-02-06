@@ -361,30 +361,42 @@ h1.title {
 <li><a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html">Assignments Part 3: Quantifying Recurrences in State Space</a></li>
 <li><a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html">Assignments Part 4: Complex Networks</a></li>
 </ul>
+<p></br> </br></p>
 </div>
 <div id="modelling-nonlinear-growth-and-deterministic-chaos" class="section level1">
 <h1><span class="header-section-number">1</span> <strong>Modelling (nonlinear) growth and Deterministic Chaos</strong></h1>
-<p>In this assignment you will build two (relatively) simple one-dimensional maps. You can use <code>R</code>, <code>Matlab</code>, <code>Python</code><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, or, just start in a spreadsheet if you are more familiar with such an environment. You can use the following <a href="https://docs.google.com/spreadsheets/d/1BL_oKoCFH3NQ3qKLBQ-WbkPg_ppSZsyDNl2nS9oPGcM/edit?usp=sharing">GoogleSheet</a> as a template, save a copy to your computer, or, copy it to a new on-line Google Sheet, or, use your favourite spreadsheet software (e.g., Excel, Numbers).</p>
-<p>We will start modelling the <em>Linear Map</em> and then proceed to the slightly more complicated <em>Logistic Map</em> (aka <em>Quadratic map</em>).</p>
+<p>In this assignment you will build two (relatively) simple one-dimensional maps. You can use <code>R</code>, <code>Matlab</code>, <code>Python</code><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, based on the model implemented in a spreadsheet. You can copy the Google Sheet to a new on-line Google Sheet, or, save it to your computer and use your favourite spreadsheet software (e.g., Excel, Numbers).</p>
+<p>We will start by modelling the <em>Linear Map</em> and then proceed to the slightly more complicated <em>Logistic Map</em> (aka <em>Quadratic map</em>).</p>
+<p></br></p>
 
 <div class="rmdnote">
-Be sure to check the solutions of the assigments <strong>after</strong> you tried to do them on your own!<br />
-Also, if you want to use <code>R</code> to do the assignments, have a look at the examples in <a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html">Chapter 2</a> on different ways to visualize time series in <code>R</code>
+<p>Check the solutions of the assignments <strong>after</strong> you tried to do them on your own!</p>
+Also, have a look at the examples in <a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html">Chapter 2</a> on different ways to visualize time series in <code>R</code>.
 </div>
 
+<p></br></p>
 <div id="the-linear-map" class="section level2">
 <h2><span class="header-section-number">1.1</span> <strong>The Linear Map</strong></h2>
+<p></br></p>
 <p>Equation <a href="#eq:linmap">(1.1)</a> is the ordinary difference equation (ODE) discussed in <a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html">Chapter 2</a> and is called the <em>Linear Map</em>:</p>
 <span class="math display" id="eq:linmap">\[\begin{equation}
-Y_{t+1} = Y_{t=0} + r*Y_t
+Y_{i+1} = Y_{i=0} + r*Y_i
 \tag{1.1}
 \end{equation}\]</span>
-<p>In these exercises you will <em>simulate</em> time series produced by the change process in equation <a href="#eq:linmap">(1.1)</a> for different parameter settings of the growth-rate parameter <span class="math inline">\(r\)</span> (the <em>control parameter</em>) and the initial conditions <span class="math inline">\(Y_0\)</span>. Simulation is obviously different from a statistical analysis in which parameters are estimated from a data set. The goal of these assignments is to get a feeling for what a dynamical model is, and how it is different from a linear statistical regression model like GLM.</p>
+<p>In these exercises you will <em>simulate</em> time series produced by the change process in equation <a href="#eq:linmap">(1.1)</a> for different parameter settings of the growth-rate parameter <span class="math inline">\(r\)</span> (the <em>control parameter</em>) and the initial conditions <span class="math inline">\(Y_0\)</span>. <em>Simulation</em> is obviously different from a statistical analysis in which parameters are estimated from a data set. The goal of these assignments is to get a feeling for what a dynamical model is, and in what way it is different from a linear statistical regression model like GLM.</p>
+<p></br></p>
+
+<div class="rmdnote">
+It is common practice to use <span class="math inline">\(Y_{i}\)</span> for the current state and <span class="math inline">\(Y_{i+1}\)</span> for the next state of a discrete time model (a map, a difference equation). For a continuous time model (a flow, a differential equation), sometimes <span class="math inline">\(Y_{t}\)</span> and <span class="math inline">\(\hat{Y_t}\)</span> are used. More common is the <span class="math inline">\(\delta\)</span>, or <em>‘change in’</em> notation: <span class="math inline">\(\frac{dY}{dt} = Y_0 + r * Y(t)\)</span>, which you can pronounce as <em>‘a change in Y over a change in time is a function of …’</em>. However, different authors have different preferences and may use other notations.
+</div>
+
+<p></br></p>
 <div id="growth-in-a-spreadsheet" class="section level3">
 <h3><span class="header-section-number">1.1.1</span> Growth in a Spreadsheet</h3>
+<p></br></p>
 
 <div class="rmdimportant">
-<p>Before you begin, be sure to check the following settings (same as first asignment):</p>
+<p>If you want to modify the spreadsheets and use them as a template for other assignments, be sure to check the following settings:</p>
 <ul>
 <li>Open a Microsoft Excel worksheet or a <a href="https://www.google.com/docs/about/">Google sheet</a></li>
 <li>Check whether the spreadsheet uses a ‘decimal-comma’ (<span class="math inline">\(0,05\)</span>) or ‘decimal-point’ (<span class="math inline">\(0.05\)</span>) notation.
@@ -397,71 +409,211 @@ Y_{t+1} = Y_{t=0} + r*Y_t
 </div>
 </li>
 </ul></li>
-<li>Open the <a href="https://docs.google.com/spreadsheets/d/1BL_oKoCFH3NQ3qKLBQ-WbkPg_ppSZsyDNl2nS9oPGcM/edit?usp=sharing">GoogleSheet</a> and look at the <strong>Linear map</strong> tab.</li>
-<li>The <code>r</code> in cell <code>A5</code> is the <em>control parameter</em>. It currently has the value <span class="math inline">\(1.08\)</span> in cell<code>B5</code>.</li>
-<li>The cell labelled <span class="math inline">\(Y_0\)</span> in <code>A6</code> is the <em>initial value</em> at <span class="math inline">\(t=0\)</span>. It has the value <span class="math inline">\(0.1\)</span> in cell <code>B6</code>.<br />
-</li>
-<li>The <code>A</code> column also contains <span class="math inline">\(Y_t\)</span>, the output of the linear map.
-<ul>
-<li>Click on <code>A10</code>, in the formula bar you can see this refers to the initial value <code>B6</code>.</li>
-<li>Click on <code>A11</code>, in the formula bar you can see the very simple implementation of the linear map.</li>
-<li>The value of cell <code>A11</code> (i.e. <span class="math inline">\(Y_{t=1}\)</span>) will be calculated by multiplying the value of cell <code>B5</code> (parameter <code>r</code>) with the value of cell <code>A10</code> (the previous value, here: <span class="math inline">\(Y_{t=0}\)</span>).</li>
-</ul></li>
-<li>Remember what it is we are doing! We are calculating <span class="math inline">\(Y_{t=2}\)</span> (i.e. ‘behaviour’ in the future) and this is completely determined by <span class="math inline">\(Y_{t=1}\)</span> (i.e., the previous step) and the parameter <code>r</code>.</li>
 </ul>
-</div>
-<div id="vary-the-control-parameter" class="section level3">
-<h3><span class="header-section-number">1.1.2</span> Vary the control parameter</h3>
+<p></br></p>
+<p>First study the behaviour of the <strong>Linear map</strong> in a spreadsheet and then try to implement it in <code>R</code>.</p>
 <ul>
-<li>If you change the values in cells <code>B5</code> and <code>B6</code> you will see an immediate change in the graph. To study model behaviour, try the following growth parameters:
+<li>Open the <a href="https://docs.google.com/spreadsheets/d/1EEpUFxEmelJDPDT61jyT_xfntLo_MYBTW0MZuRSC770/edit?usp=sharing">GoogleSheet</a> and look at the <strong>Linear map</strong> tab.</li>
+<li>The <code>r</code> in cell <code>A5</code> is the <em>control parameter</em>. It currently has the value <span class="math inline">\(1.08\)</span> in cell<code>B5</code>.</li>
+<li>The cell labelled <span class="math inline">\(Y_0\)</span> in <code>A6</code> is the <em>initial value</em> at <span class="math inline">\(i=0\)</span>. It has the value <span class="math inline">\(0.1\)</span> in cell <code>B6</code>.<br />
+</li>
+<li>The <code>A</code> column also contains <span class="math inline">\(Y_i\)</span>, the output of the linear map.
+<ul>
+<li>Click on <code>A10</code>, in the formula bar you can see this refers to the initial value in <code>B6</code>. This will be the first input to the iterative process.</li>
+<li>Click on <code>A11</code>, in the formula bar you can see the very simple implementation of the linear map.</li>
+<li>The value of cell <code>A11</code> (i.e. <span class="math inline">\(Y_{i=1}\)</span>) will be calculated by multiplying the value of cell <code>B5</code> (parameter <code>r</code>) with the value of cell <code>A10</code> (the previous value, which happens to be: <span class="math inline">\(Y_{i=0}\)</span>).</li>
+</ul></li>
+</ul>
+<p></br></p>
+
+<div class="rmdkennen">
+<p>A reminder of what the model represents:</p>
+<ul>
+<li>We are calculating <span class="math inline">\(Y_{i+1}\)</span> (i.e. ‘behaviour’ in the future, given the current state)</li>
+<li>This value is <em>completely determined</em> by <span class="math inline">\(Y_{t=0}\)</span> (i.e., the first ‘input’) and the value of the control parameter <code>r</code> (the growth rate)</li>
+<li>There are no stochastic components involved in generating the temporal evolution of <code>Y</code>
+</div>
+</li>
+</ul>
+<p></br></p>
+</div>
+<div id="change-the-control-parameter-label-the-order-parameter" class="section level3 tabset tabset-fade tabset-pills">
+<h3><span class="header-section-number">1.1.2</span> Change the control parameter, label the order parameter</h3>
+<p>If you make a copy of the Google Sheet you should be able to edit the cells. If this does not work, <a href="https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/blob/master/assignments/assignment_data/Iterating1Dmaps/Assignment%20DCS_%20Iterating%201D%20Maps.xlsx">download the spreadsheet from GitHub</a></p>
+<ul>
+<li>Change the values in cells <code>B5</code> and <code>B6</code> and you will see an immediate change in the graph. To study model behaviour, try the following growth parameters:
 <ul>
 <li><span class="math inline">\(r = -1.08\)</span></li>
-<li><span class="math inline">\(r = 1,08\)</span></li>
 <li><span class="math inline">\(r = 1\)</span></li>
 <li><span class="math inline">\(r = -1\)</span></li>
+<li><span class="math inline">\(r = 0.95\)</span></li>
+<li><span class="math inline">\(r = -0.95\)</span></li>
 </ul></li>
+</ul>
+<div id="questions" class="section level4 unnumbered">
+<h4>Questions</h4>
+<ul>
+<li>Are there any <em>qualitative differences</em> in the dynamical behaviour of the system that can be attributed parameter values?</li>
+<li>Provide a description for each clearly distinct behaviour displayed by this system (only for the parameter settings you examined).</li>
 </ul>
 </div>
-<div id="dependence-on-initial-conditions" class="section level3">
-<h3><span class="header-section-number">1.1.3</span> Dependence on initial conditions?</h3>
+<div id="answers" class="section level4 unnumbered">
+<h4>Answers</h4>
 <ul>
-<li>Change the initial value <span class="math inline">\(Y_0\)</span> in cell <code>B6</code> to <span class="math inline">\(10\)</span>.</li>
-<li>Subsequently give the growth parameter in cell <code>B5</code> the following values:
+<li>Yes!
 <ul>
-<li><span class="math inline">\(0.95\)</span></li>
-<li><span class="math inline">\(-0.95\)</span>.</li>
+<li><span class="math inline">\(r = 1.08\)</span> - Unlimited exponential growth, <span class="math inline">\(Y\)</span> will grow infinitely large</li>
+<li><span class="math inline">\(r = -1.08\)</span> - Unstable limit cycle, exponential 2-period oscillation <span class="math inline">\(Y\)</span> will grow infinitely large</li>
+<li><span class="math inline">\(r = 1\)</span> - Point attractor, fixed point at <span class="math inline">\(Y = 1\)</span></li>
+<li><span class="math inline">\(r = -1\)</span> - Limit cycle, closed period-2 orbit at <span class="math inline">\(Y = [-1,1]\)</span></li>
+<li><span class="math inline">\(r = 0.95\)</span> - Exponential decay, <span class="math inline">\(Y\)</span> will approach <span class="math inline">\(0\)</span> in the limit</li>
+<li><span class="math inline">\(r = -0.95\)</span> - Point attractor, exponentially decaying 2-period oscillation, <span class="math inline">\(Y\)</span> will approach <span class="math inline">\(0\)</span></li>
 </ul></li>
 </ul>
+
+<div class="rmdkennen">
+<p>The labels assigned to behavioural modes that are clearly qualitatively distinct from one another, are know as the <strong>order parameter</strong>. The <strong>order parameter</strong> will change its value to indicate the system has transitioned to a new behavioural regime. Such changes often occur suddenly with gradual changes in the <strong>control parameter</strong>.<br />
+For example, the four phases that describe matter are an <strong>order parameter</strong> (solid, liquid, gas and plasma). We know water will transition from a liquid state to a gas state if we increase the <strong>control parameter</strong> beyond a certain point (e.g. temperature rises above <span class="math inline">\(100^\circ\text{C}\)</span>).</p>
+<p>Other names you might encounter that refer to the change of the label of an order parameter:</p>
+<ul>
+<li>Phase transition/shift</li>
+<li>Order transition</li>
+<li>Critical transition</li>
+<li>Change of behavioural mode/regime</li>
+<li>Change of attractor state/landscape</li>
+<li>Shift between self-organised/stable states/attractors
+</div>
+</li>
+</ul>
+<p></br></p>
+</div>
+</div>
+<div id="dependence-on-initial-conditions" class="section level3 tabset tabset-fade tabset-pills">
+<h3><span class="header-section-number">1.1.3</span> Dependence on initial conditions?</h3>
+<ul>
+<li>Change the initial value <span class="math inline">\(Y_0\)</span> in cell <code>B6</code> to <span class="math inline">\(10\)</span> and compare to <span class="math inline">\(0.1\)</span> (if you want to directly compare different settings, just create a new copy of the sheet)</li>
+<li>Subsequently give the growth parameter in cell <code>B5</code> the following values:
+<ul>
+<li><span class="math inline">\(r = 1.08\)</span></li>
+<li><span class="math inline">\(r = -1.08\)</span></li>
+<li><span class="math inline">\(r = 1\)</span></li>
+<li><span class="math inline">\(r = -1\)</span></li>
+<li><span class="math inline">\(r = 0.95\)</span></li>
+<li><span class="math inline">\(r = -0.95\)</span></li>
+</ul></li>
+</ul>
+<div id="questions-1" class="section level4 unnumbered">
+<h4>Questions</h4>
+<ul>
+<li>Are there any <em>qualitative differences</em> in the dynamical behaviour of the system for each parameter setting, that can be attributed to a difference in initial conditions?</li>
+</ul>
+</div>
+<div id="answers-1" class="section level4 unnumbered">
+<h4>Answers</h4>
+<ul>
+<li>No, there are no differences in the overall dynamics due to changes in initial conditions. Of course, the absolute values change, but</li>
+</ul>
+</div>
+</div>
+<div id="using-r-to-simulate-the-linear-map" class="section level3 tabset tabset-fade tabset-pills">
+<h3><span class="header-section-number">1.1.4</span> Using <code>R</code> to simulate the Linear Map</h3>
+<p>The best (and easiest) way to simulate these simple models in <code>R</code> is to create a function, which takes as input arguments the parameters (<span class="math inline">\(Y_0\)</span>, <span class="math inline">\(r\)</span>) and a variable indicating the length of the time series.</p>
+<div id="questions-2" class="section level4 unnumbered">
+<h4>Questions</h4>
+<p>For example, for the Linear Map you could use this template:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># TEMPLATE</span>
+<span class="co"># Modify this function</span>
+linearMap &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">Y0 =</span> <span class="dv">0</span>, <span class="dt">r =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">100</span>){
+    
+    <span class="co"># Initialize Y as vector of Y0, followed by N-1 empty slots (NA).</span>
+    Y &lt;-<span class="st"> </span><span class="kw">c</span>(Y0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>))
+    
+    <span class="co"># Then, you need create the iteration</span>
+    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(N<span class="op">-</span><span class="dv">1</span>)){
+        
+    Y[i<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="co"># !!Implement the linear or Quadratic map here!!</span>
+<span class="st">        </span>
+<span class="st">    </span>}
+    
+    <span class="kw">return</span>(Y)
+}</code></pre></div>
+<p></br></p>
+<ul>
+<li>Copy the code to <code>R</code> and implement the Linear Map by looking at the formula, or the spreadsheet.</li>
+<li>To test it, you need to initialize the function by selecting the code and running it.
+<ul>
+<li>The environment will now contain a function called <code>linearMap</code></li>
+</ul></li>
+<li>Generate some data by calling the function using <span class="math inline">\(Y0=0.1\)</span>, <span class="math inline">\(r=1.08\)</span> and <span class="math inline">\(N=100\)</span> and store the result in a variable.</li>
+</ul>
+</div>
+<div id="answers-2" class="section level4 unnumbered">
+<h4>Answers</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Linear Map</span>
+linearMap &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">Y0 =</span> <span class="dv">0</span>, <span class="dt">r =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">100</span>){
+  
+  <span class="co"># Initialize Y as vector of Y0, followed by N-1 empty slots (NA).</span>
+  Y &lt;-<span class="st"> </span><span class="kw">c</span>(Y0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>))
+  
+  <span class="co"># Then, you need create the iteration</span>
+  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(N<span class="op">-</span><span class="dv">1</span>)){
+    
+    Y[i<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span>r <span class="op">*</span><span class="st"> </span>Y[i] <span class="co"># The linear difference equation</span>
+    
+    }
+  
+  <span class="kw">return</span>(Y)
+}</code></pre></div>
+<p></br></p>
+</div>
+</div>
+<div id="plot-the-timeseries" class="section level3 tabset tabset-fade tabset-pills">
+<h3><span class="header-section-number">1.1.5</span> Plot the timeseries</h3>
+<div id="questions-3" class="section level4 unnumbered">
+<h4>Questions</h4>
+<p>Creating a time series plot is easy if the function <code>linearMap</code> returns the time series as a numeric vector. You could just use:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">linearMap</span>(<span class="dt">Y0=</span><span class="fl">0.1</span>,<span class="dt">r=</span><span class="fl">1.08</span>,<span class="dt">N=</span><span class="dv">100</span>), <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
+</div>
+<div id="answers-3" class="section level4 unnumbered">
+<h4>Answers</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">linearMap</span>(<span class="dt">Y0=</span><span class="fl">0.1</span>,<span class="dt">r=</span><span class="fl">1.08</span>,<span class="dt">N=</span><span class="dv">100</span>), <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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rUKFCjJx4kTzSOz02uLoVFqzZo20adMm0eBTy5ExY0Zp27atvP/++wSgTl0Y8kEAAQQQQCCKBJYuXWpu/ytdunQU1TpwVbUNQHPnzi333HOPyeXChQui91yGS6pWrZosXrzY74Svel9GsWLFwqXYlAMBBBBAAAEEIkiA7ve0XUzbAFTn9gzX+T21XBqEHjx4UHS+Ur3HU+9LTZcunbkHVO9bnTBhghmVpt30JAQQQAABBBBAINACOhWlDsompU7ANgBN3amcOap8+fKybt066dixo+mKv3r16jUZ16lTR2bOnCk1a9a85jM2IIAAAggggAACaRHYvHmznDlzRvQ2RVLqBFwXgGo19X4LHeF+8eJF2b17t2irp87FVbRoUSlevHhIp4hK3WXgKAQQQAABBBBwiwDd72m/Un7nAU17FsE7g84BqsGotnhqa+fly5dNN/yVK1eClylnRgABBBBAAIGoFiAATfvld10A+u6778o///nPeDV/6623zFygFStWlDJlysjNN99suuDj7cQbBBBAAAEEEEAgjQL79++XLVu2yH333ZfGM0X34a7rgtf7P3XpTSuNHTtWXnvtNbn//vvNwKmTJ0+aKaN0jfpffvlF9J5REgIIIIAAAgggEAiBb7/9Vho2bCgZMrguhApE9QN2jjTpaVe3PrQrPFTpo48+MlNGxR3x/uKLL8rdd98tgwcPlnHjxqWoaBrg/vDDD36P0ftPjx8/7nc/dkAAAQQQQACByBHQ0e/PPPNM5FQoRDVJUxd8p06dzITwOgqsZ8+eIamCBoFPPPHENXl36NBB1q5de812fxv0PlId2ebvoSsg2I3A93d+PkcAAQQQQAABdwpoL6tOQK+rLZLSJpCmFtBatWqZ1k9dcejjjz82LYI6iX2w07lz58yod13xqEmTJrYT5a9cuVLy58+f4qJoy6k+/KWhQ4ea+0797cfnCCCAAAIIIBAZAlOmTDG3/Oky5aS0CaSpBfSxxx4zy11qEZ566ilxIviMiYmRefPmSY4cOaRy5cqigaYGg6tXrzYSe/fuleeee04+/fRTefTRR9Omw9EIIIAAAggggMD/C3z55ZfSokULPAIgkKoAVJfmPHXqVACyT/kpRo0aZYLNESNGSNWqVUWXCtUbgbdv325ONm3aNNHPtAv+6aefTnkGHIEAAggggAACCCQQOHr0qBnc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4Vw4yoYAAgi4UaBo0aKyYMECX9E1KP3555+lR48eMnbsWBOc/vHHH1K8eHGzT968eeXxxx/37a+DmpYtWybTp0+X+vXrm+316tWTAgUKyKBBg6R///5y6623Sq9eveSNN94wx7Zr107uu+8+ef75533n4QUCCCAQrgIEoOF6ZSgXAgi4VkADwbjppptuki1btphNGoxqt7sVfOrGhx9+WNKl+1+H1MKFCyVXrlySI0cO07JpnatcuXLx3nfv3t20ktapU0cyZMhgglwdlU9CAAEEwl2AADTcrxDlQwAB1wkk7ALPnDmzr4t969at5t7PuJXKmDGjFCxY0LdJ7xE9ceKEuZ/Tt/H/X+g9oVbSqZu6du0q2oWvjxtuuMH6iGcEEEAgrAX+9yd3WBeTwiGAAALuEUiqFfLGG2/03ccZt0anTp3yvc2XL5/ofleuXDGBq94faj20695K586dM/d96r4TJ06M1zpq7cMzAgggEI4CBKDheFUoEwIIRKxA+fLlZfXq1XL8+HFfHdeuXStnzpzxvS9btqwZ8a6DjDSY1YcOTGrZsqW5B9TaUe///PPPP839pjVq1BC9D1SDUhICCCAQ7gIEoOF+hSgfAghElIB2leugIw0WDxw4INu2bZMOHTrEq2PHjh1FW0F1pPt3331ngsxXXnlFvvrqK9H7PTXpqPfBgwdLv379TNf7yJEjTdCqQSkJAQQQCHcBAtBwv0KUDwEEIkpAA8upU6fK7t27RUfL33bbbWaku762Uu7cuWXWrFnmbZMmTcyApdmzZ8sHH3wgd911l5w/f94EsDqYqUuXLma/MmXKyOuvv26CUg1OSQgggEA4C8R4u3U84VxAyoYAAghEqsDBgwfNSPesWbMmWkXtqteAUyetJyGAAAKRIkAAGilXknoggAACCCCAAAIuEaAL3iUXimIigAACCCCAAAKRIkAAGilXknoggAACCCCAAAIuESAAdcmFopgIIIAAAggggECkCBCARsqVpB4IIIAAAggggIBLBAhAXXKhKCYCCCCAAAIIIBApAgSgkXIlqQcCCCCAAAIIIOASAQJQl1woiokAAggggAACCESKAAFopFxJ6oEAAggggAACCLhEgADUJReKYiKAAAIIIIAAApEiQAAaKVeSeiCAAAIIIIAAAi4RIAB1yYWimAgggAACCCCAQKQIEIBGypWkHggggAACCCCAgEsECEBdcqEoJgIIIIAAAgggECkCBKCRciWpBwIIIIAAAggg4BIBAlCXXCiKiQACCCCAAAIIRIoAAWikXEnqgQACCCCAAAIIuESAANQlF4piIoAAAggggAACkSJAABopV5J6IIAAAggggAACLhEgAHXJhaKYCCCAAAIIIIBApAgQgEbKlaQeCCCAAAIIIICASwQIQF1yoSgmAggggAACCCAQKQIEoJFyJakHAggggAACCCDgEoH/A0e0ajSpqqUSAAAAAElFTkSuQmCC" /><!-- --></p>
+<p><code>R</code> and <code>Matlab</code> have specialized objects to represent time series, and functions and packages for time series analysis. These are especially convenient for plotting time and date information on the X-axis. See the examples on plotting <a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html#plotTS">time series in <code>R</code> in Chapter 2</a>.</p>
+<p></br> </br></p>
+</div>
 </div>
 </div>
 <div id="the-logistic-map" class="section level2">
 <h2><span class="header-section-number">1.2</span> <strong>The Logistic Map</strong></h2>
 <p>The Logistic Map takes the following functional form:</p>
 <span class="math display" id="eq:logmap">\[\begin{equation}
-Y_{t+1} = r*Y_t*(1-Y_t)
+Y_{i+1} = r*Y_i*(1-Y_i)
 \tag{1.2}
 \end{equation}\]</span>
 <div id="chaos-in-a-spreadsheet" class="section level3">
 <h3><span class="header-section-number">1.2.1</span> Chaos in a spreadsheet</h3>
 <ul>
 <li>Open the <a href="https://docs.google.com/spreadsheets/d/1BL_oKoCFH3NQ3qKLBQ-WbkPg_ppSZsyDNl2nS9oPGcM/edit?usp=sharing">GoogleSheet</a> and look at the <strong>Logistic map</strong> tab.</li>
-<li>The set-up is the same as for the linear map, except of course the change process that is implemented.</li>
-<li>The <code>A</code> column also contains <span class="math inline">\(Y_t\)</span>, the output of the Logistic map, currently the behaviour looks a lot like an S-curve, a logistic function.
+<li>The set-up is the same as for the linear map, except of course the implemented change process.</li>
+<li>The <code>A</code> column contains <span class="math inline">\(Y_i\)</span>, the output of the Logistic map. With <span class="math inline">\(r=1.3\)</span> the behaviour looks a lot like an S-curve, a logistic function.</li>
+<li>Check the following:
 <ul>
 <li>Click on <code>A10</code>, in the formula bar you can see this refers to the initial value <code>B6</code>.</li>
 <li>Click on <code>A11</code>, in the formula bar you can see the very simple implementation of the Logistic map.</li>
-<li>Again, the value of cell <code>A11</code> (<span class="math inline">\(Y_{t=1}\)</span>) is calculated by multiplying the value of cell <code>B5</code> (parameter <code>r</code>) with the value of cell <code>A10</code> (the current value <span class="math inline">\(Y_t\)</span>, in this case <span class="math inline">\(Y_{t=0}\)</span>). The only difference is we are also multiplying by <span class="math inline">\((1-Y_t)\)</span>.</li>
+<li>The value of cell <code>A11</code> (<span class="math inline">\(Y_{i=1}\)</span>) is calculated by multiplying the value of cell <code>B5</code> (parameter <code>r</code>) with the value of cell <code>A10</code> (the current value <span class="math inline">\(Y_i\)</span>, in this case <span class="math inline">\(Y_{i=0}\)</span>). The only difference is we are also multiplying by <span class="math inline">\((1-Y_i)\)</span>.</li>
 </ul></li>
 </ul>
+<p></br></p>
 
 <div class="rmdselfThink">
 We established that <code>r</code> controls growth, what could be the function of <span class="math inline">\((1-Y_t)\)</span>?
 </div>
 
+<p></br></p>
 </div>
-<div id="vary-the-control-parameter-1" class="section level3">
-<h3><span class="header-section-number">1.2.2</span> Vary the control parameter</h3>
-<p>To study the behaviour of the Logistic Map you can start playing around with the values in <code>B5</code>.</p>
+<div id="change-the-control-parameter-label-the-order-parameter-1" class="section level3 tabset tabset-fade tabset-pills">
+<h3><span class="header-section-number">1.2.2</span> Change the control parameter, label the order parameter</h3>
+<p>To study the behaviour of the Logistic Map you can start changing the values in <code>B5</code>.</p>
 <ul>
 <li>Try the following settings for <span class="math inline">\(r\)</span>:
 <ul>
@@ -473,30 +625,71 @@ We established that <code>r</code> controls growth, what could be the function o
 <li><span class="math inline">\(r = 3.9\)</span></li>
 </ul></li>
 </ul>
+<div id="questions-4" class="section level4 unnumbered">
+<h4>Questions</h4>
+<ul>
+<li>Are there any <em>qualitative differences</em> in the dynamical behaviour of the system that can be attributed parameter values?</li>
+<li>Provide a description for each clearly distinct behaviour (the labels of the order parameter) displayed by this system (only for the parameter settings you examined).</li>
+</ul>
+</div>
+<div id="answers-4" class="section level4 unnumbered">
+<h4>Answers</h4>
+<ul>
+<li>Yes!</li>
+<li>With <span class="math inline">\(Y_0 = 0.01\)</span>:
+<ul>
+<li><span class="math inline">\(r = 0.9\)</span> - Point attractor, fixed point at <span class="math inline">\(Y = 0\)</span></li>
+<li><span class="math inline">\(r = 1.9\)</span> - Point attractor, fixed point at <span class="math inline">\(Y = 0.4737\)</span></li>
+<li><span class="math inline">\(r = 2.9\)</span> - Point attractor, fixed point at <span class="math inline">\(Y = 0.6552\)</span></li>
+<li><span class="math inline">\(r = 3.3\)</span> - Limit cycle attractor, closed period 2 orbit at <span class="math inline">\(Y = [0.8236, 0.4794]\)</span></li>
+<li><span class="math inline">\(r = 3.52\)</span> - Limit cycle attractor, closed period 4 orbit at <span class="math inline">\(Y = [0.5121, 0.8795, 0.3731, 0.8233]\)</span></li>
+<li><span class="math inline">\(r = 3.9\)</span> - Strange attractor, a-periodic orbit all values between <span class="math inline">\(\approx0.01\)</span> and <span class="math inline">\(\approx0.99\)</span></li>
+</ul></li>
+</ul>
+</div>
 </div>
 <div id="the-return-plot" class="section level3">
 <h3><span class="header-section-number">1.2.3</span> The return plot</h3>
 <ul>
 <li>Set <span class="math inline">\(r\)</span> at <span class="math inline">\(4.0\)</span>:
 <ul>
-<li>Now copy <code>A10:A310</code> to <code>B9:B309</code> (i.e., move it one cell to the right, and one cell up)</li>
-<li>Select both columns (<code>A10</code> to <code>B309</code>!) and make a scatter-plot</li>
+<li>How would you describe the dynamics of the time series? Periodic? Something else?</li>
+<li>Check the values, is there any value that is recurring, for example like when <span class="math inline">\(r=3.3\)</span>? Perhaps if you increase the length of the simulation?</li>
+</ul></li>
+<li>Select the values in both columns under <span class="math inline">\(Y(i)\)</span> and <span class="math inline">\(Y(i+1)\)</span>, (<code>A10</code> to <code>B309</code>) and create a scatter-plot (no lines, just points).
+<ul>
+<li>The points should line up to represent a familiar shape…</li>
 </ul></li>
 </ul>
-<p>The plot you just produced is a so called <strong>return plot</strong>, in which you have plotted <span class="math inline">\(Y_{t+1}\)</span> against <span class="math inline">\(Y_t\)</span>.</p>
+<p></br></p>
 
-<div class="rmdselfThink">
-Can you explain the pattern you see (a ‘parabola’) by looking closely at the functional form of the Logistic Map? (hint: it’s also called <strong>Quadratic Map</strong>)
+<div class="rmdkennen">
+<p>The plot you just produced is a so called <strong>return plot</strong>, in which you have plotted <span class="math inline">\(Y_{i+1}\)</span> against <span class="math inline">\(Y_i\)</span>. We shifted the time series by 1 time step, which is why this is also called a <strong>lag 1 plot</strong>.</p>
+<p>Can you explain the pattern you see (a ‘parabola’) by looking closely at the functional form of the Logistic Map? (hint: another name for this equation is the <strong>Quadratic Map</strong>).</p>
+If you change the control parameter to a lower value the return plot will seem to display a shape that is no longer a parabola, but this is not the case, all values produced by by the Logistic Map <strong>must</strong> be a point on a parabola. Some parameter settings just do not produce enought different points for the parabola to show itself in the return plot.
 </div>
 
+<p></br></p>
 <ul>
-<li>What do you expect the return plot of the Linear Map will look like? Go back and try it!</li>
+<li>What do you expect the return plot of the <strong>Linear Map</strong> will look like? Go ahead and try it!</li>
 </ul>
+<p></br></p>
+
+<div class="rmdselfThink">
+<p>The return plot is an important tool for getting a ‘first impression’ of the nature of the dynamic process that generated the observed values:</p>
+<ul>
+<li>Try to imagine what the lag 1 plot of a cubic difference equation would look like</li>
+<li>What about the return plot for a timeseries of independent random numbers (white noise)?<br />
+</li>
+<li>We are of course not limited to a lag of 1, what happens at lag 2, or lag 10 in the return plots of the Linear and Quadratic Map?
+</div>
+</li>
+</ul>
+<p></br></p>
 </div>
 <div id="sensitive-dependence-on-initial-conditions" class="section level3">
 <h3><span class="header-section-number">1.2.4</span> Sensitive dependence on initial conditions?</h3>
 <p>Go to the following <a href="https://docs.google.com/spreadsheets/d/1pKFhe5JcXXo6vK-Nx-GvxafaYkEZx31ya57I6xpWWMA/edit?usp=sharing">GoogleSheet</a> and download or copy it.</p>
-<p>This sheet displays the extreme sensitivity on initial conditions of systems displaying chaotic behaviour, more commonly known as: <strong>The Butterfly Effect</strong></p>
 <ul>
 <li>Imagine these are observed time series from two subjects in a response time experiment. These subjects are perfect ‘twins’:
 <ul>
@@ -513,15 +706,24 @@ Can you explain the pattern you see (a ‘parabola’) by looking closely at the
 </ul></li>
 <li>What happens as you make the discrepancy smaller and smaller?</li>
 </ul>
+<p></br></p>
+
+<div class="rmdkennen">
+<p>This sheet displays the extreme sensitivity to changes in initial conditions displayed by the Logistic Map for specific parameter settings. This specific phenomenon is more commonly referred to as <strong>The Butterfly Effect</strong>. It is a characteristic of a very interesting and rather mysterious behaviour displayed by deterministic dynamical equations known as <strong>deterministic chaos</strong>.</p>
+<p>However, perhaps even more important to notice here, is the fact that a wide range of qualitatively different behaviourial modes can be understood as originating from one and the same, rather simple, dynamical system. The different behavioural modes were observed for different values of a control parameter, which, in real-world models, often represents an observable (physical) quantity (e.g. temperature, available resources, chemical gradient, etc.)</p>
+The Logistic Map is the simplest nontrivial model that can display deterministic chaos.
+</div>
+
+<p></br></p>
 </div>
 </div>
-<div id="using-r-to-simulate-the-maps" class="section level2">
-<h2><span class="header-section-number">1.3</span> <strong>Using <code>R</code> to simulate the maps</strong></h2>
-<p>The best (and easiest) way to simulate these simple models is to create a function which takes as input the parameters (<span class="math inline">\(Y_0\)</span>, <span class="math inline">\(r\)</span>) and a variable indicating the length of the time series.</p>
+<div id="use-r-to-simulate-the-logistic-map" class="section level2">
+<h2><span class="header-section-number">1.3</span> Use <code>R</code> to simulate the Logistic Map</h2>
+<p>The best (and easiest) way to simulate the discrete time models is to create a function which takes as input the parameters (<span class="math inline">\(Y_0\)</span>, <span class="math inline">\(r\)</span>) and a variable indicating the length of the time series.</p>
 <p>For example for the Linear Map:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># TEMPLATE</span>
 <span class="co"># Modify this function</span>
-linearMap &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">Y0 =</span> <span class="dv">0</span>, <span class="dt">r =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">100</span>){
+logisticMap &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">Y0 =</span> <span class="dv">0</span>, <span class="dt">r =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">100</span>){
     
     <span class="co"># Initialize Y as vector of Y0, followed by N-1 empty slots (NA).</span>
     Y &lt;-<span class="st"> </span><span class="kw">c</span>(Y0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>))
@@ -529,69 +731,57 @@ linearMap &lt;-<span class="st"> </span><span class="cf">function</span>(<span c
     <span class="co"># Then, you need create the iteratation</span>
     <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(N<span class="op">-</span><span class="dv">1</span>)){
         
-    Y[i<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="co"># !!Implement the linear or Quadratic map here!!</span>
+    Y[i<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="co"># !!Implement the linear or logistic map here!!</span>
 <span class="st">        </span>
 <span class="st">    </span>}
     
     <span class="kw">return</span>(Y)
 }</code></pre></div>
+<p></br></p>
 <ul>
 <li>Copy the code above and implement the linear map.</li>
 <li>When you are done, you need to initialize the function, select the code and run it.
 <ul>
-<li>The environment will now contain a function called <code>linearMap</code></li>
-<li>Generate some data by calling the function using <span class="math inline">\(Y0=0.1\)</span>, <span class="math inline">\(r=1.08\)</span> and <span class="math inline">\(N=100\)</span> and store the result in a variable.</li>
+<li>The environment will now contain a function called <code>logisticMap</code></li>
+<li>Generate some data by calling the function using <span class="math inline">\(Y0=0.1\)</span>, <span class="math inline">\(r=4\)</span> and <span class="math inline">\(N=100\)</span> (or any other values you want to explore) and store the result in a variable.</li>
 </ul></li>
 </ul>
-<div id="plot-the-timeseries" class="section level3">
+<div id="plot-the-timeseries-1" class="section level3">
 <h3><span class="header-section-number">1.3.1</span> Plot the timeseries</h3>
-<p>Creating the time series graphs and the return plot should be easy if the function <code>linearMap</code> returns the time series. <code>R</code> and <code>Matlab</code> have specialized objects to represent time series, and functions and packages for time series analysis. They are especially convenient for plotting time and date information on the X-axis. See the examples on plotting <a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html">time series in Chapter 2</a>.</p>
+<p>Creating the time series graphs and the return plot should be easy if the function <code>logisticMap</code> returns the time series. <code>R</code> and <code>Matlab</code> have specialized objects to represent time series, and functions and packages for time series analysis. They are especially convenient for plotting time and date information on the X-axis. See the examples on plotting <a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html">time series in Chapter 2</a>.</p>
+<ul>
+<li>Also try ro create a graph that demonstrates the sensitive dependence on initial conditions</li>
+<li>Create the lag 1 return plot.
+<ul>
+<li>Also try to create a lag 2, lag 3 and lag 4 return plot.</li>
+<li>Can you explain the patterns?</li>
+</ul></li>
+</ul>
+<p></br></p>
+<hr />
+<p></br> </br></p>
 </div>
 </div>
-<div id="the-growth-model-by-van-geert-1991" class="section level2">
-<h2><span class="header-section-number">1.4</span> <strong>The growth model by Van Geert (1991)</strong></h2>
-<p>In this assignment you’ll build a more sophisticated growth model and look at its properties. The model will be the growth model by Van Geert (1991).</p>
-<p>The growth model by Van Geert has the following form:</p>
+<div id="a-model-of-cogntitive-growth" class="section level2">
+<h2><span class="header-section-number">1.4</span> <strong>A model of cogntitive growth</strong></h2>
+<p>In this assignment you’ll build a slightly more sophisticated growth model and study at its properties. The model will be the growth model introduced by <a href="https://eric.ed.gov/?id=EJ494106">Paul van Geert (1991)</a>.</p>
+<p>This growth model was used to study growth of language skills in young children, such as vocabulary, and was intended to be to represent ‘an ecology of growers’ referring to the many motor, perceptual and cognitive skills a child needs to develop in order to become proficient at using a language. It has the following form:</p>
 <span class="math display" id="eq:vanG">\[\begin{equation}
 L_{t+1} = L_t * (1 + r - r * \frac{L_t}{K})
 \tag{1.3}
 \end{equation}\]</span>
-<p>Note the similarities to Equation <a href="#eq:logmap">(1.2)</a>, the (stylized) logistic map.</p>
+<p></br></p>
+
+<div class="rmdkennen">
+Note the similarities to Equation <a href="#eq:logmap">(1.2)</a>, the (stylized) logistic map. The main difference is that the number <span class="math inline">\(1\)</span> in <span class="math inline">\((1-Y_i)\)</span> has become a parameter <span class="math inline">\(K\)</span>, or, the <em>carrying capacity</em> whch indicates how far the function can grow. A more general term used for models of this kind is: <em>restricted growth model</em>.
+</div>
+
+<p></br></p>
 <div id="the-growth-model-in-a-spreadsheet" class="section level3">
 <h3><span class="header-section-number">1.4.1</span> The growth model in a spreadsheet</h3>
-
-<div class="rmdimportant">
-<p>Before you begin, be sure to check the following settings (same as first asignment):</p>
+<p>The model is <a href="https://docs.google.com/spreadsheets/d/1DAg0u-zMFOIvRSDOZDxqnzyS0HQJg4FIXzJIMvEMwiI/edit?usp=sharing">implemented in a spreadsheet</a>, select the first tabsheet.</p>
 <ul>
-<li>Open a Microsoft Excel worksheet or a <a href="https://www.google.com/docs/about/">Google sheet</a></li>
-<li>Check whether the spreadsheet uses a ‘decimal-comma’ (<span class="math inline">\(0,05\)</span>) or ‘decimal-point’ (<span class="math inline">\(0.05\)</span>) notation.
-<ul>
-<li>The numbers given in the assignments of this course all use a ‘decimal-point’ notation.</li>
-</ul></li>
-<li>Check if the <code>$</code> symbol fixes rows and columns when it used in a formula in your preferred spreadsheet program.
-<ul>
-<li>This is the default setting in Microsoft Excel and Google Sheets. If you use one of those programs you are all set.
-</div>
-</li>
-</ul></li>
-</ul>
-<p>To build it take the sheet in <a href="#the-logistic-map">assignment 1,2</a> as a template.</p>
-<ul>
-<li>Define the appropriate constants (<span class="math inline">\(r\)</span> in <code>A5</code>, <span class="math inline">\(L_0\)</span> in <code>A6</code>) and prepare the necessary things you need for building an iterative process.</li>
-<li>In particular, add the other parameter that appears in Van Geert’s model:
-<ul>
-<li>Type <span class="math inline">\(K\)</span> in cell <code>A7</code>. This is the <em>carrying capacity</em>. It receives the value <span class="math inline">\(1\)</span> in cell <code>B7</code>.</li>
-</ul></li>
-<li>Start with the following values:
-<ul>
-<li><span class="math inline">\(r = 1.2\)</span></li>
-<li><span class="math inline">\(L_0 = 0.01\)</span></li>
-</ul></li>
-</ul>
-<p>Take good notice of what is constant (parameters <span class="math inline">\(r\)</span> and <span class="math inline">\(K\)</span>), for which the <code>$</code> must be used, and what must change on every iterative step (variable <span class="math inline">\(L_t\)</span>). Take about <span class="math inline">\(100\)</span> steps.</p>
-<ul>
-<li>Create the graphs</li>
-<li>You can start playing with the values for the parameters and the initial values in cells <code>B5</code>, <code>B6</code> and <code>B7</code>. To study its behaviour, be sure to try the following growth parameters:
+<li>You can start by changing the values for the parameters and the initial values in cells <code>B5</code>, <code>B6</code> and <code>B7</code>. To study its behaviour, be sure to try the following growth parameters:
 <ul>
 <li><span class="math inline">\(r = 1.2\)</span></li>
 <li><span class="math inline">\(r = 2.2\)</span></li>
@@ -608,6 +798,43 @@ L_{t+1} = L_t * (1 + r - r * \frac{L_t}{K})
 <ul>
 <li>Can you explain why this is so?</li>
 </ul></li>
+<li>Implement the model in <code>R</code>.
+<ul>
+<li>You should be able to do this by slightly modifying you model of the Logistic Map.</li>
+<li>Make a lag 1 return plot.</li>
+</ul></li>
+</ul>
+<p></br> </br></p>
+<p>To model the autocatalytic growth equations we provide a function <code>growth.ac()</code>, which is able to simulate all of the processes discussed in the lectures. Using just a few lines of code, each of the 4 difference equations used in the assignments can be simulated. Basically the code block below contains the solutions to the Linear Map, the stylized Logisitc Map and the Van Geert model for cognitive growth.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">growth.ac &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">Y0 =</span> <span class="fl">0.01</span>, <span class="dt">r =</span> <span class="dv">1</span>, <span class="dt">k =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">100</span>, <span class="dt">type =</span> <span class="kw">c</span>(<span class="st">&quot;driving&quot;</span>, <span class="st">&quot;damping&quot;</span>, <span class="st">&quot;logistic&quot;</span>, <span class="st">&quot;vanGeert&quot;</span>)[<span class="dv">1</span>]){
+    <span class="co"># Create a vector Y of length N, which has value Y0 at Y[1]</span>
+    <span class="cf">if</span>(N<span class="op">&gt;</span><span class="dv">1</span>){
+    Y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">c</span>(Y0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">2</span>)))
+    <span class="co"># Conditional on the value of type ... </span>
+    <span class="cf">switch</span>(type, 
+           <span class="co"># Iterate N steps of the difference function with values passed for Y0, k and r.</span>
+           <span class="dt">driving  =</span> <span class="kw">sapply</span>(<span class="kw">seq_along</span>(Y), <span class="cf">function</span>(t) Y[[t<span class="op">+</span><span class="dv">1</span>]] &lt;&lt;-<span class="st"> </span>r <span class="op">*</span><span class="st"> </span>Y[t] ),
+           <span class="dt">damping  =</span> k <span class="op">+</span><span class="st"> </span><span class="kw">sapply</span>(<span class="kw">seq_along</span>(Y), <span class="cf">function</span>(t) Y[[t<span class="op">+</span><span class="dv">1</span>]] &lt;&lt;-<span class="st"> </span><span class="op">-</span><span class="st"> </span>r <span class="op">*</span><span class="st"> </span>Y[t]<span class="op">^</span><span class="dv">2</span> <span class="op">/</span><span class="st"> </span>k),
+           <span class="dt">logistic =</span> <span class="kw">sapply</span>(<span class="kw">seq_along</span>(Y), <span class="cf">function</span>(t) Y[[t<span class="op">+</span><span class="dv">1</span>]] &lt;&lt;-<span class="st"> </span>r <span class="op">*</span><span class="st"> </span>Y[t] <span class="op">*</span><span class="st"> </span>((k <span class="op">-</span><span class="st"> </span>Y[t]) <span class="op">/</span><span class="st"> </span>k)),
+           <span class="dt">vanGeert =</span> <span class="kw">sapply</span>(<span class="kw">seq_along</span>(Y), <span class="cf">function</span>(t) Y[[t<span class="op">+</span><span class="dv">1</span>]] &lt;&lt;-<span class="st"> </span>Y[t] <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>r <span class="op">-</span><span class="st"> </span>r <span class="op">*</span><span class="st"> </span>Y[t] <span class="op">/</span><span class="st"> </span>k)) 
+    )}
+    <span class="kw">return</span>(<span class="kw">ts</span>(Y))
+}
+
+<span class="co"># Call the function with default settings and r = 1.1</span>
+Y &lt;-<span class="st"> </span><span class="kw">growth.ac</span>(<span class="dt">r =</span> <span class="fl">1.1</span>)</code></pre></div>
+<p>Some notes about this function:</p>
+<ul>
+<li>To select which growth process to simulate, the argument <code>type</code> is defined which takes the values <code>driving</code> (default), <code>damping</code>, <code>logistic</code> and <code>vanGeert</code>.
+<ul>
+<li>The statement <code>switch(type, ...)</code> will iterate an equation based on the value of <code>type</code>.</li>
+</ul></li>
+<li>A <code>time series</code> object is returned due to the function <code>ts()</code>. This is a convenient way to represent time series data, it can also store the sample rate of the signal and start and end times.
+<ul>
+<li>Most of the basic functions, like <code>plot()</code> and <code>summary()</code> will recognise a time series object when it is passed as an argument and use settings appropriate for time series data.</li>
+</ul></li>
+<li>The <code>sapply()</code> function iterates <span class="math inline">\(t\)</span> from <span class="math inline">\(1\)</span> to the number of elements in <span class="math inline">\(Y\)</span> (<code>seq_along(Y)</code>) and then applies the function.</li>
+<li>The double headed arrow <code>&lt;&lt;-</code> is necessary because we want to update vector <span class="math inline">\(Y\)</span>, which is defined outside the <code>sapply()</code> environment.</li>
 </ul>
 </div>
 </div>
@@ -615,39 +842,59 @@ L_{t+1} = L_t * (1 + r - r * \frac{L_t}{K})
 <h2><span class="header-section-number">1.5</span> <strong>Conditional growth: Jumps and Stages</strong></h2>
 <div id="auto-conditional-jumps" class="section level3">
 <h3><span class="header-section-number">1.5.1</span> Auto-conditional jumps</h3>
-<p>Suppose we want to model that the growth rate <span class="math inline">\(r\)</span> increases after a certain amount has been learned. In general, this is a very common phenomenon, for instance: when becoming proficient at a skill, growth (in proficiency) is at first slow, but then all of a sudden there can be a jump to the appropriate (and sustained) level of proficiency.</p>
+<p>Suppose we want to model that the growth rate <span class="math inline">\(r\)</span> increases after a certain amount has been learned. In general, this is a very common phenomenon, for instance: When becoming proficient at a skill, growth (in proficiency) is at first slow, but then all of a sudden there can be a jump to the appropriate (and sustained) level of proficiency.</p>
 <ul>
-<li>Take the model you just built as a starting point with <span class="math inline">\(r = 0.1\)</span> (<code>B5</code>)
+<li>Take the model of the Logistic Map as a starting point.</li>
+<li>Look at the spreadsheet <code>Van Geert (Jumps)</code></li>
+<li>Suppose we want our parameter to change when a growth level of <span class="math inline">\(0.2\)</span> is reached. We’ll need an <code>IF</code> statement which looks something like this: <code>IF</code> <span class="math inline">\(L &gt; 0.2\)</span> then use the new parameter value, otherwise use the parameter value we started with.
 <ul>
-<li>Type <span class="math inline">\(0.5\)</span> in <code>C5</code>. This will be the new parameter value for <span class="math inline">\(r\)</span>.</li>
-<li>Build your new model in column <code>B</code> (leave the original in <code>A</code>).</li>
+<li>in Excel this becomes quite complicated using the <code>IF</code> function (<code>ALS</code> in Dutch).</li>
+<li>Implementing the conditional jumps <code>R</code> will take on a different (much easier) form.</li>
 </ul></li>
-<li>Suppose we want our parameter to change when a growth level of <span class="math inline">\(0.2\)</span> is reached. We???ll need an <code>IF</code> statement which looks something like this: <code>IF</code> <span class="math inline">\(L &gt; 0.2\)</span> then use the parameter value in <code>C5</code>, otherwise use the parameter value in <code>B5</code>.
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># TEMPLATE</span>
+<span class="co"># Modify this function</span>
+vanGeert &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">L0 =</span> <span class="dv">0</span>, <span class="dt">r =</span> <span class="dv">1</span>, <span class="dt">K =</span> <span class="dv">2</span>, <span class="dt">N =</span> <span class="dv">100</span>){
+    
+    <span class="co"># Initialize L as vector of Y0, followed by N-1 empty slots (NA).</span>
+    L &lt;-<span class="st"> </span><span class="kw">c</span>(L0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>))
+    
+    <span class="co"># Then, you need create the iteratation</span>
+    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(N<span class="op">-</span><span class="dv">1</span>)){
+        
+    <span class="co"># You need to monitor the value of L and change the growth rate according to a rule</span>
+    <span class="cf">if</span>(L[i]<span class="op">&gt;=</span>ThresholdValue){
+      r &lt;-<span class="st"> </span>
+<span class="st">    </span>} <span class="cf">else</span> {
+      r &lt;-<span class="st"> </span>
+<span class="st">    </span>}
+      
+    L[i<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="co"># Implement the model here!!</span>
+<span class="st">        </span>
+<span class="st">    </span>}
+    
+    <span class="kw">return</span>(L)
+}</code></pre></div>
+<p></br></p>
 <ul>
-<li>Excel has a built in <code>IF</code> function (may be <code>ALS</code> in Dutch).</li>
-<li>In the first cell in which calculations should start, press <span class="math inline">\(=\)</span> and then from the formula list choose the <code>IF</code> function, or just type it.</li>
-<li>Try to figure out what you have to do. In the Logical_test box you should state something which expresses <span class="math inline">\(L &gt; 0.2\)</span>.</li>
-<li>The other fields tell Excel what to do when this statement is <code>TRUE</code> (then use parameter value in <code>C5</code>) or when it is <code>FALSE</code> (then use parameter value in <code>B5</code>).</li>
-<li><strong>Note:</strong> the word <em>value</em> might be misleading; you can also input new statements.</li>
-</ul></li>
-<li>Make a graph in which the old and the new conditional models are represented by lines.
+<li>Copy the code above and implement the Van Geert’s model.</li>
+<li>When you are done, you need to initialize the function, select the code and run it.
 <ul>
-<li>Try changing the value of <span class="math inline">\(r\)</span> in <code>C5</code> into: <span class="math inline">\(1, 2, 2.8, 2.9, 3\)</span>.</li>
+<li>The environment will now contain a function called <code>vanGeert</code></li>
+<li>Generate some data, e.g. with <span class="math inline">\(r\)</span> set to <span class="math inline">\(1, 2, 2.8, 2.9, 3\)</span>.</li>
+<li><em>Extra:</em> Consider making <code>ThresholdValue</code> an argument of the function so you can play around with the values.</li>
 </ul></li>
 </ul>
 </div>
 <div id="auto-conditional-stages" class="section level3">
 <h3><span class="header-section-number">1.5.2</span> Auto-conditional stages</h3>
-<p>Another conditional change we might want to explore is that when a certain growth level is reached the carrying capacity K increases, reflecting that new resources have become available to support further growth.</p>
+<p>Another conditional change we might want to explore is that when a certain growth level is reached the carrying capacity <span class="math inline">\(K\)</span> increases, reflecting that new resources have become available to support further growth.</p>
 <ul>
-<li>Now we want <span class="math inline">\(K\)</span> to change, so type <span class="math inline">\(1\)</span> in <code>B7</code>, <span class="math inline">\(2\)</span> in <code>C7</code>.</li>
-<li><p>Build your model in column C. Follow the same steps as above, but now make sure that when <span class="math inline">\(L &gt; 0.99\)</span>, <span class="math inline">\(K\)</span> changes to the value in <code>C7</code>. Keep <span class="math inline">\(r = 0.2\)</span> (<code>B5</code>).</p></li>
-<li>If all goes well you should see two stages when you create a graph of the time series in column <code>C</code>. Change <span class="math inline">\(K\)</span> in <code>C7</code> to other values.
-<ul>
-<li>Try to also change the growth rate r after reaching <span class="math inline">\(L &gt; 0.99\)</span> by referring to <code>C5</code>. Start with a value of <span class="math inline">\(0.3\)</span> in <code>C5</code>. Set <span class="math inline">\(K\)</span> in <code>C7</code> to <span class="math inline">\(2\)</span> again.</li>
-<li>Also try <span class="math inline">\(1, 2.1, 2.5, 2.6, 3\)</span>.</li>
-</ul></li>
+<li>Build your model in such a way that when <span class="math inline">\(L &gt; 0.99\)</span>, <span class="math inline">\(K\)</span> changes to the value 2, keep <span class="math inline">\(r = 0.1\)</span></li>
+<li>Try to also to change the growth rate r after reaching <span class="math inline">\(L &gt; 0.99\)</span></li>
+<li>Recreate the model on the tab <code>Van Geert (3 stages)</code> in <code>R</code></li>
 </ul>
+<p></br> </br></p>
 </div>
 </div>
 <div id="connected-growers" class="section level2">
@@ -662,13 +909,16 @@ L_{t+1} = L_t * (1 + r - r * \frac{L_t}{K})
 <li>Connected Growers</li>
 <li>Interaction during Play</li>
 </ul>
+<p></br></p>
 <hr />
+<p></br> </br></p>
 </div>
 </div>
 </div>
 <div id="multivariate-systems" class="section level1">
 <h1><span class="header-section-number">2</span> <strong>Multivariate systems</strong></h1>
 <p>In this assignment we will look at a 2D coupled dynamical system: <strong>the Predator-Prey model</strong> (aka <a href="https://en.wikipedia.org/wiki/Lotka???Volterra_equations">Lotka-Volterra equations</a>).</p>
+<p></br> </br></p>
 <div id="the-predator-prey-model" class="section level2">
 <h2><span class="header-section-number">2.1</span> <strong>The predator-prey model</strong></h2>
 <p>The dynamical system is given by the following set of first-order differential equations, one represents changes in a population of predators, (e.g., <strong>F</strong>oxes: <span class="math inline">\(f_F(R_t,F_t)\)</span> ), the other represents changes in a population of prey, (e.g., <strong>R</strong>abbits: <span class="math inline">\(f_R(R_t,F_t)\)</span> ).</p>
@@ -703,6 +953,7 @@ R_{t+1} &amp;= f_R(R_t,Ft) * \Delta + R_t \\
 F_{t+1} &amp;= f_F(R_t,F_t) * \Delta + F_t
 \tag{2.5}
 \end{align}\]</span>
+<p></br> </br></p>
 </div>
 </div>
 <div id="a-coupled-system-in-a-spreadsheet" class="section level2">
@@ -724,7 +975,9 @@ F_{t+1} &amp;= f_F(R_t,F_t) * \Delta + F_t
 <div id="tip-of-the-iceberg" class="section level3 unnumbered">
 <h3>Tip of the iceberg</h3>
 <p>There is much more to tell about dynamic modelling, see Chapter 4 for some more advanced topics.</p>
+<p></br></p>
 <hr />
+<p></br> </br></p>
 </div>
 </div>
 </div>
@@ -734,6 +987,7 @@ F_{t+1} &amp;= f_F(R_t,F_t) * \Delta + F_t
 <li>The non-linear regression assignment is written for <code>SPSS</code>, but you can try to use ‘R’ as well. Be sure to look at the solutions of the <a href="#bta">Basic Time Series Analysis</a>) assignments.</li>
 <li>Using the <code>cusp</code> package</li>
 </ul>
+<p></br> </br></p>
 <div id="fitting-the-cusp-catastrophe-in-spss" class="section level2">
 <h2><span class="header-section-number">3.1</span> <strong>Fitting the cusp catastrophe in <code>SPSS</code></strong></h2>
 <p>In the file <a href="https://github.com/FredHasselman/DCS/raw/master/assignmentData/Potential_Catastrophe/Cusp%20attitude.sav">Cusp Attitude.sav</a>, you can find data from a (simulated) experiment. Assume the experiment tried to measure the effects of explicit predisposition and <a href="http://onlinelibrary.wiley.com/doi/10.1002/mar.4220110207/abstract">affective conditioning</a> on attitudes towards Complexity Science measured in a sample of psychology students using a specially designed Implicit Attitude Test (IAT).</p>
@@ -775,9 +1029,11 @@ F_{t+1} &amp;= f_F(R_t,F_t) * \Delta + F_t
 <div id="alternative-without-using-regular-regression" class="section level3">
 <h3><span class="header-section-number">3.1.3</span> Alternative without using <code>regular</code> regression</h3>
 <p>The model can also be fitted with linear regression in SPSS, but we need to make some extra (non-linear) variables using <code>COMPUTE</code>:</p>
+<p></br></p>
 <pre><code>BetaZY1 = Beta*ZY1  *(Bifurcation, splitting parameter).
 ZY1_2 = ZY1 ** 2    *(ZY1 Squared).
 ZY1_3 = ZY1 ** 3    *(ZY1 Cubed).</code></pre>
+<p></br></p>
 <ul>
 <li>Create a linear regression model with <span class="math inline">\(dZY\)</span> as dependent and <span class="math inline">\(Alpha\)</span>, <span class="math inline">\(BetaZY1\)</span> and <span class="math inline">\(ZY1_2\)</span> en <span class="math inline">\(ZY1_3\)</span> as predictors.</li>
 <li>Run! The parameter estimates should be the same.</li>

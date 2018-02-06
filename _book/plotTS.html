@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="final-words.html">
-<link rel="next" href="final-words-2.html">
+<link rel="prev" href="getting-started-with-r.html">
+<link rel="next" href="the-return-plot.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -269,18 +269,116 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="final-words-1" class="section level1">
-<h1><span class="header-section-number">Chapter 7</span> Final Words</h1>
-<p>We have finished a nice book.</p>
+<div id="plotTS" class="section level2">
+<h2><span class="header-section-number">3.3</span> <strong>The <code>time series</code> object</strong></h2>
+<p>A time series object is expected to have a time-dimension on the x-axis. This is very convenient, because <code>R</code> will generate the time axis for you by looking at the <em>t</em>ime <em>s</em>eries <em>p</em>roperties attribute of the object. Even though we are not working with measurement ourcomes, consider a value at a time-index in a time series object a <strong>sample</strong>:</p>
+<ul>
+<li><code>Start</code> - The value of time at the first sample in the series (e.g., <span class="math inline">\(0\)</span>, or <span class="math inline">\(1905\)</span>)</li>
+<li><code>End</code> - The value of time at the last sample in the series (e.g., <span class="math inline">\(100\)</span>, or <span class="math inline">\(2005\)</span>)</li>
+<li><code>Frequency</code> - The amount of time that passed between two samples, or, the sample rate (e.g., <span class="math inline">\(0.5\)</span>, or <span class="math inline">\(10\)</span>)</li>
+</ul>
+<p>Examples of using the time series object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get a timeseries of 100 random numbers </span>
+Y &lt;-<span class="st"> </span><span class="kw">ts</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>))
+<span class="co"># plot.ts</span>
+<span class="kw">plot</span>(Y)</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-5-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get sample rate info</span>
+<span class="kw">tsp</span>(Y)</code></pre></div>
+<pre><code>## [1]   1 100   1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Extract the time vector</span>
+<span class="kw">time</span>(Y)</code></pre></div>
+<pre><code>## Time Series:
+## Start = 1 
+## End = 100 
+## Frequency = 1 
+##   [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17
+##  [18]  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34
+##  [35]  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51
+##  [52]  52  53  54  55  56  57  58  59  60  61  62  63  64  65  66  67  68
+##  [69]  69  70  71  72  73  74  75  76  77  78  79  80  81  82  83  84  85
+##  [86]  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100</code></pre>
+<p>For now, these values are in principle all arbitrary units (<code>a.u.</code>). These settings only make sense if they represent the parameters of an actual measurement procedure.</p>
+<p>It is easy to adjust the time vector, by assigning new values using <code>tsp()</code> (values have to be possible given the timeseries length). For example, suppose the sampling frequency was <span class="math inline">\(0.1\)</span> instead of <span class="math inline">\(1\)</span> and the Start time was <span class="math inline">\(10\)</span> and End time was <span class="math inline">\(1000\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Assign new values</span>
+(<span class="kw">tsp</span>(Y) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">1000</span>, .<span class="dv">1</span>))</code></pre></div>
+<pre><code>## [1] 1e+01 1e+03 1e-01</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Time axis is automatically adjusted </span>
+<span class="kw">time</span>(Y)</code></pre></div>
+<pre><code>## Time Series:
+## Start = 10 
+## End = 1000 
+## Frequency = 0.1 
+##   [1]   10   20   30   40   50   60   70   80   90  100  110  120  130  140
+##  [15]  150  160  170  180  190  200  210  220  230  240  250  260  270  280
+##  [29]  290  300  310  320  330  340  350  360  370  380  390  400  410  420
+##  [43]  430  440  450  460  470  480  490  500  510  520  530  540  550  560
+##  [57]  570  580  590  600  610  620  630  640  650  660  670  680  690  700
+##  [71]  710  720  730  740  750  760  770  780  790  800  810  820  830  840
+##  [85]  850  860  870  880  890  900  910  920  930  940  950  960  970  980
+##  [99]  990 1000</code></pre>
+<div id="plotting-a-ts-object-as-a-time-series" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Plotting a <code>ts</code> object as a time series</h3>
+<p>Depending on which packages you use, there will be different settings applied to time series objects created by <code>ts()</code>. Below are some examples of differences between plotting routines.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(lattice)       <span class="co"># Needed for plotting</span>
+<span class="kw">require</span>(latticeExtra)  <span class="co"># Needed for plotting</span>
 
+<span class="co"># stats::plot.ts</span>
+<span class="kw">plot</span>(Y, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;stats::plot.ts&quot;</span>)</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-7-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># lattice::xyplot.ts</span>
+<span class="kw">xyplot</span>(Y, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;lattice::xyplot.ts&quot;</span>)</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-7-2.png" width="99%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="plotting-multiple-time-series-in-one-figure" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Plotting multiple time series in one figure</h3>
+<p>Plot multiple timeseries in frames with <code>plot.ts()</code> in <code>package::stats</code>. This function takes a matrix as input, here we use <code>cbind( ... )</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># stats::plot.ts  </span>
+<span class="kw">plot</span>(<span class="kw">cbind</span>(Y,
+           <span class="kw">cumsum</span>(Y), 
+           <span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y)))
+           ), 
+     <span class="dt">yax.flip =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">TRUE</span>) 
+<span class="kw">title</span>(<span class="dt">main =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Random Numbers: &quot;</span>,<span class="kw">N</span>(<span class="dv">0</span>,sigma))), 
+      <span class="dt">xlab =</span> <span class="st">&quot;time (a.u.)&quot;</span>)</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-8-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<p>Plot multiple timeseries in one graph with <code>ts.plot()</code> in <code>package::graphics</code>. This function can handle multiple <code>ts</code> objects as arguments.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># graphics::ts.plot</span>
+<span class="kw">ts.plot</span>(Y,
+           <span class="kw">cumsum</span>(Y), 
+           <span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y))),
+        
+        <span class="dt">gpars =</span> <span class="kw">list</span>(<span class="dt">xlab =</span> <span class="st">&quot;time (a.u.)&quot;</span>,
+                     <span class="dt">ylab =</span> <span class="kw">expression</span>(<span class="kw">Y</span>(t)),
+                     <span class="dt">main =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Random Numbers: &quot;</span>,<span class="kw">N</span>(<span class="dv">0</span>,sigma))),
+                     <span class="dt">lwd =</span> <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>),
+                     <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>),
+                     <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;darkred&quot;</span>,<span class="st">&quot;darkblue&quot;</span>,<span class="st">&quot;darkgreen&quot;</span>)
+                     )
+        )
+<span class="kw">legend</span>(<span class="dv">0</span>, <span class="op">-</span><span class="dv">10</span>, <span class="kw">c</span>(<span class="st">&quot;Y&quot;</span>,<span class="st">&quot;cumsum(Y)&quot;</span>, <span class="st">&quot;cumprod(Y)&quot;</span>), <span class="dt">lwd =</span> <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;darkred&quot;</span>,<span class="st">&quot;darkblue&quot;</span>,<span class="st">&quot;darkgreen&quot;</span>), <span class="dt">merge =</span> <span class="ot">TRUE</span>, <span class="dt">cex=</span>.<span class="dv">9</span>)</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-9-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<p>Use <code>xyplot()</code> in <code>package::lattice</code> to create a plot with panels. The easiest way to do this is to create a dataset in so-called “long” format. This means the variable to plot is in 1 column and other variables indicate different levels, or conditions under which the variable was observed or simulated.</p>
+<p>Function <code>ldply()</code> is used to generate <span class="math inline">\(Y\)</span> for three different settings of <span class="math inline">\(r\)</span>. The values of <span class="math inline">\(r\)</span> are passed as a <strong>l</strong>ist and after a function is applied the result is returned as a <strong>d</strong>ataframe.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(plyr)          <span class="co"># Needed for function ldply()</span>
+
+<span class="co"># Create a long format dataframe for various values for `r`</span>
+data &lt;-<span class="st"> </span><span class="kw">cbind.data.frame</span>(<span class="dt">Y     =</span> <span class="kw">c</span>(<span class="kw">as.numeric</span>(Y), <span class="kw">cumsum</span>(Y), <span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y)))),
+                         <span class="dt">time  =</span> <span class="kw">c</span>(<span class="kw">time</span>(Y), <span class="kw">time</span>(Y), <span class="kw">time</span>(Y)),
+                         <span class="dt">label =</span> <span class="kw">factor</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;Y&quot;</span>,<span class="kw">length</span>(Y)),  <span class="kw">rep</span>(<span class="st">&quot;cumsum(Y)&quot;</span>,<span class="kw">length</span>(Y)), <span class="kw">rep</span>(<span class="st">&quot;cumsum(diff(Y))&quot;</span>,<span class="kw">length</span>(Y))))
+                         )
+<span class="co"># Plot using the formula interface</span>
+<span class="kw">xyplot</span>(Y <span class="op">~</span><span class="st"> </span>time <span class="op">|</span><span class="st"> </span>label, <span class="dt">data =</span> data, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Random Numbers: &quot;</span>,<span class="kw">N</span>(<span class="dv">0</span>,sigma))))</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-10-1.png" width="99%" style="display: block; margin: auto;" /></p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="final-words.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="final-words-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="getting-started-with-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-return-plot.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

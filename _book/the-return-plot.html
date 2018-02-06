@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="final-words.html">
-<link rel="next" href="final-words-2.html">
+<link rel="prev" href="plotTS.html">
+<link rel="next" href="spreadsheet-versus-matlab-r-etc-.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -269,18 +269,39 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="final-words-1" class="section level1">
-<h1><span class="header-section-number">Chapter 7</span> Final Words</h1>
-<p>We have finished a nice book.</p>
+<div id="the-return-plot" class="section level2">
+<h2><span class="header-section-number">3.4</span> The return plot</h2>
+<p>To create a return plot the values of <span class="math inline">\(Y\)</span> have to be shifted by a certain lag. The functions <code>lead()</code> and <code>lag()</code> in <code>package::dplyr</code> are excellent for this purpose (note that <code>dplyr::lag()</code> behaves different from <code>stats::lag()</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Function lag() and lead()</span>
+<span class="kw">require</span>(dplyr)
 
+<span class="co"># Get exponential growth</span>
+Y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
+Y1 &lt;-<span class="st"> </span>Y<span class="op">/</span><span class="kw">max</span>(Y)
+<span class="co"># Get logistic growth in the chaotic regime</span>
+Y2 &lt;-<span class="st"> </span><span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y)))<span class="op">/</span><span class="kw">max</span>(<span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y))))
+<span class="co"># Use the `lag` function from package `dplyr`</span>
+op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">pty =</span> <span class="st">&quot;s&quot;</span>)
+<span class="kw">plot</span>(dplyr<span class="op">::</span><span class="kw">lag</span>(Y1), Y1, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Y(t+1)&quot;</span>,
+     <span class="dt">main =</span> <span class="st">&quot;rnorm(1000) / max&quot;</span>)
+<span class="kw">plot</span>(dplyr<span class="op">::</span><span class="kw">lag</span>(Y2), Y2, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Y(t+1)&quot;</span>,
+     <span class="dt">main =</span> <span class="st">&quot;cumsum(diff(Y)) / max&quot;</span>)</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-11-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(op)</code></pre></div>
+<p>Use <code>l_ply()</code> from <code>package::plyr</code> to create return plots with different lags. The <strong>l_</strong> before <strong>ply</strong> means the function will take a <strong>l</strong>ist as input to a function, but it will not expect any data to be returned, for example in the case of a function that is used to plot something.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Explore different lags</span>
+op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">pty =</span> <span class="st">&quot;s&quot;</span>)
+plyr<span class="op">::</span><span class="kw">l_ply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="cf">function</span>(l) <span class="kw">plot</span>(<span class="kw">lag</span>(Y2, <span class="dt">n =</span> l), Y2, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="kw">paste0</span>(<span class="st">&quot;Y(t+&quot;</span>,l,<span class="st">&quot;)&quot;</span>), <span class="dt">cex =</span> .<span class="dv">8</span>))</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-12-1.png" width="99%" style="display: block; margin: auto;" /><img src="DCS1718_files/figure-html/unnamed-chunk-12-2.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(op)</code></pre></div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="final-words.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="final-words-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="plotTS.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="spreadsheet-versus-matlab-r-etc-.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

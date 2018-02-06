@@ -48,6 +48,43 @@
 
 
 
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
 
 <link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
@@ -77,7 +114,7 @@
 <li class="chapter" data-level="" data-path="learning-objectives.html"><a href="learning-objectives.html#general"><i class="fa fa-check"></i>General</a></li>
 </ul></li>
 <li><a href="literature.html#literature"><strong>Literature</strong></a><ul>
-<li class="chapter" data-level="0.0.1" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>0.0.1</b> Note about the book and assignments</a></li>
+<li class="chapter" data-level="0.0.1" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>0.0.1</b> Notes about the online book and the assignments</a></li>
 </ul></li>
 <li><a href="schedule.html#schedule"><strong>Schedule</strong></a></li>
 <li><a href="we-use-r.html#we-use-r"><strong>We use <code>R</code>!</strong></a></li>
@@ -115,6 +152,13 @@
 <li class="chapter" data-level="3.1.1" data-path="statistic-versus-dynamic-models.html"><a href="statistic-versus-dynamic-models.html#its-a-line-its-a-plane"><i class="fa fa-check"></i><b>3.1.1</b> <strong>It’s a line! It’s a plane!</strong></a></li>
 <li class="chapter" data-level="3.1.2" data-path="statistic-versus-dynamic-models.html"><a href="statistic-versus-dynamic-models.html#no-its-a-time-series"><i class="fa fa-check"></i><b>3.1.2</b> <strong>No! … It’s a time series!</strong></a></li>
 </ul></li>
+<li class="chapter" data-level="3.2" data-path="getting-started-with-r.html"><a href="getting-started-with-r.html"><i class="fa fa-check"></i><b>3.2</b> <strong>Getting started with <code>R</code></strong></a></li>
+<li class="chapter" data-level="3.3" data-path="plotTS.html"><a href="plotTS.html"><i class="fa fa-check"></i><b>3.3</b> <strong>The <code>time series</code> object</strong></a><ul>
+<li class="chapter" data-level="3.3.1" data-path="plotTS.html"><a href="plotTS.html#plotting-a-ts-object-as-a-time-series"><i class="fa fa-check"></i><b>3.3.1</b> Plotting a <code>ts</code> object as a time series</a></li>
+<li class="chapter" data-level="3.3.2" data-path="plotTS.html"><a href="plotTS.html#plotting-multiple-time-series-in-one-figure"><i class="fa fa-check"></i><b>3.3.2</b> Plotting multiple time series in one figure</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="the-return-plot.html"><a href="the-return-plot.html"><i class="fa fa-check"></i><b>3.4</b> The return plot</a></li>
+<li class="chapter" data-level="3.5" data-path="spreadsheet-versus-matlab-r-etc-.html"><a href="spreadsheet-versus-matlab-r-etc-.html"><i class="fa fa-check"></i><b>3.5</b> Spreadsheet versus <code>Matlab</code>, <code>R</code>, etc.</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>4</b> Methods</a></li>
 <li class="chapter" data-level="5" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>5</b> Applications</a><ul>
@@ -239,12 +283,33 @@
 </ul>
 <p>A list of required and optional literature related to the topic discussed in each session will be available on Blackboard.</p>
 <p>We als provide links to online materials on specific topics (<em>Study Materials</em>) that may provide additional explanation and information about key concepts. These materials are not obligatory, but highly recommended to study at least once.</p>
-<div id="note-about-the-book-and-assignments" class="section level3">
-<h3><span class="header-section-number">0.0.1</span> Note about the book and assignments</h3>
-<p>The texts in the chapters of this book are intended as a rough introductory guide to accompany the lectures. An essential part of the course are <a href="">the assignments that are available online</a></p>
+<div id="notes-about-the-online-book-and-the-assignments" class="section level3">
+<h3><span class="header-section-number">0.0.1</span> Notes about the online book and the assignments</h3>
+<p>The texts in the chapters of this book are intended as a rough introductory guide to accompany the lectures, thet are still somewhat of a work in progress. We made everything as coherent as possible, sometimes though, you will notice a paragraph or chapter rather resembles a set of lecture notes instead of a self-contained text. Do not hesitate to let us know if you think anything is unclear or too far out of context for you to understand.</p>
+<p>An essential part of the course are <a href="">the assignments that are available online</a></p>
 
 <div class="rmdimportant">
-The text inside these blocks
+The text inside these blocks provides important information about the course, the assignments, or the exam.
+</div>
+
+
+<div class="rmdkennen">
+The text inside these blocks provides examples, or, information about a topic you should pay close attentiont to and try to understand.
+</div>
+
+
+<div class="rmdnote">
+The text inside these blocks provides a note, a comment, or observation.
+</div>
+
+
+<div class="rmdselfThink">
+The content in these blocks are often questions about a topic, or, suggestions about connections between different topics discussed in the book and the assignments. You should decide for yourself if you need to dig deeper to answer the questions or if you want to discuss the content. One way to find an answer or start a discussion is to open a thread in the discussion forum on Blackboard labelled <em>ThinkBox</em>.
+</div>
+
+
+<div class="rmdentertain">
+The content in these blocks is provided as entertainment :)
 </div>
 
 </div>

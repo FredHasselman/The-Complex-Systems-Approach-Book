@@ -143,29 +143,35 @@ A list of required and optional literature related to the topic discussed in eac
 We als provide links to online materials on specific topics (*Study Materials*) that may provide additional explanation and information about key concepts. These materials are not obligatory, but highly recommended to study at least once.
 
 
-### Note about the book and assignments
+### Notes about the online book and the assignments
 
-The texts in the chapters of this book are intended as a rough introductory guide to accompany the lectures. An essential part of the course are [the assignments that are available online]()
+The texts in the chapters of this book are intended as a rough introductory guide to accompany the lectures, thet are still somewhat of a work in progress. We made everything as coherent as possible, sometimes though, you will notice a paragraph or chapter rather resembles a set of lecture notes instead of a self-contained text. Do not hesitate to let us know if you think anything is unclear or too far out of context for you to understand.
+
+An essential part of the course are [the assignments that are available online]()
+
 
 ```{block2, imp, type='rmdimportant'}
- The text inside these blocks provides important information about the course, or the assignments.
+ The text inside these blocks provides important information about the course, the assignments, or the exam.
 ```
+
 
 ```{block2, ken, type='rmdkennen'}
  The text inside these blocks provides examples, or, information about a topic you should pay close attentiont to and try to understand.
 ```
 
+
 ```{block2, note, type='rmdnote'}
  The text inside these blocks provides a note, a comment, or observation.
 ```
 
-```{block2, imp, type='rmdselfThink'}
- The text inside these blocks contains questions about a topic, or suggests connections between different topics discussed in the book or in the assignments. You should decide for yourself if you need to discuss the information. One way to do this is by opening a discussion thread on the discussion forum on Blackboard.
+
+```{block2, think, type='rmdselfThink'}
+The content in these blocks are often questions about a topic, or, suggestions about connections between different topics discussed in the book and the assignments. You should decide for yourself if you need to dig deeper to answer the questions or if you want to discuss the content. One way to find an answer or start a discussion is to open a thread in the discussion forum on Blackboard labelled *ThinkBox*.
 ```
 
 
-```{block2, imp, type='rmdentertain'}
- The content in these boxes is provided as entertainment :) 
+```{block2, amuse, type='rmdentertain'}
+ The content in these blocks is provided as entertainment :) 
 ```
 
 
