@@ -37,10 +37,9 @@ output:
 
 # **Modelling (nonlinear) growth and Deterministic Chaos**
 
-In this assignment you will build two (relatively) simple one-dimensional maps. You can use `R`, `Matlab`, `Python`^[Unless otherwise noted, we will assume you'll use `R` complete the assignments.], based on the model implemented in a spreadsheet. You can copy the Google Sheet to a new on-line Google Sheet, or,  save it to your computer and use your favourite spreadsheet software (e.g., Excel, Numbers).    
+In this assignment you will build two (relatively) simple one-dimensional maps based on the models implemented in a spreadsheet. Just copy the linked Google Sheet to a new on-line Google Sheet, or, save it to your computer and use your favourite spreadsheet software (e.g., Excel, Numbers) to explore the behaviour of the model.    
     
-    
-We will start by modelling the *Linear Map* and then proceed to the slightly more complicated *Logistic Map* (aka *Quadratic map*).     
+We will start by modelling the *Linear Map* and then proceed to the slightly more complicated *Logistic Map* (aka *Quadratic map*). You can use `R`, `Matlab`, or `Python` to model the dynamical processes, but for now we will assume you use `R`.
 
 </br>
 

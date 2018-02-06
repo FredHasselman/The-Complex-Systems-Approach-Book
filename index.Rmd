@@ -128,27 +128,23 @@ At the end of this course, students have reached a level of understanding that w
 
 ## **Literature** {-}
 
-Main literature: 
+### Main literature: {-}
 
 -	Hasselman, F., & Wijnants, M. (2018). A Complex Systems Approach to the Behavioural Sciences. A practical guide to basic theory, models, methods and analyses [this book]
 -	Rose, T. (2016). The end of average: How we succeed in a world that values sameness. Penguin UK. [also available in Dutch and many other languages]
 
-Selected chapters from these books will be made available to make a personal copy:
+### Selected chapters from these books will be made available to make a personal copy {-}
 
 -	Friedenberg, J. (2009). Dynamical psychology: Complexity, self-organization and mind. ISCE Publishing.
 -	Kaplan, D., & Glass, L. (2012). Understanding nonlinear dynamics. Springer Science & Business Media.
 
-A list of required and optional literature related to the topic discussed in each session will be available on Blackboard.
-
 We als provide links to online materials on specific topics (*Study Materials*) that may provide additional explanation and information about key concepts. These materials are not obligatory, but highly recommended to study at least once.
 
-
-### Notes about the online book and the assignments
+### Notes about the online book and the assignments {-}
 
 The texts in the chapters of this book are intended as a rough introductory guide to accompany the lectures, thet are still somewhat of a work in progress. We made everything as coherent as possible, sometimes though, you will notice a paragraph or chapter rather resembles a set of lecture notes instead of a self-contained text. Do not hesitate to let us know if you think anything is unclear or too far out of context for you to understand.
 
-An essential part of the course are [the assignments that are available online]()
-
+An essential part of the course are [the assignments that are available online](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
 
 ```{block2, imp, type='rmdimportant'}
  The text inside these blocks provides important information about the course, the assignments, or the exam.

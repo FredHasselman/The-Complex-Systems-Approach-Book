@@ -1,3 +1,2 @@
-# Methods
+# Basic TSA
 
-We describe our methods in this chapter.
