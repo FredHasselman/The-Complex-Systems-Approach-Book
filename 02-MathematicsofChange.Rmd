@@ -211,7 +211,7 @@ Use `l_ply()` from `package::plyr` to create return plots with different lags. T
 ```{r, echo=TRUE, message=FALSE, warning=FALSE, collapse=FALSE, figure.height=20, figure.width=20, tidy=FALSE}
 # Explore different lags
 op <- par(mfrow = c(1,2), pty = "s")
-plyr::l_ply(1:4, function(l) plot(lag(Y2, n = l), Y2, xy.labels = FALSE, pch = 16, xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = paste0("Y(t+",l,")"), cex = .8))
+plyr::l_ply(1:4, function(l) plot(dplyr::lag(Y2, n = l), Y2, xy.labels = FALSE, pch = 16, xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = paste0("Y(t+",l,")"), cex = .8))
 par(op)
 ```
 

@@ -107,6 +107,7 @@ First study the behaviour of the **Linear map** in a spreadsheet and then try to
 If you make a copy of the Google Sheet you should be able to edit the cells. If this does not work, [download the spreadsheet from GitHub](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/blob/master/assignments/assignment_data/Iterating1Dmaps/Assignment%20DCS_%20Iterating%201D%20Maps.xlsx)
   
 * Change the values in cells `B5` and `B6` and you will see an immediate change in the graph. To study model behaviour, try the following growth parameters:
+    + $r =  1.08$
     + $r = -1.08$
     + $r =  1$
     + $r = -1$
@@ -165,7 +166,7 @@ The best (and easiest) way to simulate these simple models in `R` is to create a
 
 #### Questions {-}
 
-For example, for the Linear Map you could use this template:
+For the Linear Map you could use this template:
 
 
 ```r
@@ -297,8 +298,10 @@ To study the behaviour of the Logistic Map you can start changing the values in 
 
 
   
-### The return plot 
+### The return plot {.tabset .tabset-fade .tabset-pills}
   
+#### Questions {-}
+
 * Set $r$ at $4.0$:
     + How would you describe the dynamics of the time series? Periodic? Something else?
     + Check the values, is there any value that is recurring, for example like when $r=3.3$? Perhaps if you increase the length of the simulation?
@@ -325,11 +328,23 @@ If you change the control parameter to a lower value the return plot will seem t
 * What about the return plot for a timeseries of independent random numbers (white noise)?     
 * We are of course not limited to a lag of 1, what happens at lag 2, or lag 10 in the return plots of the Linear and Quadratic Map?</div>\EndKnitrBlock{rmdselfThink}
 
+#### Answers {-}
+
+* Set $r$ at $4.0$:
+    + The dynamics are called a-periodic, or quasi-periodic, or, chaotic.
+    + None of the values will exactly recur!!
+* Select the values in both columns under $Y(i)$ and $Y(i+1)$, (`A10` to `B309`) and create a scatter-plot (no lines, just points).
+    + The points form a parabola
+    + The return plot for both maps can be seen [here](https://docs.google.com/spreadsheets/d/17PBTvGa1Hu9spqEQGuhpwWXGeY7Nujkm09pxcppKPn4/edit?usp=sharing) 
+
+
 </br>
 
-### Sensitive dependence on initial conditions?  
+### Sensitive dependence on initial conditions?  {.tabset .tabset-fade .tabset-pills}
   
 Go to the following [GoogleSheet](https://docs.google.com/spreadsheets/d/1pKFhe5JcXXo6vK-Nx-GvxafaYkEZx31ya57I6xpWWMA/edit?usp=sharing) and download or copy it.
+  
+#### Questions {-}
   
 * Imagine these are observed time series from two subjects in a response time experiment. These subjects are perfect 'twins':
     + The formula describing their behaviour is exactly the same (it's the Quadratic Map, check it!)
@@ -344,6 +359,9 @@ Go to the following [GoogleSheet](https://docs.google.com/spreadsheets/d/1pKFhe5
 
 </br>
 
+
+#### Answers {-}
+
 \BeginKnitrBlock{rmdkennen}<div class="rmdkennen">This sheet displays the extreme sensitivity to changes in initial conditions displayed by the Logistic Map for specific parameter settings. This specific phenomenon is more commonly referred to as **The Butterfly Effect**. It is a characteristic of a very interesting and rather mysterious behaviour displayed by deterministic dynamical equations known as **deterministic chaos**.
 
 However, perhaps even more important to notice here, is the fact that a wide range of qualitatively different behaviourial modes can be understood as originating from one and the same, rather simple, dynamical system. The different behavioural modes were observed for different values of a control parameter, which, in real-world models, often represents an observable (physical) quantity (e.g. temperature, available resources, chemical gradient, etc.) 
@@ -352,17 +370,19 @@ The Logistic Map is the simplest nontrivial model that can display deterministic
 
 </br>
 
-## Use `R` to simulate the Logistic Map
+### Use `R` to simulate the Logistic Map {.tabset .tabset-fade .tabset-pills}
 
 The best (and easiest) way to simulate the discrete time models is to create a function which takes as input the parameters ($Y_0$, $r$) and a variable indicating the length of the time series.
 
-For example for the Linear Map:
+#### Questions {-}
+
+To model the Logistic Map, use this template:
 
 
 ```r
 # TEMPLATE
 # Modify this function
-logisticMap <- function(Y0 = 0, r = 1, N = 100){
+logisticMap <- function(Y0 = 0.01, r = 1, N = 100){
     
     # Initialize Y as vector of Y0, followed by N-1 empty slots (NA).
     Y <- c(Y0, rep(NA,N-1))
@@ -380,20 +400,84 @@ logisticMap <- function(Y0 = 0, r = 1, N = 100){
 
 </br>
 
-* Copy the code above and implement the linear map.
+* Copy the code above and implement the Logistic Map.
 * When you are done, you need to initialize the function, select the code and run it. 
     + The environment will now contain a function called `logisticMap`
     + Generate some data by calling the function using $Y0=0.1$, $r=4$ and $N=100$ (or any other values you want to explore) and store the result in a variable. 
     
 
-### Plot the timeseries
+#### Answers {-}
 
-Creating the time series graphs and the return plot should be easy if the function `logisticMap` returns the time series.  `R` and `Matlab` have specialized objects to represent time series, and functions and packages for time series analysis. They are especially convenient for plotting time and date information on the X-axis. See the examples on plotting [time series in Chapter 2](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html).
+
+```r
+# Logistic Map
+logisticMap <- function(Y0 = 0.01, r = 1, N = 100){
+    
+    # Initialize Y as vector of Y0, followed by N-1 empty slots (NA).
+    Y <- c(Y0, rep(NA,N-1))
+    
+    # Then, you need create the iteratation
+    for(i in 1:(N-1)){
+        
+    Y[i+1] <- r * Y[i] * (1 - Y[i]) # The quadratic difference equation
+       
+    }
+    
+    return(Y)
+}
+```
+
+
+### Plot the timeseries {.tabset .tabset-fade .tabset-pills}
+
+#### Questions {-}
+
+Creating a time series plot is easy if the function `linearMap` returns the time series as a numeric vector. You could just use:
+
+
+```r
+plot(logisticMap(Y0=0.01,r=1.9,N=100), type = "l")
+```
 
 * Also try ro create a graph that demonstrates the sensitive dependence on initial conditions
 * Create the lag 1 return plot.
       + Also try to create a lag 2, lag 3 and lag 4 return plot.
       + Can you explain the patterns?
+
+
+#### Answers {-}
+
+
+```r
+library(plyr)
+rs <- c(0.9,1.9,2.9,3.3,3.52,3.9)
+op<-par(mfrow=c(2,3))
+l_ply(rs,function(r) plot(logisticMap(r=r),ylab = paste("r =",r) ,type = "l"))
+```
+
+![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+
+```r
+par(op)
+```
+
+* Also try to create a graph that demonstrates the sensitive dependence on initial conditions
+* Create the lag 1 return plot.
+      + Also try to create a lag 2, lag 3 and lag 4 return plot.
+      + Can you explain the patterns?
+
+
+```r
+lags <- c(1,2,3,4)
+op <- par(mfrow = c(2,2), pty = "s")
+l_ply(lags, function(l) {plot(dplyr::lag(logisticMap(r=4),l), logisticMap(r=4), pch = 16, xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",  main = paste("lag =",l))})
+```
+
+![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+
+```r
+par(op)
+```
 
 </br>
 
