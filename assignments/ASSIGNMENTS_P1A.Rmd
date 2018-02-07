@@ -1,5 +1,5 @@
 ---
-title: "DCS Assignments Part I"
+title: "DCS Assignments Part I-A"
 author: "Fred Hasselman & Maarten Wijnants"
 date: "1/14/2018"
 output: 
@@ -30,6 +30,7 @@ knitr::opts_chunk$set(include=TRUE)
 # **Quick Links** {-}
 
 * [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
+* [Assignments Part 1B: Potential Theory and Catastrophe Models](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1B.html)
 * [Assignments Part 2: Time Series Analysis: Temporal Correlations and Fractal Scaling](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)
 * [Assignments Part 3: Quantifying Recurrences in State Space](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)
 * [Assignments Part 4: Complex Networks](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)
@@ -354,7 +355,7 @@ The return plot is an important tool for getting a 'first impression' of the nat
 
 ### Sensitive dependence on initial conditions?  {.tabset .tabset-fade .tabset-pills}
   
-Go to the following [GoogleSheet](https://docs.google.com/spreadsheets/d/1pKFhe5JcXXo6vK-Nx-GvxafaYkEZx31ya57I6xpWWMA/edit?usp=sharing) and download or copy it.
+Go to the following [GoogleSheet](https://docs.google.com/spreadsheets/d/1xaZJLYfZzkxg_PXCAa7QT7p4R_JTnUIxzs_Qs1-RAOQ/edit?usp=sharing) and download or copy it.
   
 #### Questions {-}
   
@@ -373,6 +374,8 @@ Go to the following [GoogleSheet](https://docs.google.com/spreadsheets/d/1pKFhe5
 
 
 #### Answers {-}
+
+By making the discrepancy smaller the two time series will become more similar.
 
 ```{block2, type="rmdkennen"}
 This sheet displays the extreme sensitivity to changes in initial conditions displayed by the Logistic Map for specific parameter settings. This specific phenomenon is more commonly referred to as **The Butterfly Effect**. It is a characteristic of a very interesting and rather mysterious behaviour displayed by deterministic dynamical equations known as **deterministic chaos**.
@@ -468,13 +471,14 @@ par(op)
 
 * Also try to create a graph that demonstrates the sensitive dependence on initial conditions
 * Create the lag 1 return plot.
-      + Also try to create a lag 2, lag 3 and lag 4 return plot.
+      + Also try to create a lag 2, lag 3 and lag 4 return plot (increase N to 500 or 1000).
       + Can you explain the patterns?
 
 ```{r, tidy=FALSE}
 lags <- c(1,2,3,4)
+N <- 1000
 op <- par(mfrow = c(2,2), pty = "s")
-l_ply(lags, function(l) {plot(dplyr::lag(logisticMap(r=4),l), logisticMap(r=4), pch = 16, xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",  main = paste("lag =",l))})
+l_ply(lags, function(l) {plot(dplyr::lag(logisticMap(r=4,N=N),l), logisticMap(r=4,N=N), pch = ".", xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",  main = paste("lag =",l))})
 par(op)
 ```
 
@@ -485,7 +489,7 @@ par(op)
 </br>
 </br>
 
-## **A model of cogntitive growth** {.tabset .tabset-fade .tabset-pills}
+## **A model of cogntitive growth** 
 
 In this assignment you'll build a slightly more sophisticated growth model and study at its properties. The model will be the growth model introduced by [Paul van Geert (1991)](https://eric.ed.gov/?id=EJ494106).
 
@@ -504,7 +508,7 @@ Note the similarities to Equation \@ref(eq:logmap), the (stylized) logistic map.
 
 </br>
 
-### The growth model in a spreadsheet
+### The growth model in a spreadsheet {.tabset .tabset-fade .tabset-pills}
 
 The model is [implemented in a spreadsheet](https://docs.google.com/spreadsheets/d/1DAg0u-zMFOIvRSDOZDxqnzyS0HQJg4FIXzJIMvEMwiI/edit?usp=sharing), select the first tabsheet.
 
@@ -520,23 +524,231 @@ The model is [implemented in a spreadsheet](https://docs.google.com/spreadsheets
     + $K = 0.5$. (Leave $r = 2.9$. Mind the value on the vertical axis!)
     
     
-#### Question {-}
+#### Questions {-}
 
 * Changes in the values of $K$ have an effect on the height of the graph. The pattern itself also changes a bit.
     + Can you explain why this is so?
     
 * Implement the model in `R`. 
-    + You should be able to do this by slightly modifying you model of the Logistic Map.
+    + You should be able to do this by slightly modifying you model of the Logistic Map, but you need to add a parameter, $K$.
     + Make a lag 1 return plot.
     
 #### Answers {-}
 
+* Changes in the values of $K$ have an effect on the height of the graph. The pattern itself also changes a bit.
+    + If $K$ is changed, the range of values that can go into the iterative process changes, so the state evolution will also change.
+    
+* Implement the model in `R`. 
+    + You should be able to do this by slightly modifying you model of the Logistic Map.
 
+```{r, include=TRUE, tidy=FALSE}
+# Van Geert's cognitive growth model
+vanGeert <- function(L0 = 0.01, r = 1.2, K = 2, N = 100){
+  # Initialize L as vector of L0, followed by N-1 empty slots (NA).
+  L <- c(L0, rep(NA, N-1))
+  # Then, you need create the iteratation
+  for(i in 1:(N-1)){
+    L[i+1] <- L[i] * (1 + r - r * L[i] / K)
+  }
+  return(L)
+}
+
+
+# Make the plots ----
+library(plyr)
+
+op<-par(mfrow=c(2,4))
+# Different r
+rs <- c(1.2, 2.2, 2.5, 2.7, 2.9)
+l_ply(rs, function(r) plot(vanGeert(r=r),ylab = paste("r =",r," | K = 2") ,type = "l"))
+
+# Different Carrying Capacity K
+Ks <- c(1.5, 0.5)
+l_ply(Ks, function(k) plot(vanGeert(r=2.9,K=k),ylab = paste("r = 2.9 | K =",k) ,type = "l"))
+
+par(op)
+```
+
+    + Make a lag 1 return plot.
+
+```{r, tidy=FALSE}
+lags <- c(1,2,3,4)
+N <- 1000
+op <- par(mfrow = c(2,2), pty = "s")
+l_ply(lags, function(l) {plot(dplyr::lag(vanGeert(r=2.9,N=N),l), vanGeert(r=2.9,N=N), pch = ".", xlim = c(0,3), ylim = c(0,3), xlab = "Y(t)", ylab = "Y(t+1)",  main = paste("lag =",l))})
+par(op)
+```
 
 </br>
 </br>
 
 
+## **Conditional growth: Jumps and Stages**
+
+
+### Auto-conditional jumps {.tabset .tabset-fade .tabset-pills}
+
+Suppose we want to model that the growth rate $r$ increases after a certain amount has been learned. In general, this is a very common phenomenon, for instance: When becoming proficient at a skill, growth (in proficiency) is at first slow, but then all of a sudden there can be a jump to the appropriate (and sustained) level of proficiency.
+
+#### Questions {-}
+
+* Take the model of the Logistic Map as a starting point.
+* Look at the spreadsheet `Van Geert (Jumps)` 
+* Suppose we want our parameter to change when a growth level of $0.2$ is reached. We'll need an `IF` statement which looks something like this: `IF` $L > 0.2$ then use the new parameter value, otherwise use the parameter value we started with. 
+    + in Excel this becomes quite complicated using the `IF` function (`ALS` in Dutch). 
+    + Implementing the conditional jumps `R` will take on a different (much easier) form.
+
+```{r, eval=FALSE, include=TRUE, tidy=FALSE}
+# TEMPLATE
+# Modify this function
+vanGeert <- function(L0 = 0, r = 1, K = 2, N = 100){
+    
+    # Initialize L as vector of Y0, followed by N-1 empty slots (NA).
+    L <- c(L0, rep(NA,N-1))
+    
+    # Then, you need create the iteratation
+    for(i in 1:(N-1)){
+        
+    # You need to monitor the value of L and change the growth rate according to a rule
+    if(L[i]>=ThresholdValue){
+      r <- 
+    } 
+
+    L[i+1] <- # Implement the model here!!
+        
+    }
+    
+    return(L)
+}
+```
+
+
+* Copy the code above and implement the Van Geert's model.
+* When you are done, you need to initialize the function, select the code and run it. 
+    + The environment will now contain a function called `vanGeert`
+    + Generate some data, e.g. with $r$ set to $1, 2, 2.8, 2.9, 3$. 
+    + *Extra:* Consider making `ThresholdValue` an argument of the function so you can play around with the values.
+
+#### Answers {-}
+
+Using the template:
+
+```{r}
+vanGeert.jump <- function(L0 = 0.01, r = 0.1, K = 2, ThresholdValue = 0.2, N = 100){
+  
+  # Create a vector L of length N, which has value L0 at L[1]
+  L <- c(L0, rep(NA, N-1))
+  
+    # Then, you need create the iteratation
+    for(i in 1:(N-1)){
+      
+      # You need to monitor the value of L and change the growth rate according to a rule
+      if(L[i]>=ThresholdValue){
+        r <- 2
+      }
+        
+    # Van Geert growth model
+    L[[i+1]] <- L[i] * (1 + r - r * L[i] / K)
+  }
+  return(ts(L))
+}
+
+# Plot with the default settings, this time let's use the lattice package
+library(lattice)
+xyplot(vanGeert.jump(),ylab = "Change r to 2 if L >= 0.2")
+```
+
+
+The code below is defines the function in such a way that we can add more than one conditional statement.
+
+```{r}
+vanGeert.cond <- function(L0 = 0.01, r = 0.1, K = 2, cond = cbind.data.frame(L = 0.2, par = "r", val = 2), N = 100){
+    
+  # Create a vector L of length N, which has value L0 at L[1]
+    L <- c(L0, rep(NA, N-1))
+    
+    # Iterate N steps of the difference equation with values passed for L0, K and r.
+    cnt <- 1
+    for(i in seq_along(L)){
+      
+        # Check if the current value of L is greater than the threshold for the current conditional rule in cond
+        if(L[i] > cond$L[cnt]){
+          
+            # If the threshold is surpassed, change the parameter settings by evaluating: cond$par = cond$val 
+            eval(parse(text = paste(cond$par[cnt], "=", cond$val[cnt])))
+          
+            # Update the counter if there is another conditional rule in cond
+            if(cnt < nrow(cond)){cnt <- cnt + 1}
+        }
+      
+        # Van Geert growth model
+        L[[i+1]] <- L[i] * (1 + r - r * L[i] / K)
+    }
+    return(ts(L))
+}
+
+
+# Plot with the default settings.
+library(lattice)
+xyplot(vanGeert.cond())
+```
+
+The 'trick' used here is to define the function such that it can take a set of conditional rules and apply them sequentially during the iterations. The conditiona rule is passed as a `data.frame`, but one could also use a `list` object. 
+
+```{r}
+(cond <- cbind.data.frame(L = c(0.2, 0.6), par = c("r", "r"), val = c(0.5, 0.1)))
+plot(vanGeert.cond(cond=cond))
+points(which(vanGeert.cond(cond=cond)>0.2)[1],0.2,col="red",pch=16)
+points(which(vanGeert.cond(cond=cond)>0.6)[1],0.6,col="red",pch=16)
+legend(60,1,legend = c("L>0.2 - change r to 0.5","L>0.6 - change r to .1"),col = c("red","red"),pch=16)
+
+```
+
+
+</br>
+
+
+### Auto-conditional stages {.tabset .tabset-fade .tabset-pills}
+
+Another conditional change we might want to explore is that when a certain growth level is reached the carrying capacity $K$ increases, reflecting that new resources have become available to support further growth.
+
+#### Questions {-}
+
+* Build your model in such a way that when $L > 0.99$, $K$ changes to the value 2, keep $r = 0.1$
+* Try to also to change the growth rate r after reaching $L > 0.99$ 
+* Recreate the model on the tab `Van Geert (3 stages)` in `R`
+
+
+#### Answers {-}
+
+We'll continue with the more general function.
+
+```{r, fig.show='asis'}
+(cond <- cbind.data.frame(L = 0.99, par = "K", val = 2))
+plot(vanGeert.cond(r=0.1,cond=cond))
+points(which(vanGeert.cond(cond=cond)>0.99)[1],0.99,col="red",pch=16)
+legend(60,1, legend = "L>0.99 - change r to 2", col = "red", pch=16)
+```
+
+
+Or, combine a change of `r` and a change of `k`
+```{r, fig.show='asis'}
+(cond <- cbind.data.frame(L = c(0.99,0.99,1.99,1.99), par = c("r","K","r","K"), val = c(0.1,2,2.1,3)))
+plot(vanGeert.cond(r=0.2,cond=cond))
+points(which(vanGeert.cond(r=0.2,cond=cond)>cond$L[1])[1],cond$L[1],col="red",pch=21)
+points(which(vanGeert.cond(r=0.2,cond=cond)>cond$L[2])[1],cond$L[2],col="blue",pch=46,cex=4)
+points(which(vanGeert.cond(r=0.2,cond=cond)>cond$L[3])[1],cond$L[3],col="red",pch=21)
+points(which(vanGeert.cond(r=0.2,cond=cond)>cond$L[4])[1],cond$L[4],col="blue",pch=46,cex=4)
+legend(60,1,legend = paste0("L>",cond$L," - change ",cond$par," to ",cond$val),col = c("red","blue"),pch=c(21,46), pt.cex = c(1,4))
+
+
+# A fantasy growth process
+(cond <- cbind.data.frame(L = c(0.1, 1.99, 1.999, 2.5, 2.9), par = c("r", "K", "r", "r","K"), val = c(0.3, 3, 0.9, 0.1, 1.3)))
+xyplot(vanGeert.cond(cond=cond))
+```
+
+
+### Growth models in package `casnet`
 
 To model the autocatalytic growth equations we provide a function `growth.ac()`, which is able to simulate all of the processes discussed in the lectures. Using just a few lines of code, each of the 4 difference equations used in the assignments can be simulated. Basically the code block below contains the solutions to the Linear Map, the stylized Logisitc Map and the Van Geert model for cognitive growth.
 
@@ -569,64 +781,6 @@ Some notes about this function:
 * The `sapply()` function iterates $t$ from $1$ to the number of elements in $Y$ (`seq_along(Y)`) and then applies the function.
 * The double headed arrow `<<-` is necessary because we want to update vector $Y$, which is defined outside the `sapply()` environment.
 
-
-
-## **Conditional growth: Jumps and Stages**
-
-
-### Auto-conditional jumps 
-
-Suppose we want to model that the growth rate $r$ increases after a certain amount has been learned. In general, this is a very common phenomenon, for instance: When becoming proficient at a skill, growth (in proficiency) is at first slow, but then all of a sudden there can be a jump to the appropriate (and sustained) level of proficiency.
-
-* Take the model of the Logistic Map as a starting point.
-* Look at the spreadsheet `Van Geert (Jumps)` 
-*  Suppose we want our parameter to change when a growth level of $0.2$ is reached. We'll need an `IF` statement which looks something like this: `IF` $L > 0.2$ then use the new parameter value, otherwise use the parameter value we started with. 
-    + in Excel this becomes quite complicated using the `IF` function (`ALS` in Dutch). 
-    + Implementing the conditional jumps `R` will take on a different (much easier) form.
-
-```{r, eval=FALSE, include=TRUE, tidy=FALSE}
-# TEMPLATE
-# Modify this function
-vanGeert <- function(L0 = 0, r = 1, K = 2, N = 100){
-    
-    # Initialize L as vector of Y0, followed by N-1 empty slots (NA).
-    L <- c(L0, rep(NA,N-1))
-    
-    # Then, you need create the iteratation
-    for(i in 1:(N-1)){
-        
-    # You need to monitor the value of L and change the growth rate according to a rule
-    if(L[i]>=ThresholdValue){
-      r <- 
-    } else {
-      r <- 
-    }
-      
-    L[i+1] <- # Implement the model here!!
-        
-    }
-    
-    return(L)
-}
-```
-
-</br>
-
-* Copy the code above and implement the Van Geert's model.
-* When you are done, you need to initialize the function, select the code and run it. 
-    + The environment will now contain a function called `vanGeert`
-    + Generate some data, e.g. with $r$ set to $1, 2, 2.8, 2.9, 3$. 
-    + *Extra:* Consider making `ThresholdValue` an argument of the function so you can play around with the values.
-
-
-### Auto-conditional stages
-
-Another conditional change we might want to explore is that when a certain growth level is reached the carrying capacity $K$ increases, reflecting that new resources have become available to support further growth.
-
-* Build your model in such a way that when $L > 0.99$, $K$ changes to the value 2, keep $r = 0.1$
-* Try to also to change the growth rate r after reaching $L > 0.99$ 
-* Recreate the model on the tab `Van Geert (3 stages)` in `R`
-
 </br>
 </br>
 
@@ -645,6 +799,7 @@ See the website by [Paul Van Geert](http://www.paulvangeert.nl/research.htm), sc
 * Interaction during Play
 
 </br>
+
 
 ----
 
@@ -733,89 +888,4 @@ There is much more to tell about dynamic modelling, see Chapter 4 for some more 
 
 </br>
 </br>
-
-# **Potential Theory and Catastrophe Models**
-
-* The non-linear regression assignment is written for `SPSS`, but you can try to use 'R' as well. Be sure to look at the solutions of the [Basic Time Series Analysis](#bta)) assignments.
-* Using the `cusp` package 
-
-</br>
-</br>
-
-## **Fitting the cusp catastrophe in `SPSS`**
-
-In the file [Cusp Attitude.sav](https://github.com/FredHasselman/DCS/raw/master/assignmentData/Potential_Catastrophe/Cusp%20attitude.sav), you can find data from a (simulated) experiment. Assume the experiment tried to measure the effects of explicit predisposition and [affective conditioning](http://onlinelibrary.wiley.com/doi/10.1002/mar.4220110207/abstract) on attitudes towards Complexity Science measured in a sample of psychology students using a specially designed Implicit Attitude Test (IAT).
-
-
-### Explore the data for catastrophe flags
-
-* Look at a Histogram of the difference score (post-pre) $dZY$. This should look quite normal (pun intended).
-    -	Perform a regular linear regression analysis predicting $dZY$ (Change in Attitude) from $\alpha$ (Predisposition). 
-    - Are you happy with the $R^2$?
-* Look for Catastrophe Flags: Bi-modality. Examine what the data look like if we split them across the conditions.
-    - Use $\beta$ (Conditioning) as a Split File Variable (`Data >> Split File`). And again, make a histogram of $dZY$.
-    - Try to describe what you see in terms of the experiment.
-    - Turn Split File off. Make a Scatter plot of $dZY$ (x-axis) and $\alpha$ (y-axis). Here you see the bi-modality flag in a more dramatic fashion. 
-     - Can you see another flag?     
-      
-
-### Fitting the catastrophe model
-
-* Perhaps we should look at a cusp Catastrophe model:
-
-   - Go to `Analyse >> Regression >> Nonlinear` (also see [Basic Time Series Analysis](#bta)). First we need to tell SPSS which parameters we want to use, press `Parameters.` 
-    - Now you can fill in the following: 
-        + `Intercept` (Starting value $0.01$)
-        + `B1` through `B4` (Starting value $0.01$)
-        + Press `Continue` and use $dZY$ as the dependent. 
-    - Now we build the model in `Model Expression`, it should say this: 
-    ```
-    Intercept + B1 * Beta * ZY1 + B2 * Alpha + B3 * ZY1 ** 2 + B4 * ZY1 ** 3
-    ```
-    - Run! And have a look at $R^2$.
-
-
-### Alternative without using `regular` regression 
-
-The model can also be fitted with linear regression in SPSS, but we need to make some extra (non-linear) variables using `COMPUTE`:
-
-</br>
-
-```
-BetaZY1 = Beta*ZY1	*(Bifurcation, splitting parameter).
-ZY1_2 = ZY1 ** 2	*(ZY1 Squared).
-ZY1_3 = ZY1 ** 3	*(ZY1 Cubed).
-```
-</br>
-
-* Create a linear regression model with $dZY$ as dependent and $Alpha$, $BetaZY1$ and $ZY1_2$ en $ZY1_3$ as predictors. 
-* Run! The parameter estimates should be the same.
-  
-  
-### Plot the results
-
-Finally try to can make a 3D-scatter plot with a smoother surface to have look at the response surface.
-
-* HINT: this is a lot easier in `R` or `Matlab` perhaps you can export your `SPSS` solution.
-
-### Interpret the results
-
-How to evaluate this model fit? 
-
-* Check Chapter 3 in which the analysis strategy is summarised. 
-* The cusp has to outperform the `pre-post` model.
-
-
-## Using the `cusp` package in `R`
-
-Use this tutorial paper to fit the cusp in 'R' according to a maximum likelihood criterion.
-
-[Grasman, R. P. P. P., Van der Maas, H. L. J., & Wagenmakers, E. (2007). Fitting the Cusp Catastrophe in R: A cusp-Package.](https://cran.r-project.org/web/packages/cusp/vignettes/Cusp-JSS.pdf)
-
-- Start R and install package `cusp` 
-
-- Work through the *Example I* (attitude data) in the paper (*Section 4: Examples*, p. 12).
-
-- *Example II* in the same section is also interesting, but is based on simulated data.
-    + Try to think of an application to psychological / behavioural science.
 

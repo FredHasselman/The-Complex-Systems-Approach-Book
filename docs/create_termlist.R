@@ -1,7 +1,7 @@
 library(plyr)
 library(tidyverse)
 
-df1   <- openxlsx::read.xlsx("/Users/Fred/Documents/GitHub/The Complex Systems Approach Book/docs/Complexity Terms - CEREGO.xlsx")
+df1   <- openxlsx::read.xlsx("/Users/Fred/Documents/GitHub/The Complex Systems Approach Book/docs/CEREGO_DynamicsOfComplexSystems.xlsx")
 dftot <- arrange(df1, Term)
 
 set.seed(321)

@@ -1,7 +1,6 @@
 # (APPENDIX) APPENDICES {-}
 
 # **List of terms**
-
 ### **Adaptive Behaviour** {- #Adap1}
 
 + System behaviour that appears to be (partially) coordinated by previously 'experienced events'
@@ -20,7 +19,7 @@
 
 ### **Behaviour (of a dynamic system)** {- #Beha5}
 
-+ The  temporal evolution of states of a system according to one or more rules (also known as state propagation rules, or, iterative processes). Models of the behaviour of dynamic systems use difference or differential equations to describe the iterative processes hypothesized to underly the temporal evolution
++ The  temporal evolution of states of a system according to one or more rules (also known as state propagation rules, or, iterative processes). Models of the behaviour of dynamic systems use difference or differential equations to describe the iterative processes hypothesized to underlie the temporal evolution
 
 ### **Bifurcation** {- #Bifu6}
 
@@ -30,17 +29,17 @@
 
 + Visual summary of the succession of period-doubling bifurcations produced by gradual changes in the control parameter(s)
 
-### **Catasrophe theory** {- #Cata8}
+### **Catastrophe flags** {- #Cata8}
 
-+ Mathematical resreach program describing how gradual change in some parameters can lead to disprortionally large changes in another parameter, called catastrophes (similair to bifurcations, Phase-, State-, or Order-transitions). 'This kind of behavior has been summarized succinctly in the phrase "the straw that broke the camel's back".' (Gilmore, 1992). 
++ Markers indicative for a physical system that is described by a catastrophe. There are 5 'classical' flags and 3 'diagnostic' flags. Classical: bimodality, sudden jumps, inaccessibility, sensitivity & hysteresis. Diagnostic: divergence from linear response, critical slowing down and critical  fluctuations. Diagnostic flags can be used as early-warning signals. 
 
-### **Catastrophe flags** {- #Cata9}
+### **Catastrophe theory** {- #Cata9}
 
-+ Markers indicative for a physical system that is describe by a catastrophe. There are 5 'classical' flags and 3 'diagnostic' flags. Classical: bimodality, sudden jumps, inaccessibility, sensitivity & hyesteresis. Diagnostic: divergence from linear response, critical slowing down and critical  fluctuations. Diagnostic flags can be used as early-warning signals. 
++ Mathematical research program describing how gradual change in some parameters can lead to disproportionately large changes in another parameter, called catastrophes (similar to bifurcations, Phase-, State-, or Order-transitions). 'This kind of behaviour has been summarized succinctly in the phrase "the straw that broke the camel's back".' (Gilmore, 1992). 
 
 ### **Complex Network** {- #Comp10}
 
-+ A network with of many nodes and likely many substructures depending on thet nature and distribution of connections between nodes
++ A network with of many nodes and likely many substructures depending on that nature and distribution of connections between nodes
 
 ### **Complex system** {- #Comp11}
 
@@ -48,7 +47,7 @@
 
 ### **Complexity science** {- #Comp12}
 
-+ Complexity science studies how systems that consist of many components can generate relatively simple and stable (nonrandom) behaviour. Important behavioural phenomena studied in Complexity Science are synchronisation, adaptation and coordination of behaviour across many different temporal and spatial scales, emergent properties and collective behaviour, holism and self-organisation
++ Complexity science studies how systems that consist of many components can generate relatively simple and stable (non-random) behaviour. Important behavioural phenomena studied in Complexity Science are synchronisation, adaptation and coordination of behaviour across many different temporal and spatial scales, emergent properties and collective behaviour, holism and self-organisation
 
 ### **Component dominant dynamics** {- #Comp13}
 
@@ -60,7 +59,7 @@
 
 ### **Critical fluctuations** {- #Crit15}
 
-+ An early warning signal for a phase transition that is characterised by an increase in fluctuations (variability) of the behaviour of the system. The increase occurs because the self-organised transition from one state to another relaxes the contraints on the degrees of freedom a system has available to generate its behaviour, allowing states and behavioural modes to appear that were previously inaccesible.
++ An early warning signal for a phase transition that is characterised by an increase in fluctuations (variability) of the behaviour of the system. The increase occurs because the self-organised transition from one state to another relaxes the constraints on the degrees of freedom a system has available to generate its behaviour, allowing states and behavioural modes to appear that were previously inaccessible.
 
 ### **Critical slowing down** {- #Crit16}
 
@@ -92,7 +91,7 @@
 
 ### **Early warning signals** {- #Earl23}
 
-+ Critical slowing down and critical fluctuations. Early-warning signals indicate instability in the existing state which may result in a qualitative shift towards a new state (phase transition / catastrophe). Early-warning signals are similair to diagnostic catastrophe flags. 
++ Critical slowing down and critical fluctuations. Early-warning signals indicate instability in the existing state which may result in a qualitative shift towards a new state (phase transition / catastrophe). Early-warning signals are similar to diagnostic catastrophe flags. 
 
 ### **Effective Complexity** {- #Effe24}
 
@@ -104,19 +103,19 @@
 
 ### **Emergence** {- #Emer26}
 
-+ A complex system can generate emergent behaviour or display emergent properties that are novel and unexpected, that is, they are not predictable from the behaviour and proprties of the components of the system
++ A complex system can generate emergent behaviour or display emergent properties that are novel and unexpected, that is, they are not predictable from the behaviour and properties of the components of the system
 
 ### **Entropy** {- #Entr27}
 
-+ Relative absence of order/redundancy in a system. The degrees of freedom a system has available for generating its behavior: Possibility
++ Relative absence of order/redundancy in a system. The degrees of freedom a system has available for generating its behaviour: Possibility
 
-### **Epigenetic landscape (potential lanscape)** {- #Epig28}
+### **Epigenetic landscape (potential landscape)** {- #Epig28}
 
 + A hypothetical landscape describing the relative stability of behavioural modes of a system over time
 
 ### **Experienced event** {- #Expe29}
 
-+ An interaction of a system with its environment that changed the internal structure/organization of the system such that it can be said to display adaptive behaviour. “Interaction with after-effects”. Random behavior is “Interaction without after-effects”.
++ An interaction of a system with its environment that changed the internal structure/organization of the system such that it can be said to display adaptive behaviour. “Interaction with after-effects”. Random behaviour is “Interaction without after-effects”.
 
 ### **flow ~** {- #flow30}
 
@@ -204,7 +203,7 @@
 
 ### **Order** {- #Orde51}
 
-+ “order is essentially the arrival of redundancy in a system, a reduction of possibilities”(Von Förster, 2003). Any form of nonrandom association or dependency that exists between parts of a system, its behaviour over time and/or its environment is a form of order. In scientific explanation of behaviour, the presence of order in non-artificial systems must be explained and should not be (implicitly) assumed.
++ “order is essentially the arrival of redundancy in a system, a reduction of possibilities”(Von Förster, 2003). Any form of non-random association or dependency that exists between parts of a system, its behaviour over time and/or its environment is a form of order. In scientific explanation of behaviour, the presence of order in non-artificial systems must be explained and should not be (implicitly) assumed.
 
 ### **Order Parameter** {- #Orde52}
 
@@ -220,7 +219,7 @@
 
 ### **Phase space** {- #Phas55}
 
-+ An abstract space used to represent the behavior of a system. Its dimensions are the variables of the system. Thus a point in the phase space defines a potential state of the system. The points actually achieved by a system depend on its iterative function and initial condition (starting point).
++ An abstract space used to represent the behaviour of a system. Its dimensions are the variables of the system. Thus a point in the phase space defines a potential state of the system. The points actually achieved by a system depend on its iterative function and initial condition (starting point).
 
 ### **Phase transition** {- #Phas56}
 
@@ -228,11 +227,11 @@
 
 ### **Potential function** {- #Pote57}
 
-+ A function that describes the order paremeter of a system, that is, it describes the relative stability of the potential end-states (attractor states) a system can settle into. The paramaters of the potential function include the control parameter.
++ A function that describes the order parameter of a system, that is, it describes the relative stability of the potential end-states (attractor states) a system can settle into. The parameters of the potential function include the control parameter.
 
 ### **Power-law scaling** {- #Powe58}
 
-+ A relationship between two variables that is linear on doubly logarithmic coordinates, meaning the law is experessed in increments that represent 'power'
++ A relationship between two variables that is linear on doubly logarithmic coordinates, meaning the law is expressed in increments that represent 'power'
 
 ### **Recursive process** {- #Recu59}
 
@@ -248,7 +247,7 @@
 
 ### **Return map** {- #Retu62}
 
-+ Plot of time series values vs.a delayed copy of itself. A return plot can be used to get an idea about the functional form of the iterative process, it is a simple variant of delay embedding.
++ Plot of time series values vs. a delayed copy of itself. A return plot can be used to get an idea about the functional form of the iterative process, it is a simple variant of delay embedding.
 
 ### **Saddle point** {- #Sadd63}
 
@@ -256,7 +255,7 @@
 
 ### **Scale free network** {- #Scal64}
 
-+ A network in which the distribution of the number of connections of a node and their frequency of occurence follows a power-law in which there are just a few nodes with many connections and many nodes with just a few connections
++ A network in which the distribution of the number of connections of a node and their frequency of occurrence follows a power-law in which there are just a few nodes with many connections and many nodes with just a few connections
 
 ### **Self-affinity** {- #Self65}
 
@@ -264,15 +263,15 @@
 
 ### **Self-similarity** {- #Self66}
 
-+ An infinite nesting of characteristic structure on all scales. Strict self-similarity refers to a form of which all substructures can be considered scaling tranformations, larger or smaller copies scaled by a single exponent for all dimensions of the structure. Statistical self-similarity refers to an approximate equivalence of scaled structure.
++ An infinite nesting of characteristic structure on all scales. Strict self-similarity refers to a form of which all substructures can be considered scaling transformations, larger or smaller copies scaled by a single exponent for all dimensions of the structure. Statistical self-similarity refers to an approximate equivalence of scaled structure.
 
 ### **Sensitive dependence on initial conditions** {- #Sens67}
 
-+ A property of chaotic systems. A dynamic system has sensitivity to initial conditions when very small differences in starting values result in very different behavior. If the orbits of nearby starting points diverge, the system has sensitivity to initial conditions.
++ A property of chaotic systems. A dynamic system has sensitivity to initial conditions when very small differences in starting values result in very different behaviour. If the orbits of nearby starting points diverge, the system has sensitivity to initial conditions.
 
 ### **Small world network** {- #Smal68}
 
-+ Many real-world networks have a small average shortest path length, but also a clustering coefficient that is significantly higher than expected by chance. These networks are extremely efficient, each node in a very large network can still be reach in just a few steps (the 'six degrees of seperation` phenomenon).
++ Many real-world networks have a small average shortest path length, but also a clustering coefficient that is significantly higher than expected by chance. These networks are extremely efficient, each node in a very large network can still be reach in just a few steps (the 'six degrees of separation` phenomenon).
 
 ### **State** {- #Stat69}
 
@@ -305,3 +304,4 @@
 ### **Transient time (transient behaviour)** {- #Tran76}
 
 + The time it takes for a system to transition from one stable state (behavioural mode, attractor state) into another, during which the system displays transient behaviour
+

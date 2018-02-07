@@ -1,5 +1,5 @@
 ---
-title: "DCS Assignments Part I"
+title: "DCS Assignments Part I-A"
 author: "Fred Hasselman & Maarten Wijnants"
 date: "1/14/2018"
 output: 
@@ -28,6 +28,7 @@ output:
 # **Quick Links** {-}
 
 * [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
+* [Assignments Part 1B: Potential Theory and Catastrophe Models](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1B.html)
 * [Assignments Part 2: Time Series Analysis: Temporal Correlations and Fractal Scaling](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)
 * [Assignments Part 3: Quantifying Recurrences in State Space](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)
 * [Assignments Part 4: Complex Networks](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)
@@ -236,7 +237,7 @@ plot(linearMap(Y0=0.1,r=1.08,N=100), type = "l")
 plot(linearMap(Y0=0.1,r=1.08,N=100), type = "l")
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 `R` and `Matlab` have specialized objects to represent time series, and functions and packages for time series analysis. These are especially convenient for plotting time and date information on the X-axis. See the examples on plotting [time series in `R` in Chapter 2](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html#plotTS).
   
@@ -457,7 +458,7 @@ op<-par(mfrow=c(2,3))
 l_ply(rs,function(r) plot(logisticMap(r=r),ylab = paste("r =",r) ,type = "l"))
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 ```r
 par(op)
@@ -476,7 +477,7 @@ op <- par(mfrow = c(2,2), pty = "s")
 l_ply(lags, function(l) {plot(dplyr::lag(logisticMap(r=4,N=N),l), logisticMap(r=4,N=N), pch = ".", xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",  main = paste("lag =",l))})
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 ```r
 par(op)
@@ -568,7 +569,7 @@ l_ply(Ks, function(k) plot(vanGeert(r=2.9,K=k),ylab = paste("r = 2.9 | K =",k) ,
 par(op)
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 
     + Make a lag 1 return plot.
 
@@ -580,7 +581,7 @@ op <- par(mfrow = c(2,2), pty = "s")
 l_ply(lags, function(l) {plot(dplyr::lag(vanGeert(r=2.9,N=N),l), vanGeert(r=2.9,N=N), pch = ".", xlim = c(0,3), ylim = c(0,3), xlab = "Y(t)", ylab = "Y(t+1)",  main = paste("lag =",l))})
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
 
 ```r
 par(op)
@@ -667,7 +668,7 @@ library(lattice)
 xyplot(vanGeert.jump(),ylab = "Change r to 2 if L >= 0.2")
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 
 
 The code below is defines the function in such a way that we can add more than one conditional statement.
@@ -705,7 +706,7 @@ library(lattice)
 xyplot(vanGeert.cond())
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
 The 'trick' used here is to define the function such that it can take a set of conditional rules and apply them sequentially during the iterations. The conditiona rule is passed as a `data.frame`, but one could also use a `list` object. 
 
@@ -727,7 +728,7 @@ points(which(vanGeert.cond(cond=cond)>0.6)[1],0.6,col="red",pch=16)
 legend(60,1,legend = c("L>0.2 - change r to 0.5","L>0.6 - change r to .1"),col = c("red","red"),pch=16)
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
 
 
 </br>
@@ -764,7 +765,7 @@ points(which(vanGeert.cond(cond=cond)>0.99)[1],0.99,col="red",pch=16)
 legend(60,1, legend = "L>0.99 - change r to 2", col = "red", pch=16)
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
 
 
 Or, combine a change of `r` and a change of `k`
@@ -790,7 +791,7 @@ points(which(vanGeert.cond(r=0.2,cond=cond)>cond$L[4])[1],cond$L[4],col="blue",p
 legend(60,1,legend = paste0("L>",cond$L," - change ",cond$par," to ",cond$val),col = c("red","blue"),pch=c(21,46), pt.cex = c(1,4))
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
 
 ```r
 # A fantasy growth process
@@ -810,7 +811,7 @@ legend(60,1,legend = paste0("L>",cond$L," - change ",cond$par," to ",cond$val),c
 xyplot(vanGeert.cond(cond=cond))
 ```
 
-![](ASSIGNMENTS_P1_files/figure-html/unnamed-chunk-23-2.png)<!-- -->
+![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-23-2.png)<!-- -->
 
 
 ### Growth models in package `casnet`
@@ -954,89 +955,4 @@ There is much more to tell about dynamic modelling, see Chapter 4 for some more 
 
 </br>
 </br>
-
-# **Potential Theory and Catastrophe Models**
-
-* The non-linear regression assignment is written for `SPSS`, but you can try to use 'R' as well. Be sure to look at the solutions of the [Basic Time Series Analysis](#bta)) assignments.
-* Using the `cusp` package 
-
-</br>
-</br>
-
-## **Fitting the cusp catastrophe in `SPSS`**
-
-In the file [Cusp Attitude.sav](https://github.com/FredHasselman/DCS/raw/master/assignmentData/Potential_Catastrophe/Cusp%20attitude.sav), you can find data from a (simulated) experiment. Assume the experiment tried to measure the effects of explicit predisposition and [affective conditioning](http://onlinelibrary.wiley.com/doi/10.1002/mar.4220110207/abstract) on attitudes towards Complexity Science measured in a sample of psychology students using a specially designed Implicit Attitude Test (IAT).
-
-
-### Explore the data for catastrophe flags
-
-* Look at a Histogram of the difference score (post-pre) $dZY$. This should look quite normal (pun intended).
-    -	Perform a regular linear regression analysis predicting $dZY$ (Change in Attitude) from $\alpha$ (Predisposition). 
-    - Are you happy with the $R^2$?
-* Look for Catastrophe Flags: Bi-modality. Examine what the data look like if we split them across the conditions.
-    - Use $\beta$ (Conditioning) as a Split File Variable (`Data >> Split File`). And again, make a histogram of $dZY$.
-    - Try to describe what you see in terms of the experiment.
-    - Turn Split File off. Make a Scatter plot of $dZY$ (x-axis) and $\alpha$ (y-axis). Here you see the bi-modality flag in a more dramatic fashion. 
-     - Can you see another flag?     
-      
-
-### Fitting the catastrophe model
-
-* Perhaps we should look at a cusp Catastrophe model:
-
-   - Go to `Analyse >> Regression >> Nonlinear` (also see [Basic Time Series Analysis](#bta)). First we need to tell SPSS which parameters we want to use, press `Parameters.` 
-    - Now you can fill in the following: 
-        + `Intercept` (Starting value $0.01$)
-        + `B1` through `B4` (Starting value $0.01$)
-        + Press `Continue` and use $dZY$ as the dependent. 
-    - Now we build the model in `Model Expression`, it should say this: 
-    ```
-    Intercept + B1 * Beta * ZY1 + B2 * Alpha + B3 * ZY1 ** 2 + B4 * ZY1 ** 3
-    ```
-    - Run! And have a look at $R^2$.
-
-
-### Alternative without using `regular` regression 
-
-The model can also be fitted with linear regression in SPSS, but we need to make some extra (non-linear) variables using `COMPUTE`:
-
-</br>
-
-```
-BetaZY1 = Beta*ZY1	*(Bifurcation, splitting parameter).
-ZY1_2 = ZY1 ** 2	*(ZY1 Squared).
-ZY1_3 = ZY1 ** 3	*(ZY1 Cubed).
-```
-</br>
-
-* Create a linear regression model with $dZY$ as dependent and $Alpha$, $BetaZY1$ and $ZY1_2$ en $ZY1_3$ as predictors. 
-* Run! The parameter estimates should be the same.
-  
-  
-### Plot the results
-
-Finally try to can make a 3D-scatter plot with a smoother surface to have look at the response surface.
-
-* HINT: this is a lot easier in `R` or `Matlab` perhaps you can export your `SPSS` solution.
-
-### Interpret the results
-
-How to evaluate this model fit? 
-
-* Check Chapter 3 in which the analysis strategy is summarised. 
-* The cusp has to outperform the `pre-post` model.
-
-
-## Using the `cusp` package in `R`
-
-Use this tutorial paper to fit the cusp in 'R' according to a maximum likelihood criterion.
-
-[Grasman, R. P. P. P., Van der Maas, H. L. J., & Wagenmakers, E. (2007). Fitting the Cusp Catastrophe in R: A cusp-Package.](https://cran.r-project.org/web/packages/cusp/vignettes/Cusp-JSS.pdf)
-
-- Start R and install package `cusp` 
-
-- Work through the *Example I* (attitude data) in the paper (*Section 4: Examples*, p. 12).
-
-- *Example II* in the same section is also interesting, but is based on simulated data.
-    + Try to think of an application to psychological / behavioural science.
 

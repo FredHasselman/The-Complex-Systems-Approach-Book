@@ -187,8 +187,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="list-of-terms.html#Beha5"><strong>Behaviour (of a dynamic system)</strong></a></li>
 <li><a href="list-of-terms.html#Bifu6"><strong>Bifurcation</strong></a></li>
 <li><a href="list-of-terms.html#Bifu7"><strong>Bifurcation diagram</strong></a></li>
-<li><a href="list-of-terms.html#Cata8"><strong>Catasrophe theory</strong></a></li>
-<li><a href="list-of-terms.html#Cata9"><strong>Catastrophe flags</strong></a></li>
+<li><a href="list-of-terms.html#Cata8"><strong>Catastrophe flags</strong></a></li>
+<li><a href="list-of-terms.html#Cata9"><strong>Catastrophe theory</strong></a></li>
 <li><a href="list-of-terms.html#Comp10"><strong>Complex Network</strong></a></li>
 <li><a href="list-of-terms.html#Comp11"><strong>Complex system</strong></a></li>
 <li><a href="list-of-terms.html#Comp12"><strong>Complexity science</strong></a></li>
@@ -207,7 +207,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="list-of-terms.html#Embe25"><strong>Embedding Dimension</strong></a></li>
 <li><a href="list-of-terms.html#Emer26"><strong>Emergence</strong></a></li>
 <li><a href="list-of-terms.html#Entr27"><strong>Entropy</strong></a></li>
-<li><a href="list-of-terms.html#Epig28"><strong>Epigenetic landscape (potential lanscape)</strong></a></li>
+<li><a href="list-of-terms.html#Epig28"><strong>Epigenetic landscape (potential landscape)</strong></a></li>
 <li><a href="list-of-terms.html#Expe29"><strong>Experienced event</strong></a></li>
 <li><a href="list-of-terms.html#flow30"><strong>flow ~</strong></a></li>
 <li><a href="list-of-terms.html#Frac31"><strong>Fractal</strong></a></li>
@@ -300,7 +300,7 @@ op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">mf
 <p>Use <code>l_ply()</code> from <code>package::plyr</code> to create return plots with different lags. The <strong>l_</strong> before <strong>ply</strong> means the function will take a <strong>l</strong>ist as input to a function, but it will not expect any data to be returned, for example in the case of a function that is used to plot something.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Explore different lags</span>
 op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">pty =</span> <span class="st">&quot;s&quot;</span>)
-plyr<span class="op">::</span><span class="kw">l_ply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="cf">function</span>(l) <span class="kw">plot</span>(<span class="kw">lag</span>(Y2, <span class="dt">n =</span> l), Y2, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="kw">paste0</span>(<span class="st">&quot;Y(t+&quot;</span>,l,<span class="st">&quot;)&quot;</span>), <span class="dt">cex =</span> .<span class="dv">8</span>))</code></pre></div>
+plyr<span class="op">::</span><span class="kw">l_ply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="cf">function</span>(l) <span class="kw">plot</span>(dplyr<span class="op">::</span><span class="kw">lag</span>(Y2, <span class="dt">n =</span> l), Y2, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="kw">paste0</span>(<span class="st">&quot;Y(t+&quot;</span>,l,<span class="st">&quot;)&quot;</span>), <span class="dt">cex =</span> .<span class="dv">8</span>))</code></pre></div>
 <p><img src="DCS1718_files/figure-html/unnamed-chunk-12-1.png" width="99%" style="display: block; margin: auto;" /><img src="DCS1718_files/figure-html/unnamed-chunk-12-2.png" width="99%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(op)</code></pre></div>
 </div>
