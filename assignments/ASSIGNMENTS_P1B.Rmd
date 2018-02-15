@@ -29,6 +29,8 @@ knitr::opts_chunk$set(include=TRUE)
 ```
 
 
+
+
 # **Quick Links** {-}
 
 * [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
@@ -41,88 +43,252 @@ knitr::opts_chunk$set(include=TRUE)
 </br>
 
 
-# **Potential Theory and Catastrophe Models**
-
-* The non-linear regression assignment is written for `SPSS`, but you can try to use 'R' as well. Be sure to look at the solutions of the [Basic Time Series Analysis](#bta)) assignments.
-* Using the `cusp` package 
-
-</br>
-</br>
-
-## **Fitting the cusp catastrophe in `SPSS`**
-
-In the file [Cusp Attitude.sav](https://github.com/FredHasselman/DCS/raw/master/assignmentData/Potential_Catastrophe/Cusp%20attitude.sav), you can find data from a (simulated) experiment. Assume the experiment tried to measure the effects of explicit predisposition and [affective conditioning](http://onlinelibrary.wiley.com/doi/10.1002/mar.4220110207/abstract) on attitudes towards Complexity Science measured in a sample of psychology students using a specially designed Implicit Attitude Test (IAT).
 
 
-### Explore the data for catastrophe flags
-
-* Look at a Histogram of the difference score (post-pre) $dZY$. This should look quite normal (pun intended).
-    -	Perform a regular linear regression analysis predicting $dZY$ (Change in Attitude) from $\alpha$ (Predisposition). 
-    - Are you happy with the $R^2$?
-* Look for Catastrophe Flags: Bi-modality. Examine what the data look like if we split them across the conditions.
-    - Use $\beta$ (Conditioning) as a Split File Variable (`Data >> Split File`). And again, make a histogram of $dZY$.
-    - Try to describe what you see in terms of the experiment.
-    - Turn Split File off. Make a Scatter plot of $dZY$ (x-axis) and $\alpha$ (y-axis). Here you see the bi-modality flag in a more dramatic fashion. 
-     - Can you see another flag?     
-      
-
-### Fitting the catastrophe model
-
-* Perhaps we should look at a cusp Catastrophe model:
-
-   - Go to `Analyse >> Regression >> Nonlinear` (also see [Basic Time Series Analysis](#bta)). First we need to tell SPSS which parameters we want to use, press `Parameters.` 
-    - Now you can fill in the following: 
-        + `Intercept` (Starting value $0.01$)
-        + `B1` through `B4` (Starting value $0.01$)
-        + Press `Continue` and use $dZY$ as the dependent. 
-    - Now we build the model in `Model Expression`, it should say this: 
-    ```
-    Intercept + B1 * Beta * ZY1 + B2 * Alpha + B3 * ZY1 ** 2 + B4 * ZY1 ** 3
-    ```
-    - Run! And have a look at $R^2$.
+# **Fitting Parameters of Analytic Solutions**
 
 
-### Alternative without using `regular` regression 
 
-The model can also be fitted with linear regression in SPSS, but we need to make some extra (non-linear) variables using `COMPUTE`:
+## **Nonlinear Growth curves**
 
-</br>
+
+### Fitting the Logistic Growth model in SPSS {.tabset .tabset-fade .tabset-pills}
+
+#### Questions {-}
+
+Open the file [Growthregression.sav](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/blob/master/assignments/assignment_data/BasicTSA_nonlinreg/GrowthRegression.sav), it contains two variables: `Time` and `Y(t)`. 
+
+This is data from an iteration of the logistic growth differential equation you are familiar with by now, but let’s pretend it’s data from one subject measured on 100 occasions.
+
+* Plot Y(t) against Time Recognize the shape?
+* To get the growth parameter we’ll try to fit the solution of the logistic flow with SPSS nonlinear regression
+     + Select nonlinear… from the `Analysis` >> `Regression` menu.
+     + Here we can build the solution equation. We need three parameters:
+            a. **Yzero**, the initial condition.
+            b. *K*, the carrying capacity.
+            c. *r*, the growth rate.
+     + Fill these in where it says `parameters` give all parameters a starting value of  $0.01$
+
+Take a good look at the analytic solution of the (stilized) logistic flow:
+
+$$
+Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K-Y_{0}\right) * e^{(-K*r*t)} }
+$$
+
+Try to build this equation, the function fo $e$ is called `EXP` in `SPSS` (`Function Group` >> `Arithmetic`)
+Group terms by using parentheses as shown in the equation.
+
+* If you think you have built the model correctly, click on `Save` choose `predicted values`. Then paste your syntax and run it!
+    + Check the estimated parameter values.
+    + Check $R^2$!!!
+
+* Plot a line graph of both the original data and the predicted values. (Smile)
+
+You can try do the same using a polynomial approach.
+
+* A polynomial fishing expedition:
+    + Create time-varying 'covariates' of $Y(t)$:
+```
+COMPUTE T1=Yt * Time.
+COMPUTE T2=Yt * (Time ** 2). 
+COMPUTE T3=Yt * (Time ** 3). 
+COMPUTE T4=Yt * (Time ** 4). 
+EXECUTE.
+```
+    + Use these variables as predictors of $Y(t)$ in a regular linear regression analysis. This is called a *polynomial regression*: Fitting combinations of curves of different shapes on the data.
+    + Before you run the analysis: Click `Save` Choose `Predicted Values: Unstandardized`
+
+```{block2, type = "rmdselfthink"}
+Look at $R^2$. This is also almost 1!
+
+Which model is better? 
+
+Think about this: Based on the results of the linear regression what can you tell about the *growth rate*, the *carrying capacity* or the *initial condition*?
+```
+
+*	Create a line graph of $Y(t)$, plot the predicted values of the nonlinear regression and the unstandardized predicted values of the linear polynomial regression against `time` in one figure.
+    + Now you can see that the shape is approximated by the polynomials, but it is not quite the same. Is this really a model of a growth process as we could encounter it in nature?
+
+
+#### Answers {-}
+
+The solutions are also provided as an `SPSS` [syntax file](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/blob/master/assignments/assignment_data/BasicTSA_nonlinreg/GrowthRegression_sol.sps) file.
+
+Or copy the block below:
+```
+GRAPH
+  /LINE(SIMPLE)=VALUE(Yt) BY Time.
+
+* NonLinear Regression.
+MODEL PROGRAM  Yzero=0.01 r=0.01 K=0.01.
+COMPUTE  PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * K * Time))).
+NLR Yt
+  /PRED PRED_
+  /SAVE PRED
+  /CRITERIA SSCONVERGENCE 1E-8 PCON 1E-8.
+
+GRAPH
+  /LINE(MULTIPLE)=VALUE(Yt PRED_) BY Time.
+
+COMPUTE T1=Yt * Time.
+COMPUTE T2=Yt * (Time ** 2).
+COMPUTE T3=Yt * (Time ** 3).
+COMPUTE T4=Yt * (Time ** 4).
+EXECUTE.
+
+REGRESSION
+  /MISSING LISTWISE
+  /STATISTICS COEFF OUTS R ANOVA
+  /CRITERIA=PIN(.05) POUT(.10)
+  /NOORIGIN 
+  /DEPENDENT Yt
+  /METHOD=ENTER T1 T2 T3 T4
+  /SAVE PRED.
+
+
+GRAPH
+  /LINE(MULTIPLE)=VALUE(Yt PRED_ PRE_1) BY Time.
+```
+
+* The point here is that the polynomial regression appoach is "just" curve fitting ... adding components until a nice fit is found ... but what does component $Y_t^4$ represent? A quartic subprocess?
+* Fitting the solution of the the logistic function will give us parameters we can interpret unambiguoulsy: Carrying capacity, growth rate, starting value.
+
+
+### Fitting the Logistic Growth model in R {.tabset .tabset-fade .tabset-pills}
+
+There are several packages that can perform nonlinear regression analysis, the function most resembling the approach used by `SPSS` is `nls` in the default `stats` package.  
+
+The easiest way to do this is to first define your function (i.e., the solution) and then fit it using starting values for the parameters.
+
+```{r, cache=FALSE}
+library(rio)
+df <- import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/BasicTSA_nonlinreg/GrowthRegression.sav", setclass = "tbl_df")
+
+# Create the function for the analytic solution
+# Same as SPSS syntax: PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * K * Time))).
+log.eq <- function(Yzero, r, K, Time) {
+    K*Yzero/(Yzero + (K-Yzero) * exp(-1*(r * K * Time)))
+}
+```
+
+There is one drawback and you can read about in the help pages:
+
+> Warning. Do not use nls on artificial "zero-residual" data.
+
+This means, "do not use it on data generated by a deterministic model which has no residual error", which is exactly what the timeseries in this assignment is, it is the output of the logisitc flow.
+
+So, this will give an error:
+```{r, echo=TRUE, message=TRUE, warning=TRUE, cache=FALSE, eval=FALSE}
+# Fit this function ... gives an error
+# The list after 'start' provides the initial values
+m.log <- nls(Yt ~ log.eq(Yzero, r, K, Time), data = df, start = list(Yzero=.01, r=.01, K=1), trace = T)
+```
+
+
+
+We'll provide you the answers right away, but be sure to figure out what is going on.
+
+
+
+#### Answers{-}
+
+It is possible to fit these ideal data using package `minpack.lm`, which contains function `nlsM`.
+
+```{r}
+library(minpack.lm)
+
+m.log <- nlsLM(Yt ~ log.eq(Yzero, r, K, Time), data = df, start = list(Yzero = .01, r=.01, K=0.1))
+
+summary(m.log)
+```
+
+In order to look at the model prediction, we use `predict()` which is defined for almost all modelfitting functions in `R`
+```{r}
+Ypred <- predict(m.log)
+
+plot(ts(df$Yt), col="gray40", lwd=5, ylab = ("Yt | Ypred"))
+lines(Ypred, col="gray80", lwd=2, lty=2)
+```
+
+Then we do a polynomial regression using `lm`:
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+# Mimic the SPSS syntax
+attach(df)
+  df$T1 <- Yt * Time
+  df$T2 <- Yt * (Time^2) 
+  df$T3 <- Yt * (Time^3) 
+  df$T4 <- Yt * (Time^4)
+detach(df)
+
+m.poly <- lm(Yt ~ T1 + T2 + T3 + T4, data=df)
+summary(m.poly)
+```
+
+Then, predict and plot!
+```{r}
+Ypoly <- predict(m.poly)
+
+plot(ts(Ypoly), col="blue1", lwd=2, ylab = ("Ypoly (blue) | Ypred (red)"))
+lines(Ypred, col="red1", lwd=2)
+```
+
+SPSS computes an $r^2$ value for nonlinear regression models, which doesn't make a lot of sense if you think about it. Here we van just compare the residual errors:
+
+* Polynomial regression: $0.005506$
+* Analytic solution: $0.002865$
+
+Slightly less residual error for the analytic solution, using less parameters to fit the model (3 vs. 5). **More important:**, the parameters of the analytic solution have a direct interpretation in terms of growth processes.
+
+
+
+# **Potential Functions**
+
+
+
+### The Phoneme Boundary Model {.tabset .tabset-fade .tabset-pills}
+
+In this assignment we will look at the potential function used to study speech perception in these studies:
+
+[Tuller, B., Case, P., Ding, M., & Kelso, J. A. (1994). The nonlinear dynamics of speech categorization. Journal of Experimental Psychology: Human perception and performance, 20(1), 3.](https://s3.amazonaws.com/academia.edu.documents/41486712/The_Nonlinear_Dynamics_of_Speech_Categor20160123-5343-1c1fpf2.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1518665892&Signature=B2jjfU7EbMTFATVYtiZxYAxw608%3D&response-content-disposition=inline%3B%20filename%3DThe_nonlinear_dynamics_of_speech_categor.pdf)
+
+[Case, P., Tuller, B., Ding, M., & Kelso, J. S. (1995). Evaluation of a dynamical model of speech perception. Perception & Psychophysics, 57(7), 977-988.](https://link.springer.com/content/pdf/10.3758%2FBF03205457.pdf)
+
+You do not have to read these articles to do the assignment, but they do provide a great introduction to the kind phenomena you can study empirically, guided by a formal model, without fitting model parameters to data. For example, the model predicts phenomena that are unexpected and inexplicable by other theories of speech perception (e.g. hysteresis), most prominent, if the boundary is approached and the same stimulus is presented a number of times, a switch in perception occurs as if the phoneme boundary is crossed. *Prospective prediction by simulation* is an excellent way to test the plausibility of a model.
+
+#### Questions {-}
+
+Have a look at [the spreadsheet in which the model is implemented](https://docs.google.com/spreadsheets/d/1L6mpHx9SewGGfjValMJ2CzQz3uzOx1PWNaNVnZ4zkew/edit?usp=sharing), copy it, and see how the function changes with values of parameter `k` (between $-1$ and $1$, be sure to check $0$. Note that this is not an iterative function, `V` is 'just' a function of `x`.
+
+* Create the function in `R`
+    + remember, no iteration needed!
+    + plot the shape for different values of `k`, use $-1,\ -0.5,\ 0 0.5,\ 1$ 
+
+#### Answers {-}
+
+```{r}
+# Variable k
+ks = c(-1,-.5,0,.5,1)
+x = seq(-2,2,by=.1)
+# the function
+V <- function(x, k){return(k*x -.5*x^2 + .25*x^4)}
+
+# Plot x against V
+op<-par(mfrow=c(1,5))
+for(k in ks){
+  plot(x,V(x,k),type="l",xlim=c(-2,2),ylim=c(-1.5,2),frame.plot =FALSE,lwd=2)
+  abline(h=0,v=0,col="grey")
+  }
+par(op)
 
 ```
-BetaZY1 = Beta*ZY1	*(Bifurcation, splitting parameter).
-ZY1_2 = ZY1 ** 2	*(ZY1 Squared).
-ZY1_3 = ZY1 ** 3	*(ZY1 Cubed).
-```
-</br>
-
-* Create a linear regression model with $dZY$ as dependent and $Alpha$, $BetaZY1$ and $ZY1_2$ en $ZY1_3$ as predictors. 
-* Run! The parameter estimates should be the same.
-  
-  
-### Plot the results
-
-Finally try to can make a 3D-scatter plot with a smoother surface to have look at the response surface.
-
-* HINT: this is a lot easier in `R` or `Matlab` perhaps you can export your `SPSS` solution.
-
-### Interpret the results
-
-How to evaluate this model fit? 
-
-* Check Chapter 3 in which the analysis strategy is summarised. 
-* The cusp has to outperform the `pre-post` model.
 
 
-## Using the `cusp` package in `R`
+### A model of risky choice
 
-Use this tutorial paper to fit the cusp in 'R' according to a maximum likelihood criterion.
+Have a look at the paper below, it uses a potential function to model nonlinear dynamics in decision making and fits model parameters based on experimental data:
 
-[Grasman, R. P. P. P., Van der Maas, H. L. J., & Wagenmakers, E. (2007). Fitting the Cusp Catastrophe in R: A cusp-Package.](https://cran.r-project.org/web/packages/cusp/vignettes/Cusp-JSS.pdf)
+[Van Rooij, M., & Van Orden, G. (2011). It's about Space, It's about Time, Neuroeconomics and the Brain Sublime. *Journal of Economic Perspectives, 25(4)*, 31-56](https://pubs.aeaweb.org/doi/pdfplus/10.1257/jep.25.4.31)
 
-- Start R and install package `cusp` 
 
-- Work through the *Example I* (attitude data) in the paper (*Section 4: Examples*, p. 12).
 
-- *Example II* in the same section is also interesting, but is based on simulated data.
-    + Try to think of an application to psychological / behavioural science.
 

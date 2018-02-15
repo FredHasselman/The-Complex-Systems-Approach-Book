@@ -30,7 +30,7 @@ knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
 # **Quick Links** {-}
 
 * [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
-* [Assignments Part 1B: Potential Theory and Catastrophe Models](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1B.html)
+* [Assignments Part 1B: Fitting Parameters and Potential Functions](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1B.html)
 * [Assignments Part 2: Time Series Analysis: Temporal Correlations and Fractal Scaling](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)
 * [Assignments Part 3: Quantifying Recurrences in State Space](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)
 * [Assignments Part 4: Complex Networks](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)
@@ -1100,7 +1100,7 @@ The result of applying a method of **numerical integration** such a s Euler's me
 The logistic differential equation $\frac{dY}{dt} = r*Y_t*\left(1-\frac{Y_t}{K}\right)$ has an analytic solution given as:
 
 $$
-\frac{Y_0 * K}{Y_0 + \left(K-Y_0\right) * e^{-r*t} }
+\frac{K * Y_0}{Y_0 + \left(K-Y_0\right) * e^{(-K*r*t)} }
 $$
 We have the implemented discrete time growth function in `growth_ac()`, but could easily adapt all those functions to make them continuous by using Euler's method. 
 
@@ -1134,7 +1134,7 @@ Y.euler <- llply(deltas, function(d){
 
 # Analytical solution
 # We have to scale TIME a bit, normally we would use 1/TIME
-Y.analytic <- ts( (K * Y0) / (Y0 + (K - Y0) * exp(-r*(TIME/30))) )
+Y.analytic <- ts( K * Y0 / (Y0 + (K - Y0) * exp(-1*(r*K*TIME/250))) )
 
 ts.plot(Y.euler[[1]], Y.euler[[2]] ,Y.euler[[3]], Y.euler[[4]], Y.euler[[5]], Y.euler[[6]], Y.euler[[7]], Y.analytic,
         gpars = list(xlab = "time (a.u.)",
