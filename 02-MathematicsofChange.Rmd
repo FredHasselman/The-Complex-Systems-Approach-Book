@@ -1,11 +1,74 @@
 # (PART) Mathematics of Change {-} 
 
+# **Some Notes on Using `R`**
+
+You have probably heard many people say they should invest more time and effort to learn to use the `R` software environment for statistical computing... *and they were right*. However, what they probably meant to say is: "I tried it, but it's so damned complicated, I gave up"... *and they were right*. That is, they were right to note that this is not a point and click tool designed to accommodate any user. It was built for the niche market of scientists who use statistics, but in that segment it's actually the most useful tool I have encountered so far. 
+
+
+## **New to `R`?**
+
+Now that your struggles with getting a grip on `R` are fully acknowledged in advance, let's try to avoid the 'giving up' from happening. Try to follow these steps to get started:   
+
+1. **Get `R` and add some user comfort:** Install the latest [`R` software](http://www.r-project.org) *and* install a user interface like [RStudio](http://www.rstudio.com)... *It's all free!* An R interface will make some things easier, e.g., searching and installing packages from repositories. R Studio will also add functionality, like git/svn version control, project management and more, like the tools to create html pages like this one (`knitr` and `Rmarkdown`). Another source of user comfort are the `packages`. `R` comes with some basic packages installed, but you'll soon need to fit generalised linear mixture models, or visualise social networks using graph theory and that means you'll be searching for packages that allow you to do such things. A good place to start *package hunting* are the [CRAN task view](http://cran.r-project.org/web/views/) pages.
+
+2. **Learn by running example `code`:** Copy the commands in the `code` blocks you find on this page, or any other tutorial or help files (e.g., Rob Kabacoff's [Quick R](http://www.statmethods.net)). Paste them into an `.R` script file in the script (or, source) editor. In R Studio You can run code by pressing `cmd` + `enter` when the cursor is on a single single line, or you can run multiple lines at once by selecting them first. If you get stuck remember that there are expert `R` users who probably have answered your question already when it was posted on a forum. Search for example through the Stack overflow site for [questions tagged with `R`](http://stackoverflow.com/questions/tagged/r))
+
+3. **Examine what happens... when you tell `R` to make something happen:** `R` stores variables (anything from numeric data to functions) in an `Environment`. There are in fact many different environments, but we'll focus on the main workspace for the current `R` session. If you run the command `x <- 1+1`, a variable `x` will appear in the `Environment` with the value `2` assigned to it. Examining what happens in the `Environment` is not the same as examining the output of a statistical analysis. Output in `R` will appear in the `Console` window. Note that in a basic set-up each new `R` session starts with an empty `Environment`. If you need data in another session, you can save the entire `Environment`, or just some selected variables, to a file (`.RData`).
+
+4. **Learn about the properties of `R` objects:** Think of objects as containers designed for specific content. One way to characterize the different objects in `R` is by how picky they are about the content you can assign it. There are objects that hold `character` and `numeric` type data, a `matrix` for numeric data organised in rows and columns, a `data.frame` is a matrix that allows different data types in columns, and least picky of all is the `list` object. It can carry any other object, you can have a `list` of which item 1 is an entire `data.frame` and item 2 is just a `character` vector of the letter `R`. The most difficult thing to master is how to efficiently work with these objects, how to assign values and query contents.
+
+5. **Avoid repeating yourself:** The `R` language has some amazing properties that allow execution of many repetitive algorithmic operations using just a few lines of code at speeds up to warp 10. Naturally, you'll need to be at least half Vulcan to master these features properly and I catch myself copying code when I shouldn't on a daily basis. The first thing you will struggle with are the `apply` functions. These functions pass the contents of a `list` object to a function. Suppose we need to calculate the means of column variables in 40 different SPSS `.sav` files stored in the folder `DAT`. With the `foreign` package loaded we can execute the following commands:   
+`data <- lapply(dir("/DAT/",pattern=".sav$"),read.spss)`        
+`out  <- sapply(data,colMeans)`       
+The first command applies read.spss to all files with a `.sav` extension found in the folder `/DAT`. It creates a data frame for each file which are all stored as elements of the list `data`. The second line applies the function `colMeans` to each element of `data` and puts the combined results in a matrix with dataset ID as columns (1-40), dataset variables as rows and the calculated column means as cells. This is just the beginning of the `R` magic, wait 'till you learn how to write functions that can create functions.
+
+
+## **Getting started with `R` tutorials**  {#tutorials}
+
+* Tutorials on using **functions**:
+     + [Quick-R](https://www.statmethods.net/management/userfunctions.html)
+     + [Software Carpentry](https://swcarpentry.github.io/r-novice-inflammation/02-func-R/)
+     + [Nicer Code](https://nicercode.github.io/guides/functions/)
+     + [Advanced R](http://adv-r.had.co.nz/Functions.html)
+
+* Tutorials on using *conditionals* and *for loops*:
+     + [Quick-R](https://www.statmethods.net/management/controlstructures.html)
+     + [Software Carpentry](https://swcarpentry.github.io/r-novice-inflammation/15-supp-loops-in-depth/)
+     + [R-Bloggers](https://www.r-bloggers.com/how-to-write-the-first-for-loop-in-r/)
+
+* Tutorials on the **-ply family** of functions:
+      + [R-bloggers](https://www.r-bloggers.com/using-apply-sapply-lapply-in-r/)
+      + [Nicer Code](https://nicercode.github.io/guides/repeating-things/)
+      + [R for Dummies](http://www.dummies.com/programming/r/how-to-use-the-apply-family-of-functions-in-r/)
+
+* **Plotting**, **plotting** and more **plotting**:
+      + [A Compendium of Clean Graphs in R](http://shinyapps.org/apps/RGraphCompendium/index.php)
+      + [ggplot2 reference](http://ggplot2.tidyverse.org/reference/)
+      + [ggplot2 extensions](http://www.ggplot2-exts.org/gallery/)
+      + [patchwork, the ultimate ggplot2 extension](https://github.com/thomasp85/patchwork)
+      + [The R-graph gallery](https://www.r-graph-gallery.com)
+      + [Quick-R](https://www.statmethods.net/graphs/index.html)
+      + [Nicer Code](https://nicercode.github.io/guides/plotting/)
+  
+* Tutorial on **Effect Size Confidence Intervals** and more:
+     + In this tutorial on [estimating Effect Size Confidence Intervals (ESCI)](http://fredhasselman.com/Onderwijs/OSCblog.html) there are a lot of examples on how to use `R`. 
+     + It was written as an addendum for [a post](http://centerforopenscience.github.io/osc/2014/03/06/confidence%20intervals/) on the **Open Science Collaboration Blog**, which contains many interesting entries on diverse subjects (like [behavioural priming](http://centerforopenscience.github.io/osc/2014/03/26/behavioral-priming/), [theoretical amnesia](http://centerforopenscience.github.io/osc/2013/11/20/theoretical-amnesia/) and [anonymous peer review](http://centerforopenscience.github.io/osc/2014/05/15/anonymous-peer-review/)) 
+
+
+## **Not new to `R`?**
+
+If you have been using `R` for a while, but do not consider yourself a master yet, I recommend learning to use the [**tidyverse**](http://tidyverse.org) packages and the accompanying web-book [**R for data scientists**](http://r4ds.had.co.nz).
+
+* Welcome to the **tidyverse**:
+      + [Install the tidyverse](https://www.tidyverse.org)
+      + [Learn how to use the tidyverse](http://r4ds.had.co.nz)
+      + [Learn how to use the tidyverse to do statistics](http://moderndive.com)
+      + [Learn how to use the tidyverse to create networks](https://www.rdocumentation.org/packages/tidygraph/versions/0.1.0)
+      + [How to make R purrr](http://purrr.tidyverse.org)
+
+
+
 # **Introduction to the Mathematics of Change** 
-
-
-
-
-## **Stat(ist)ic versus Dynamic Models**
 
 The simplest non-trivial *iterative change process* can be described by the following *difference equation*: 
 
@@ -17,14 +80,14 @@ The equation describes the way in which the value of $Y$ changes [between two ad
 1. The starting value $Y_0$ at $t=0$, also called the *starting value*, or the *initial conditions*.
 2. A rule for incrementing time, here the change in $Y$ takes place over a discrete time step of 1: $t+1$.    
     
-The values taken on by variable $Y$ are considered to represent the states  quantifiable observable  leAlternative ways to describe the change of states :
+The values taken on by variable $Y$ are considered to represent the states  quantifiable observable  alternative ways to describe the change of states :
 
 * A dynamical rule describing the propagation of the states of a system observable measured by the values of variable `Y` through discrete time.
 * A dynamic law describing the time-evolution of the states of a system observable measured by the variable `Y`.   
     
 These descriptions all refer to the change processes that govern system observables (properties of dynamical systems that can be observed through measurement).     
 
-### **It's a line! It's a plane!** 
+## **It's a line! It's a plane!** 
 The formula resembles the equation of a line. There is a constant value $Y_{0}$ which is added to a proportion of the value of $Y$ at time $t$, given by parameter $a$. This is equivalent to the slope of a line. However, in a $(X,Y)$ plane there are two 'spatial' (metric) dimensions representing the values two variables $X$ and $Y$ can take on (see figure).
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -49,8 +112,6 @@ The best fitting straight line would be called a statistical model of the linear
 In other words: If you throw 1 die 100 times in a row, the average of the 100 numbers is the **time-average** of one of the observables of die-throwing systems. If this system is ergodic, then its **time-average** is expected to be similar to the average of the numbers that turn up if you throw 100 dice all at the same instance of time. The dice layed out on the table represent a spatial sample, a snapshot frozen in time, of the possible states the system can be in. Taking the average would be the **spatial average** this observable of die-throwing systems. This ergodic condiciotn is often implicitly assumed in Behavioural Science when studies claim to study change by taking different samples of individuals (snapshots of system states) and comparing if they are the same. 
 ```
 
-
-
  need to assume independence of measurements within and between subjects. These assumptions can be translated to certain conditions that must hold for the model to be valid, known as *Compound Symmetry* and *Sphericity*:    
 
 > The compound symmetry assumption requires that the variances (pooled within-group) and covariances (across subjects) of the different repeated measures are homogeneous (identical). This is a sufficient condition for the univariate F test for repeated measures to be valid (i.e., for the reported F values to actually follow the F distribution). However, it is not a necessary condition. The sphericity assumption is a necessary and sufficient condition for the F test to be valid; it states that the within-subject "model" consists of independent (orthogonal) components. The nature of these assumptions, and the effects of violations are usually not well-described in ANOVA textbooks; [^assumptions]   
@@ -60,7 +121,7 @@ As you can read in the quoted text above, these conditions must hold in order to
 
 If you choose to use GLM repeated measures to model change over time, you will only be able to infer independent components that are responsible for the time-evolution of $Y$. As is hinted in the last sentence of the quote, the validity of such inferences is not a common topic of discussion statistics textbooks.
 
-### **No! ... It's a time series!**
+## **No! ... It's a time series!**
 
 The important difference between a regular 2-dimensional Euclidean plane and the space in which we model change processes is that the $X$-axis represents the physical dimension **time**. In the case of the Linear Map we have a 1D space with one 'spatial' dimension $Y$ and a time dimension $t$. This  is called time series if $Y$ is sampled as a continuous process, or a trial series if the time between subsequent observations is not relevant, just the fact that there was a temporal order (for example, a series of response latencies to trials in a psychological experiment in the order in which they were presented to the subject).
 
@@ -74,7 +135,7 @@ text(-1.2, y1[1], expression(Y[t==0]),col="grey60")
 text(21.5, y1[21], expression(Y[t==20]),col="grey60")
 ```
 
-Time behaves different from a spatial dimension in that it is directional (time cannot be reversed), it cannot take on negative values, and, unless one is dealing with a truly random process, there will be a temporal correlation across one or more values of $Y$ seperated by an amount of time. In the linear difference equation this occurs because each value one step in the future is calculated based on the current value. If the values of $Y$ represent an observable of a dynamical system, the system can be said to have a history, or a memory.
+Time behaves different from a spatial dimension in that it is directional (time cannot be reversed), it cannot take on negative values, and, unless one is dealing with a truly random process, there will be a temporal correlation across one or more values of $Y$ separated by an amount of time. In the linear difference equation this occurs because each value one step in the future is calculated based on the current value. If the values of $Y$ represent an observable of a dynamical system, the system can be said to have a history, or a memory.
 
 Ergodic systems do *not* have a history or a memory that extends across more than one time step. This is very convenient, because one can calculate the expected value of a system observable given infinite time, by making use of of the laws of probabilities of random events (or random fields). This means: The average of an observable of an Ergodic system measured across infinite time (its entire history, the **time-average**), will be the be the same value as the average of this observable measured at one instance in time, but in an infinite amount of systems of the same kind (the population, the **spatial average**) [^dice]. 
 
@@ -86,15 +147,9 @@ Summarising, the most profound difference is not the fact that the equation of l
 * The GLM represents changes in $Y$ as a function of a [linear predictor](https://en.wikipedia.org/wiki/Linear_predictor_function) composed of additive components that can be regarded as independent sources of variation that sum up to the observed values of $Y$.
 
 
+## **`R`: The time series object** {#plotTS}
 
-
-## **Getting started with `R`** 
-
-In this tutorial on [estimating Effect Size Confidence Intervals (ESCI)](http://fredhasselman.com/Onderwijs/OSCblog.html) there are a lot of examples on how to use `R`. It was written as an addendum for [a post](http://centerforopenscience.github.io/osc/2014/03/06/confidence%20intervals/) on the **Open Science Collaboration Blog**, which contains many interesting entries on diverse subjects (like [behavioural priming](http://centerforopenscience.github.io/osc/2014/03/26/behavioral-priming/), [theoretical amnesia](http://centerforopenscience.github.io/osc/2013/11/20/theoretical-amnesia/) and [anonymous peer review](http://centerforopenscience.github.io/osc/2014/05/15/anonymous-peer-review/)) 
-
-## **The `time series` object** {#plotTS}
-
-A time series object is expected to have a time-dimension on the x-axis. This is very convenient, because `R` will generate the time axis for you by looking at the *t*ime *s*eries *p*roperties attribute of the object. Even though we are not working with measurement ourcomes, consider a value at a time-index in a time series object a **sample**:
+A time series object is expected to have a time-dimension on the x-axis. This is very convenient, because `R` will generate the time axis for you by looking at the *t*ime *s*eries *p*roperties attribute of the object. Even though we are not working with measurement outcomes, consider a value at a time-index in a time series object a **sample**:
 
 * `Start` -  The value of time at the first sample in the series (e.g., $0$, or $1905$)
 * `End` - The value of time at the last sample in the series (e.g., $100$, or $2005$)
@@ -114,7 +169,7 @@ time(Y)
 
 For now, these values are in principle all arbitrary units (`a.u.`). These settings only make sense if they represent the parameters of an actual measurement procedure.
 
-It is easy to adjust the time vector, by assigning new values using `tsp()` (values have to be possible given the timeseries length). For example, suppose the sampling frequency was $0.1$ instead of $1$ and the Start time was $10$ and End time was $1000$.
+It is easy to adjust the time vector, by assigning new values using `tsp()` (values have to be possible given the time series length). For example, suppose the sampling frequency was $0.1$ instead of $1$ and the Start time was $10$ and End time was $1000$.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 # Assign new values
 (tsp(Y) <- c(10, 1000, .1))
@@ -122,7 +177,7 @@ It is easy to adjust the time vector, by assigning new values using `tsp()` (val
 time(Y)
 ```
 
-### Plotting a `ts` object as a time series
+### Plotting a `ts` object as a time series 
 
 Depending on which packages you use, there will be different settings applied to time series objects created by `ts()`. Below are some examples of differences between plotting routines.
 
@@ -138,7 +193,7 @@ xyplot(Y, lwd = 2, main = "lattice::xyplot.ts")
 
 ### Plotting multiple time series in one figure
 
-Plot multiple timeseries in frames with `plot.ts()` in `package::stats`.
+Plot multiple time series in frames with `plot.ts()` in `package::stats`.
 This function takes a matrix as input, here we use `cbind( ... )`.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE, collapse=TRUE, tidy=FALSE}
 # stats::plot.ts  
@@ -151,7 +206,7 @@ title(main = expression(paste("Random Numbers: ",N(0,sigma))),
       xlab = "time (a.u.)")
 ```
 
-Plot multiple timeseries in one graph with `ts.plot()` in `package::graphics`.
+Plot multiple time series in one graph with `ts.plot()` in `package::graphics`.
 This function can handle multiple `ts` objects as arguments.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE, collapse=TRUE, tidy=FALSE}
 # graphics::ts.plot
@@ -185,7 +240,7 @@ data <- cbind.data.frame(Y     = c(as.numeric(Y), cumsum(Y), cumsum(c(0,diff(Y))
 xyplot(Y ~ time | label, data = data, type = "l", main = expression(paste("Random Numbers: ",N(0,sigma))))
 ```
 
-## The return plot
+### The return plot
 
 To create a return plot the values of $Y$ have to be shifted by a certain lag. The functions `lead()` and `lag()` in `package::dplyr` are excellent for this purpose (note that `dplyr::lag()` behaves different from `stats::lag()`).
 ```{r, echo=TRUE, message=FALSE, warning=FALSE, cache=FALSE, collapse=TRUE, tidy=FALSE}
@@ -215,14 +270,108 @@ plyr::l_ply(1:4, function(l) plot(dplyr::lag(Y2, n = l), Y2, xy.labels = FALSE, 
 par(op)
 ```
 
-## Spreadsheet versus `Matlab`, `R`, etc.
+### Using `ggplot2`
 
-Coding change processes (difference equations) in `Matlab` and `R` is always easier than using a spreadsheet. One obvious way to do it is to use a counter variable representing the iterations of time in a `for ... next` loop. The iterations should run over a vector (which is the same concept as a row or a column in a spreadsheet: An indexed array of numbers or characters). The first entry should be the starting value, so the vector index $1$ represents $Y_0$.
+Becoming proficient at `ggplot2` can take some time, but it does pay off. One of the problems with plotting time series data is that `ggplot2` wants tidy data in *long* format. Tidy data is:
 
-The loop can be implemented a number of ways, for example as a function which can be called from a script or the command / console window. In `R` working with functions is easy, and very much recommended, because it will speed up calculations considerably, and it will reduce the amount of code you need to write. You need to gain some experience with coding in `R` before you'll get it right. In order to get it lean and clean (and possibly even mean as well) you'll need a lot of experience with coding in `R`,therefore, we will (eventually) provide you the functions you'll need to complete the assignments. All you have to do is figure out how to use, or modify them to suit your specific needs.
+> Tidy data is a standard way of mapping the meaning of a dataset to its structure. A dataset is
+messy or tidy depending on how rows, columns and tables are matched up with observations,
+variables and types. In tidy data:
+1. Each variable forms a column.
+2. Each observation forms a row.
+3. Each type of observational unit forms a table.
+>
+> ---@wickham2014a
 
 
+## **Implementing iterative functions**
 
+Coding change processes (difference equations) in `Matlab` and `R` is always easier than using a spreadsheet. One obvious way to do it is to use a counter variable representing the iterations of time in a `for ... next` loop (see [tutorials](#tutorials)). The iterations should run over a vector (which is the same concept as a row or a column in a spreadsheet: An indexed array of numbers or characters). The first entry should be the starting value, so the vector index $1$ represents $Y_0$.
+
+The loop can be implemented a number of ways, for example as a function which can be called from a script or the command or console window. In `R` working with **functions** is easy, and very much recommended (see [tutorials](#tutorials)), because it will speed up calculations considerably, and it will reduce the amount of code you need to write. You need to gain some experience with coding in `R` before you'll get it right. In order to get it lean and clean (and possibly even mean as well) you'll need a lot of experience with coding in `R`,therefore, we will (eventually) provide you the functions you'll need to complete the assignments in the **Answers** section of the assignments. If you get stuck, look at the answers. If you need to do something that reminds you of an assignment, figure out how to modify the answers to suit your specific needs.
+
+
+## **Numerical integration to simulate continuous time**
+
+In order to 'solve' a differential equation for continuous time using a method of numerical integration, one could code it like in the spreadsheet assignment below. For `R` and `Matlab` there are so-called *solvers* available, functions that will do the integration for you. For `R` look at the [Examples in package `deSolve`](http://desolve.r-forge.r-project.org).
+
+
+### Euler's method and more... {-}
+
+The result of applying a method of numerical integration is called a **numerical solution** of the differential equation. The **analytical solution** is the equation which will give you a value of $Y$ for any point in time, given an initial value $Y_0$. Systems which have an analytical solution can be used to test the accuracy of **numerical solutions**.
+
+
+### Analytical solution {-}
+Remember that the analytical solution for the logistic equation is:
+
+$$
+Y(t)  =  \frac{K}{1 + \left(\frac{K}{Y_{0} - 1}\right) * e^{-r*t} }
+$$
+
+If we want to know the growth level $Y_t$ at $t=10$, with $Y_0=.0001$, $r=1.1$ and $K=4$, we can just `fill it in`:
+```{r, echo=TRUE, include=TRUE}
+# Define a function for the solution
+logSol <- function(Y0, r, K, t){K/(1+(K/Y0-1)*exp(-r*t))}
+
+# Call the function
+logSol(Y0=.0001, r=1.1, K=4, t=10)
+
+```
+
+We can pas a vector of time points to create the exact solution, the same we would get if we were to iterate the differential/difference equation.
+```{r, echo=TRUE, include=TRUE}
+# Plot from t=1 to t=100
+plot(logSol(Y0=.0001, r=1.1, K=4, t=seq(1,20)), type = "b", 
+     ylab = expression(Y[t]), xlab = "t")
+# Plot t=10 in red
+points(10,logSol(Y0=.0001, r=1.1, K=4, t=10), col="red", pch=16)
+```
+
+### Numerical solution (discrete) {-}
+
+If we would iterate the differential equation ...
+
+$$
+\frac{dY}{dt} = Y_t * (1 + r - r * \frac{Y_t}{K})
+$$
+
+... as if it were a difference equation, that is, *not* simulating continuous time.
+
+```{r, echo=TRUE, include=TRUE}
+logIter <-  function(Y0,r,K,t){
+  N <- length(t)
+  Y <- as.numeric(c(Y0, rep(NA,N-2)))
+  sapply(seq_along(Y), function(t){ Y[[t+1]] <<- Y[t] * (1 + r - r * Y[t] / K)})
+  }
+
+# Plot from t=1 to t=100
+plot(logIter(Y0=.0001, r=1.1, K=4, t=seq(1,20)), type = "b", 
+     ylab = expression(Y[t]), xlab = "t")
+# Plot t=10 in red
+points(10,logSol(Y0=.0001, r=1.1, K=4, t=10), col="red", pch=16)
+```
+
+
+## **Modeling interactions between processes and agents** {#advmodels}
+
+### The Competetive Lottka-Volterra Equations 
+
+The coupled predator-prey dynamics in the previous assignment are not a very realistic model of an actual ecological system. Both equations are exponential growth functions, but **R**abbits for example, also have to eat! One way to increase realism is to consider coupled logistic growth by introducing a carrying capacity.   
+
+* Follow the link to the [Wiki page](https://en.wikipedia.org/wiki/Competitive_Lotka???Volterra_equations) and try to model the system!
+
+
+> This is what *interaction dynamics* refers to, modeling mutual dependiencies using the `if ... then` conditional rules isn't really about interaction, or coupling between processes.
+
+
+### Predator-Prey (and other) dynamics as Agent Based Models 
+
+Agent-Based models are an expansion of the idea of "connected growers" that includes a spatial location  of the things that is subject to change over time.
+
+Have a look at some of the [NETlogo](http://ccl.northwestern.edu/netlogo/) demo's:
+
+* [Rabbits Weeds Grass](http://www.netlogoweb.org/launch#http://www.netlogoweb.org/assets/modelslib/Sample%20Models/Biology/Rabbits%20Grass%20Weeds.nlogo)
+* [Wolf Sheep Grass](http://www.netlogoweb.org/launch#http://www.netlogoweb.org/assets/modelslib/Sample%20Models/Biology/Wolf%20Sheep%20Predation.nlogo)
 
 
 -----

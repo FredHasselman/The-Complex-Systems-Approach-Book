@@ -442,7 +442,7 @@ Creating a time series plot is easy if the function `linearMap` returns the time
 plot(logisticMap(Y0=0.01,r=1.9,N=100), type = "l")
 ```
 
-* Also try ro create a graph that demonstrates the sensitive dependence on initial conditions
+* Also try to create a graph that demonstrates the sensitive dependence on initial conditions
 * Create the lag 1 return plot.
       + Also try to create a lag 2, lag 3 and lag 4 return plot.
       + Can you explain the patterns?
@@ -509,7 +509,7 @@ L_{t+1} = L_t * (1 + r - r * \frac{L_t}{K})
 
 ### The growth model in a spreadsheet {.tabset .tabset-fade .tabset-pills}
 
-The model is [implemented in a spreadsheet](https://docs.google.com/spreadsheets/d/1DAg0u-zMFOIvRSDOZDxqnzyS0HQJg4FIXzJIMvEMwiI/edit?usp=sharing), select the first tabsheet.
+The model is [implemented in a spreadsheet](https://docs.google.com/spreadsheets/d/1DAg0u-zMFOIvRSDOZDxqnzyS0HQJg4FIXzJIMvEMwiI/edit?usp=sharing), select the first tab sheet.
 
 * You can start by changing the values for the parameters and the initial values in cells `B5`, `B6` and `B7`. To study its behaviour, be sure to try the following growth parameters:
     + $r = 1.2$
@@ -708,7 +708,7 @@ xyplot(vanGeert.cond())
 
 ![](ASSIGNMENTS_P1A_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
-The 'trick' used here is to define the function such that it can take a set of conditional rules and apply them sequentially during the iterations. The conditiona rule is passed as a `data.frame`, but one could also use a `list` object. 
+The 'trick' used here is to define the function such that it can take a set of conditional rules and apply them sequentially during the iterations. The conditional rule is passed as a `data.frame`, but one could also use a `list` object. 
 
 
 ```r
@@ -816,7 +816,7 @@ xyplot(vanGeert.cond(cond=cond))
 
 ### Growth models in package `casnet`
 
-To model the autocatalytic growth equations we provide a function `growth.ac()`, which is able to simulate all of the processes discussed in the lectures. Using just a few lines of code, each of the 4 difference equations used in the assignments can be simulated. Basically the code block below contains the solutions to the Linear Map, the stylized Logisitc Map and the Van Geert model for cognitive growth.
+To model the auto catalytic growth equations we provide a function `growth.ac()`, which is able to simulate all of the processes discussed in the lectures. Using just a few lines of code, each of the 4 difference equations used in the assignments can be simulated. Basically the code block below contains the solutions to the Linear Map, the stylized Logistic Map and the Van Geert model for cognitive growth.
 
 
 ```r
@@ -862,7 +862,7 @@ Some notes about this function:
 
 # **Multivariate systems**
 
-By multivariate systems we do not simply mean there is more than 1 iterative process (dynamical variable), but that there is a coupling between at least two iterative processes that makes the outcomes of each individual process at each timestep (partially) dependent on the previous time step of other processes.
+By multivariate systems we do not simply mean there is more than 1 iterative process (dynamical variable), but that there is a coupling between at least two iterative processes that makes the outcomes of each individual process at each time step (partially) dependent on the previous time step of other processes.
 
 You'll start by expanding on the previous assignments, in which you modelled changes in the parameter values by implementing an `IF ... THEN` rule that evaluated whether some threshold level was reached. In the assignment you'll create a kind of **one-directional coupling**, or **supportive interaction**, which is just a precursor to modelling more interesting interaction dynamics.
 
@@ -871,9 +871,9 @@ You'll start by expanding on the previous assignments, in which you modelled cha
 
 ## **One directional coupling**
 
-A more realistic way to model a change of growth parameter `r` using `IF ... THEN` statements, is to make the growth of a variable depend o another process. The proper *dynamical* way to do this would be to define a coupled system of difference or differential equations in which the interaction dynamics completely regulate growth (or decay) of the variables directly, such as the predator-prey system in the next assignment. 
+A more realistic way to model a change of growth parameter `r` using `IF ... THEN` statements, is to make the growth of a variable depend on another process. The proper *dynamical* way to do this would be to define a coupled system of difference or differential equations in which the interaction dynamics completely regulate growth (or decay) of the variables directly, such as the predator-prey system in the next assignment. 
 
-In this assignment we'll keep using at least one 'conditional' rule and try to implement emergent levels by creating **supportive interactions** between seperate processes. This is probably the most simple version of *interaction dynamics*, *coupling dynamics*, or *multiplicative interactions* with more thqn one iterative process. Basically, the processes will still be rather independent from one another and the interaction simply means a 'shock' is delivered to an individual process, after which the system just continuous to evolve on its own. 
+In this assignment we'll keep using at least one 'conditional' rule and try to implement emergent levels by creating **supportive interactions** between separate processes. This is probably the most simple version of *interaction dynamics*, *coupling dynamics*, or *multiplicative interactions* with more then one iterative process. Basically, the processes will still be rather independent from one another and the interaction simply means a 'shock' is delivered to an individual process, after which the system just continuous to evolve on its own. 
 
 
 ### Connected growers {.tabset .tabset-fade .tabset-pills}
@@ -902,14 +902,14 @@ Try to model this example of supportive interaction in `R`.
 * You can use the template function below
 * You can look in the spreadsheet, or look in the chapter to find the right formula's for `A` and `B`
 * Make a plot like in the spreadsheet
-    + Note that the function returns a dataframe with A, B and C
+    + Note that the function returns a data frame with A, B and C
 
 
 ```r
-vanGeert.support <- function(A0 = 0.001, Ar = 1, AK = 1, 
-                             B0 = 0.001, Br = 1, BK = 1, 
+vanGeert.support <- function(A0 = 0.01, Ar = .5, AK = 1, 
+                             B0 = 0.01, Br = .2, BK = 1, 
                              C0 = 0, C1 = 1, Cr = 1, CK = 1, 
-                             AtoC = 0.8, BsupportA = 1.1, N = 300)){
+                             AtoC = 0.8, BsupportA = .5, N = 100){
   
   # Create a vector A,B,C of length N, which has value A0,B0,C0 at A[1],B[1],C[1]
   A <- c(A0, rep(NA, N-1))
@@ -920,7 +920,7 @@ vanGeert.support <- function(A0 = 0.001, Ar = 1, AK = 1,
   for(i in 1:(N-1)){
     
     # You need to monitor the value of L and change the growth rate according to a rule
-    if(A[i]>=AtoC){
+    if(A[i]<AtoC){
       C[i+1] <- # Value of C0
     } else {
       C[i+1] <- # Value of C1
@@ -956,7 +956,7 @@ vanGeert.support <- function(A0 = 0.01, Ar = .5, AK = 1,
   for(i in 1:(N-1)){
     
     # You need to monitor the value of L and change the growth rate according to a rule
-    if(A[i]<=AtoC){
+    if(A[i]<AtoC){
       C[[i+1]] <- C0
     } else {
       C[[i+1]] <- C1
@@ -972,7 +972,7 @@ vanGeert.support <- function(A0 = 0.01, Ar = .5, AK = 1,
 ```
 
 * Make a plot like in the spreadsheet
-    + Note that the function returns a dataframe with A, B and C
+    + Note that the function returns a data frame with A, B and C
 
 
 ```r
@@ -1115,14 +1115,14 @@ Use `R` to implement [the model in this spreadsheet](https://docs.google.com/spr
     + `a` and `d` are `1`
     + `b` and `c` are `2` 
     + Initial values `R0` and `F0` are `0.1`
-* Make a plot of the timeseries for Foxes and Rabbits
+* Make a plot of the time series for Foxes and Rabbits
 * Make a plot of the 2D state space of this system (aka *phase plane*)
     + Examine how the state space changes for different parameter settings
 
 #### Answers {-}
 
 
-The Euler setup:
+The Euler set-up:
 $$
 \begin{align}
 R_{t+1} &= f_R(R_t,Ft) * \Delta + R_t \\
@@ -1241,7 +1241,7 @@ legend(70, 5, c(paste("Euler: delta =",deltas),"Analytic solution (t/30)"),
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">If you want to learn how to put mathematical operators in legends and axes using `expression()`, see the webpage [Mathematical Annotation in R](http://vis.supstat.com/2013/04/mathematical-annotation-in-r/)</div>\EndKnitrBlock{rmdnote}
 
-When `delta` is relatively large, the fluctuations still resemble deterministic chaos, as delta gets closer to 0, this 'smooths out' the fluctuations and the analytic solution is approached. As a consequence, it takes longer and longer to reach `K`. However, 'longer' is of course relative to the unit of time represented onthe x-axis, because we're simulating, they are arbitrary units.
+When `delta` is relatively large, the fluctuations still resemble deterministic chaos, as delta gets closer to 0, this 'smooths out' the fluctuations and the analytic solution is approached. As a consequence, it takes longer and longer to reach `K`. However, 'longer' is of course relative to the unit of time represented on the x-axis, because we're simulating, they are arbitrary units.
 
 ----
 
