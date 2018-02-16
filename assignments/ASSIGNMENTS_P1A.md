@@ -46,7 +46,7 @@ We will start by modelling the *Linear Map* and then proceed to the slightly mor
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">Check the solutions of the assignments **after** you tried to do them on your own!    
   
-Also, have a look at the examples in [Chapter 2](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html) on different ways to visualize time series in `R`.</div>\EndKnitrBlock{rmdnote}
+Also, have a look at the examples on [plotting time series in `R` in the course book](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/plotTS.html) on different ways to visualize time series in `R`.</div>\EndKnitrBlock{rmdnote}
 
 </br>
 

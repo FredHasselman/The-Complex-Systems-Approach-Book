@@ -273,6 +273,32 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">4.4</span> <strong>Implementing iterative functions</strong></h2>
 <p>Coding change processes (difference equations) in <code>Matlab</code> and <code>R</code> is always easier than using a spreadsheet. One obvious way to do it is to use a counter variable representing the iterations of time in a <code>for ... next</code> loop (see <a href="tutorials.html#tutorials">tutorials</a>). The iterations should run over a vector (which is the same concept as a row or a column in a spreadsheet: An indexed array of numbers or characters). The first entry should be the starting value, so the vector index <span class="math inline">\(1\)</span> represents <span class="math inline">\(Y_0\)</span>.</p>
 <p>The loop can be implemented a number of ways, for example as a function which can be called from a script or the command or console window. In <code>R</code> working with <strong>functions</strong> is easy, and very much recommended (see <a href="tutorials.html#tutorials">tutorials</a>), because it will speed up calculations considerably, and it will reduce the amount of code you need to write. You need to gain some experience with coding in <code>R</code> before you’ll get it right. In order to get it lean and clean (and possibly even mean as well) you’ll need a lot of experience with coding in <code>R</code>,therefore, we will (eventually) provide you the functions you’ll need to complete the assignments in the <strong>Answers</strong> section of the assignments. If you get stuck, look at the answers. If you need to do something that reminds you of an assignment, figure out how to modify the answers to suit your specific needs.</p>
+<p>We’ll use the linear map <span class="math inline">\(Y_{i+1} = r*Y_i\)</span> as an example and show three different ways to implement iterative processes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># for loop</span>
+N  &lt;-<span class="st"> </span><span class="dv">100</span>
+r  &lt;-<span class="st"> </span><span class="op">-</span>.<span class="dv">9</span>
+Y0 &lt;-<span class="st"> </span><span class="fl">0.01</span>
+Y  &lt;-<span class="st"> </span><span class="kw">c</span>(Y0,<span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>))
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(N<span class="op">-</span><span class="dv">1</span>)){
+  Y[i<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span>r<span class="op">*</span>Y[i]
+}
+<span class="kw">plot</span>(Y,<span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sapply</span>
+Yout &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">seq_along</span>(Y),<span class="cf">function</span>(t) r<span class="op">*</span>Y[t])
+<span class="kw">plot</span>(Yout,<span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-2.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># function with for loop</span>
+linmap1 &lt;-<span class="st"> </span><span class="cf">function</span>(Y0,r,N){
+  Y  &lt;-<span class="st"> </span><span class="kw">c</span>(Y0,<span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>))
+  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(N<span class="op">-</span><span class="dv">1</span>)){
+    Y[i<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span>r<span class="op">*</span>Y[i]
+  }
+  <span class="kw">return</span>(Y)
+}
+<span class="kw">plot</span>(<span class="kw">linmap1</span>(Y0,r,N),<span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-3.png" width="99%" style="display: block; margin: auto;" /></p>
 </div>
             </section>
 

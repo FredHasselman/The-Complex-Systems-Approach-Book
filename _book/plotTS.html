@@ -375,19 +375,20 @@ data &lt;-<span class="st"> </span><span class="kw">cbind.data.frame</span>(<spa
 <h3><span class="header-section-number">4.3.3</span> The return plot</h3>
 <p>To create a return plot the values of <span class="math inline">\(Y\)</span> have to be shifted by a certain lag. The functions <code>lead()</code> and <code>lag()</code> in <code>package::dplyr</code> are excellent for this purpose (note that <code>dplyr::lag()</code> behaves different from <code>stats::lag()</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Function lag() and lead()</span>
-<span class="kw">require</span>(dplyr)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(casnet)
 
 <span class="co"># Get exponential growth</span>
-Y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
-Y1 &lt;-<span class="st"> </span>Y<span class="op">/</span><span class="kw">max</span>(Y)
+Y &lt;-<span class="st"> </span><span class="kw">growth_ac</span>(<span class="dt">N=</span><span class="dv">1000</span>,<span class="dt">r=</span><span class="fl">1.5</span>,<span class="dt">type =</span> <span class="st">&quot;driving&quot;</span>)
+Y1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(Y<span class="op">/</span><span class="kw">max</span>(Y))
 <span class="co"># Get logistic growth in the chaotic regime</span>
-Y2 &lt;-<span class="st"> </span><span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y)))<span class="op">/</span><span class="kw">max</span>(<span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y))))
+Y2 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">growth_ac</span>(<span class="dt">N=</span><span class="dv">1000</span>,<span class="dt">r=</span><span class="dv">4</span>,<span class="dt">type =</span> <span class="st">&quot;logistic&quot;</span>))
 <span class="co"># Use the `lag` function from package `dplyr`</span>
 op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">pty =</span> <span class="st">&quot;s&quot;</span>)
 <span class="kw">plot</span>(dplyr<span class="op">::</span><span class="kw">lag</span>(Y1), Y1, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Y(t+1)&quot;</span>,
-     <span class="dt">main =</span> <span class="st">&quot;rnorm(1000) / max&quot;</span>)
+     <span class="dt">main =</span> <span class="st">&quot;exponential / max&quot;</span>)
 <span class="kw">plot</span>(dplyr<span class="op">::</span><span class="kw">lag</span>(Y2), Y2, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Y(t+1)&quot;</span>,
-     <span class="dt">main =</span> <span class="st">&quot;cumsum(diff(Y)) / max&quot;</span>)</code></pre></div>
+     <span class="dt">main =</span> <span class="st">&quot;logistic / max&quot;</span>)</code></pre></div>
 <p><img src="DCS1718_files/figure-html/unnamed-chunk-11-1.png" width="99%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(op)</code></pre></div>
 <p>Use <code>l_ply()</code> from <code>package::plyr</code> to create return plots with different lags. The <strong>l_</strong> before <strong>ply</strong> means the function will take a <strong>l</strong>ist as input to a function, but it will not expect any data to be returned, for example in the case of a function that is used to plot something.</p>
@@ -404,6 +405,48 @@ plyr<span class="op">::</span><span class="kw">l_ply</span>(<span class="dv">1</
 <p>Tidy data is a standard way of mapping the meaning of a dataset to its structure. A dataset is messy or tidy depending on how rows, columns and tables are matched up with observations, variables and types. In tidy data: 1. Each variable forms a column. 2. Each observation forms a row. 3. Each type of observational unit forms a table.</p>
 <p>—<span class="citation">Wickham &amp; others (<a href="references.html#ref-wickham2014a">2014</a>)</span></p>
 </blockquote>
+<p>So if we have a set of timeseries as in the previous examples, we need to change it to long format.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+
+Y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
+
+<span class="co"># A wide data frame</span>
+df.wide &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Ynrm =</span> Y<span class="op">^</span><span class="dv">2</span>,
+                      <span class="dt">Ycum =</span> <span class="kw">cumsum</span>(Y), 
+                      <span class="dt">Yuni =</span> <span class="kw">cumsum</span>(Y<span class="op">-</span><span class="kw">median</span>(Y)),
+                      <span class="dt">t    =</span> <span class="kw">seq_along</span>(Y)
+                      )
+
+<span class="kw">glimpse</span>(df.wide)</code></pre></div>
+<pre><code>## Observations: 1,000
+## Variables: 4
+## $ Ynrm &lt;dbl&gt; 0.021619297, 1.150044858, 1.998677976, 0.931738059, 0.521...
+## $ Ycum &lt;dbl&gt; 0.1470350, -0.9253664, -2.3391125, -1.3738467, -2.0963197...
+## $ Yuni &lt;dbl&gt; 0.1696797, -0.8800770, -2.2711784, -1.2832679, -1.9830963...
+## $ t    &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># A long dataframe</span>
+df.long &lt;-<span class="st"> </span>df.wide <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(<span class="dt">key=</span>TimeSeries,<span class="dt">value=</span>Y,<span class="op">-</span>t)
+
+<span class="kw">glimpse</span>(df.long)</code></pre></div>
+<pre><code>## Observations: 3,000
+## Variables: 3
+## $ t          &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ...
+## $ TimeSeries &lt;chr&gt; &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Yn...
+## $ Y          &lt;dbl&gt; 0.021619297, 1.150044858, 1.998677976, 0.931738059,...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>t, <span class="dt">y=</span>Y, <span class="dt">colour=</span>TimeSeries)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>t,<span class="dt">y=</span>Y)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>TimeSeries) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-2.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>t,<span class="dt">y=</span>Y)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(TimeSeries<span class="op">~</span>.) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-3.png" width="99%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
             </section>

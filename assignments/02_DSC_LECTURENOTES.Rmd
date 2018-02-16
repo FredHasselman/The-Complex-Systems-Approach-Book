@@ -161,6 +161,8 @@ ggplot(data, aes(x= time, y = Y)) +
 
 # PART I {-}
 
+
+
 ## Modelling (nonlinear) growth and Deterministic Chaos {-}
 
 The simplest non-trivial *iterative change process* can be described by the following *difference equation*: 

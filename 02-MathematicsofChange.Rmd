@@ -31,7 +31,7 @@ The first command applies read.spss to all files with a `.sav` extension found i
      + [Nicer Code](https://nicercode.github.io/guides/functions/)
      + [Advanced R](http://adv-r.had.co.nz/Functions.html)
 
-* Tutorials on using *conditionals* and *for loops*:
+* Tutorials on using **conditionals** and **for loops**:
      + [Quick-R](https://www.statmethods.net/management/controlstructures.html)
      + [Software Carpentry](https://swcarpentry.github.io/r-novice-inflammation/15-supp-loops-in-depth/)
      + [R-Bloggers](https://www.r-bloggers.com/how-to-write-the-first-for-loop-in-r/)
@@ -51,7 +51,7 @@ The first command applies read.spss to all files with a `.sav` extension found i
       + [Nicer Code](https://nicercode.github.io/guides/plotting/)
   
 * Tutorial on **Effect Size Confidence Intervals** and more:
-     + In this tutorial on [estimating Effect Size Confidence Intervals (ESCI)](http://fredhasselman.com/Onderwijs/OSCblog.html) there are a lot of examples on how to use `R`. 
+     + In this tutorial on [estimating Effect Size Confidence Intervals (ESCI)](http://fredhasselman.com/post/2015-05-05-OSC-R-ESCI-Tutorial/) there are a lot of examples on how to use `R`. 
      + It was written as an addendum for [a post](http://centerforopenscience.github.io/osc/2014/03/06/confidence%20intervals/) on the **Open Science Collaboration Blog**, which contains many interesting entries on diverse subjects (like [behavioural priming](http://centerforopenscience.github.io/osc/2014/03/26/behavioral-priming/), [theoretical amnesia](http://centerforopenscience.github.io/osc/2013/11/20/theoretical-amnesia/) and [anonymous peer review](http://centerforopenscience.github.io/osc/2014/05/15/anonymous-peer-review/)) 
 
 
@@ -245,19 +245,20 @@ xyplot(Y ~ time | label, data = data, type = "l", main = expression(paste("Rando
 To create a return plot the values of $Y$ have to be shifted by a certain lag. The functions `lead()` and `lag()` in `package::dplyr` are excellent for this purpose (note that `dplyr::lag()` behaves different from `stats::lag()`).
 ```{r, echo=TRUE, message=FALSE, warning=FALSE, cache=FALSE, collapse=TRUE, tidy=FALSE}
 # Function lag() and lead()
-require(dplyr)
+library(dplyr)
+library(casnet)
 
 # Get exponential growth
-Y <- rnorm(1000)
-Y1 <- Y/max(Y)
+Y <- growth_ac(N=1000,r=1.5,type = "driving")
+Y1 <- as.numeric(Y/max(Y))
 # Get logistic growth in the chaotic regime
-Y2 <- cumsum(c(0,diff(Y)))/max(cumsum(c(0,diff(Y))))
+Y2 <- as.numeric(growth_ac(N=1000,r=4,type = "logistic"))
 # Use the `lag` function from package `dplyr`
 op <- par(mfrow = c(1,2), pty = "s")
 plot(dplyr::lag(Y1), Y1, xy.labels = FALSE, pch = 16, xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",
-     main = "rnorm(1000) / max")
+     main = "exponential / max")
 plot(dplyr::lag(Y2), Y2, xy.labels = FALSE, pch = 16, xlim = c(0,1), ylim = c(0,1), xlab = "Y(t)", ylab = "Y(t+1)",
-     main = "cumsum(diff(Y)) / max")
+     main = "logistic / max")
 par(op)
 ```
 
@@ -283,12 +284,81 @@ variables and types. In tidy data:
 >
 > ---@wickham2014a
 
+So if we have a set of timeseries as in the previous examples, we need to change it to long format.
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+
+Y <- rnorm(1000)
+
+# A wide data frame
+df.wide <- data.frame(Ynrm = Y^2,
+                      Ycum = cumsum(Y), 
+                      Yuni = cumsum(Y-median(Y)),
+                      t    = seq_along(Y)
+                      )
+
+glimpse(df.wide)
+
+# A long dataframe
+df.long <- df.wide %>% gather(key=TimeSeries,value=Y,-t)
+
+glimpse(df.long)
+
+ggplot(df.long, aes(x=t, y=Y, colour=TimeSeries)) +
+  geom_line() + 
+  theme_bw()
+
+
+ggplot(df.long, aes(x=t,y=Y)) +
+  geom_line() + 
+  facet_wrap(~TimeSeries) +
+  theme_bw()
+
+
+ggplot(df.long, aes(x=t,y=Y)) +
+  geom_line() + 
+  facet_grid(TimeSeries~.) +
+  theme_bw()
+
+```
+
 
 ## **Implementing iterative functions**
 
 Coding change processes (difference equations) in `Matlab` and `R` is always easier than using a spreadsheet. One obvious way to do it is to use a counter variable representing the iterations of time in a `for ... next` loop (see [tutorials](#tutorials)). The iterations should run over a vector (which is the same concept as a row or a column in a spreadsheet: An indexed array of numbers or characters). The first entry should be the starting value, so the vector index $1$ represents $Y_0$.
 
 The loop can be implemented a number of ways, for example as a function which can be called from a script or the command or console window. In `R` working with **functions** is easy, and very much recommended (see [tutorials](#tutorials)), because it will speed up calculations considerably, and it will reduce the amount of code you need to write. You need to gain some experience with coding in `R` before you'll get it right. In order to get it lean and clean (and possibly even mean as well) you'll need a lot of experience with coding in `R`,therefore, we will (eventually) provide you the functions you'll need to complete the assignments in the **Answers** section of the assignments. If you get stuck, look at the answers. If you need to do something that reminds you of an assignment, figure out how to modify the answers to suit your specific needs.
+
+
+We'll use the linear map $Y_{i+1} = r*Y_i$ as an example and show three different ways to implement iterative processes.
+
+```{r}
+# for loop
+N  <- 100
+r  <- -.9
+Y0 <- 0.01
+Y  <- c(Y0,rep(NA,N-1))
+
+for(i in 1:(N-1)){
+  Y[i+1] <- r*Y[i]
+}
+plot(Y,type = "l")
+
+# sapply
+Yout <- sapply(seq_along(Y),function(t) r*Y[t])
+plot(Yout,type = "l")
+
+# function with for loop
+linmap1 <- function(Y0,r,N){
+  Y  <- c(Y0,rep(NA,N-1))
+  for(i in 1:(N-1)){
+    Y[i+1] <- r*Y[i]
+  }
+  return(Y)
+}
+plot(linmap1(Y0,r,N),type = "l")
+```
 
 
 ## **Numerical integration to simulate continuous time**
