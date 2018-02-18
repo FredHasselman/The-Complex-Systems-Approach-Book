@@ -379,7 +379,7 @@ Also, have a look at the examples on <a href="https://darwin.pwo.ru.nl/skunkwork
 <div id="the-linear-map" class="section level2">
 <h2><span class="header-section-number">1.1</span> <strong>The Linear Map</strong></h2>
 <p></br></p>
-<p>Equation <a href="#eq:linmap">(1.1)</a> is the ordinary difference equation (ODE) discussed in <a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html">Chapter 2</a> and is called the <em>Linear Map</em>:</p>
+<p>Equation <a href="#eq:linmap">(1.1)</a> is the ordinary difference equation (ODE) discussed in <a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/introduction-to-the-mathematics-of-change.html">the course book</a> and is called the <em>Linear Map</em>:</p>
 <span class="math display" id="eq:linmap">\[\begin{equation}
 Y_{i+1} = Y_{i=0} + r*Y_i
 \tag{1.1}
@@ -522,7 +522,7 @@ For example, the four phases that describe matter are an <strong>order parameter
 <p>The best (and easiest) way to simulate these simple models in <code>R</code> is to create a function, which takes as input arguments the parameters (<span class="math inline">\(Y_0\)</span>, <span class="math inline">\(r\)</span>) and a variable indicating the length of the time series.</p>
 <div id="questions-2" class="section level4 unnumbered">
 <h4>Questions</h4>
-<p>For the Linear Map you could use this template:</p>
+<p>For the Linear Map you could use this template (<a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/implementing-iterative-functions.html">also see the notes in the course book</a>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># TEMPLATE</span>
 <span class="co"># Modify this function</span>
 linearMap &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">Y0 =</span> <span class="dv">0</span>, <span class="dt">r =</span> <span class="dv">1</span>, <span class="dt">N =</span> <span class="dv">100</span>){
@@ -1313,7 +1313,7 @@ Y3[Y2 <span class="op">&gt;</span><span class="st"> </span>c2] &lt;-<span class=
 \frac{dF}{dt}&amp;=(c*R-d)*F
 \tag{2.1}
 \end{align}\]</span>
-<p>This is not a <em>difference</em> equation but a <em>differential</em> equation, which means building this system is not as straightforward as was the case in the previous assignments. Simulation requires a numerical method to ‘solve’ this differential equation for time, which means we need a method to approach, or estimate continuous time in discrete time. Below you will receive a speed course in one of the simplest numerical procedures for integrating differential equations, the <a href="https://en.wikipedia.org/wiki/Euler_method">Euler method</a>.</p>
+<p>This is not a <em>difference</em> equation but a <em>differential</em> equation, which means building this system is not as straightforward as was the case in the previous assignments. Simulation requires a numerical method to ‘solve’ this differential equation for time, which means we need a method to approach, or estimate continuous time in discrete time. Below you will receive a speed course in one of the simplest numerical procedures for integrating differential equations, the <a href="https://en.wikipedia.org/wiki/Euler_method">Euler method</a> (<a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/numerical-integration-to-simulate-continuous-time.html">also see the notes in the course book</a>).</p>
 <div id="eulers-method" class="section level3 unnumbered">
 <h3>Euler’s Method</h3>
 <p>A general differential equation is given by:</p>
@@ -1463,9 +1463,13 @@ If you want to learn how to put mathematical operators in legends and axes using
 </div>
 
 <p>When <code>delta</code> is relatively large, the fluctuations still resemble deterministic chaos, as delta gets closer to 0, this ‘smooths out’ the fluctuations and the analytic solution is approached. As a consequence, it takes longer and longer to reach <code>K</code>. However, ‘longer’ is of course relative to the unit of time represented on the x-axis, because we’re simulating, they are arbitrary units.</p>
+</div>
+</div>
+<div id="beyond-foxes-and-rabbits" class="section level2">
+<h2><span class="header-section-number">2.3</span> <strong>Beyond Foxes and Rabbits</strong></h2>
+<p>In the <a href="https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/advmodels.html">course book</a> we listed some more advanced models that build on the basic models we discussed here.</p>
 <hr />
 <p></br> </br></p>
-</div>
 </div>
 </div>
 

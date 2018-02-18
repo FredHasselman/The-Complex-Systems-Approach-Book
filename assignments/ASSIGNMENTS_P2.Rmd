@@ -20,62 +20,9 @@ output:
 
 # **Basic Timeseries Analysis** 
 
-Most of the basic timeseries analyses can be performed in `SPSS`, because many of you will be familiar with the software we present the first assignments mainly as `SPSS` instructions, but you can go ahead an try your preferred environment for (statistical) computing.
 
+## **Correlation functions and AR-MA models**
 
-## Time series analysis in SPSS (17 and higher) 
-
-### Nonlinear Growth curves in SPSS {#bta}
-
- * Open the file [Growthregression.sav](https://github.com/FredHasselman/DCS/blob/master/assignmentData/BasicTSA_nonlinreg/GrowthRegression.sav), it contains two variables: `Time` and `Y(t)`. 
-
-This is data from an iteration of the logistic growth differential equation you are familiar with by now, but let’s pretend it’s data from one subject measured on 100 occasions.
-
-1. Plot Y(t) against Time Recognize the shape?
-2. To get the growth parameter we’ll try to fit the solution of the logistic flow with SPSS nonlinear regression
-     - Select nonlinear… from the `Analysis` >> `Regression` menu.
-     - Here we can build the solution equation. We need three parameters:
-            a. **Yzero**, the initial condition.
-            b. *K*, the carrying capacity.
-            c. *r*, the growth rate.
-    - Fill these in where it says `parameters` give all parameters a starting value of  $0.01$
-
-4.	Take a good look at the analytic solution of the (stilized) logistic flow:
-
-$$
-Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K-Y_{0}\right) * e^{(-K*r*t)} }
-$$
-
-Tr to build this equation, the function fo $e$ is called `EXP` in `SPSS` (`Function Group` >> `Arithmetic`)
-Group terms by using parentheses as shown in the equation.
-
-5. If you think you have built the model correctly, click on `Save` choose `predicted values`. Then paste your syntax and run it!
-    - Check the estimated parameter values.
-    - Check $R^2$!!!
-
-6. Plot a line graph of both the original data and the predicted values. (Smile)
-
-7. A polynomial fishing expedition:
-     - Create time-varying covariates of $Y(t)$:
-```
-COMPUTE T1=Yt * Time.
-COMPUTE T2=Yt * (Time ** 2). 
-COMPUTE T3=Yt * (Time ** 3). 
-COMPUTE T4=Yt * (Time ** 4). 
-EXECUTE.
-```
-    - Use these variables as predictors of $Y(t)$ in a regular linear regression analysis. This is called a *polynomial regression*: Fitting combinations of curves of different shapes on the data.
-    -  Before you run the analysis: Click `Save` Choose `Predicted Values: Unstandardized`
-
-8. Look at $R^2$. This is also almost 1. Which model is better? Think about this: Based o the results o the linear regression what can yo tell about the *growth rate*, the *carrying capacity* or the *initial condition*?
-
-9.	Create a line graph of $Y(t)$, plot the predicted values of the nonlinear regression and the unstandardized predicted values of the linear polynomial regression against `time` in one figure.
-
-10. Now you can see that the shape is approximated by the polynomials, but it is not quite the same. Is this really a model of a growth process as we could encounter it in nature?
-
-[| jump to solution |](#btasol)
-
-### Correlation functions and AR-MA models {#pacf}
 
 1. Download the file [`series.sav`](https://github.com/FredHasselman/DCS/blob/master/assignmentData/BasicTSA_arma/series.sav) from blackboard. It contains three time series `TS_1`, `TS_2` and `TS_3`. As a first step look at the mean and the standard deviation (`Analyze` >> `Descriptives`).  Suppose these were time series from three subjects in an experiment, what would you conclude based on the means and SD’s?  
 
@@ -115,7 +62,6 @@ COMPUTE TS_1_lag1 = LAG(TS_1)
 ``` 
     - Are your conclusions about the time series the same as in 3. after interpreting these return plots? 
 
-[| jump to solution |](#pacfsol)
 
 ## Notes on TSA in `R` {#bTSAinR}
 
@@ -137,9 +83,6 @@ series <- import("https://github.com/FredHasselman/DCS/raw/master/assignmentData
 You can use the function `arima()`, `acf()` and `pacf()` in `R` (`Matlab` has functions that go by slightly different names, check the [Matlab Help pages](https://nl.mathworks.com/help/econ/autocorr.html)). 
 
 There are many extensions to these linear models, check the [`CRAN Task View` on `Time Series Analysis`](https://cran.r-project.org/web/views/TimeSeries.html) to learn more (e.g. about package `zoo` and `forecast`).
-
-
-[| jump to solution |](#bTSAinRsol)
 
 
 ## Heartbeat dynamics {#hrv}
@@ -179,7 +122,7 @@ The assignment is to scrutinise the data and find out which time series belongs 
 ### First inspection
 The chances that you are an experienced cardiologist are slim. We therefore suggest you proceed your detective work as follows:
 
-*	Construct a graphical representation of the time series, and inspect their dynamics visually (use the code examples provided in the [solutions to previous sessions](#moc1Rsol) to plot your time series).
+*	Construct a graphical representation of the time series, and inspect their dynamics visually ( plot your time series).
 * Write down your first guesses about which time series belongs to which subject. Take your time for this visual inspection (i.e., which one looks more like a line than a plane, which one looks more 'smooth' than 'rough').
 *	Next, explore some measures of central tendency and dispersion, etc.
 *	Third, compute the Relative Roughness for each time series, use Equation \@ref(eq:RR)
@@ -208,8 +151,6 @@ Don’t worry; we’ll cover the interpretation over the next two weeks in furth
 * Next estimate the Relative Roughness of the randomized series. Did the estimates change compared to your previous outcomes (if so, why)?
 
 * Now suppose you would repeat what you did the previous, but instead of using shuffle you would integrate the fictitious HBI series (i.e., normalize, then use `x=cumsum(x))`. You can look up `cumsum` in `R` or `Matlab`’s Help documentation). Would you get an estimate of Relative Roughness that is approximately comparable with what you got in another HBI series? If so, why?
-
-[| jump to solution |](#hrvsol)
 
 
 
@@ -269,8 +210,6 @@ The function `fd.psd()` will perform the spectral slope fitting procedure.
     + Compare the results... What is your conclusion?
 
 
-[| jump to solution |](#psdsol)
-
 ## DFA and SDA {#dfa}
 
 * Use the functions `fd.dfa()` and `fd.sda()` to estimate the self-affinity parameter and Dimension of the series.
@@ -279,12 +218,11 @@ The function `fd.psd()` will perform the spectral slope fitting procedure.
 
 [| jump to solution |](#dfasol)
 
+
 ## ACF/PACF, Relative Roughness {#pacfrel}
 
 * Also calculate the ACF, PACF ([see assignment](#pacf)) and [Relative Roughness](#relR)
     + Compare the results.
-
-[| jump to solution |](#pacfrelrsol)
 
 ## Heartbeat dynamics II {#hrv2}
 In the [previous assignment](#relR), you were presented with three different time series of heartbeat intervals (HBI), and you analyzed them using a measure of Relative Roughness (RR; cf. Marmelat & Delignières, 2012).
@@ -295,7 +233,6 @@ A logical step is to unleash the full force of your new analytic toolbox onto th
     + Do the outcomes of the different methods converge on the continuum of blue, white and pink, to Brownian and black noise? That is, do they indicate the same type of temporal structure?
 * As a final step, construct return plots for each time series and try to interpret what you observe, given the outcomes of the scaling parameter estimates.
 
-[| jump to solution |](#hrv2sol)
 
 ## Analysis of Deterministic Chaos {#chaos}
 

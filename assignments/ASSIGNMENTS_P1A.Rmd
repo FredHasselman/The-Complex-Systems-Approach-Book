@@ -58,7 +58,7 @@ Also, have a look at the examples on [plotting time series in `R` in the course 
 
 </br>
 
-Equation \@ref(eq:linmap) is the ordinary difference equation (ODE) discussed in [Chapter 2](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/02-MathematicsofChange.html) and is called the *Linear Map*:
+Equation \@ref(eq:linmap) is the ordinary difference equation (ODE) discussed in [the course book](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/introduction-to-the-mathematics-of-change.html) and is called the *Linear Map*:
   
 \begin{equation}
 Y_{i+1} = Y_{i=0} + r*Y_i
@@ -179,7 +179,7 @@ The best (and easiest) way to simulate these simple models in `R` is to create a
 
 #### Questions {-}
 
-For the Linear Map you could use this template:
+For the Linear Map you could use this template ([also see the notes in the course book](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/implementing-iterative-functions.html)):
 
 ```{r, eval=FALSE, include=TRUE, tidy=FALSE}
 # TEMPLATE
@@ -991,7 +991,7 @@ The dynamical system is given by the following set of first-order differential e
 \end{align}
 
 
-This is not a *difference* equation but a *differential* equation, which means building this system is not as straightforward as was the case in the previous assignments. Simulation requires a numerical method to 'solve' this differential equation for time, which means we need a method to approach, or estimate continuous time in discrete time. Below you will receive a speed course in one of the simplest numerical procedures for integrating differential equations, the [Euler method](https://en.wikipedia.org/wiki/Euler_method).    
+This is not a *difference* equation but a *differential* equation, which means building this system is not as straightforward as was the case in the previous assignments. Simulation requires a numerical method to 'solve' this differential equation for time, which means we need a method to approach, or estimate continuous time in discrete time. Below you will receive a speed course in one of the simplest numerical procedures for integrating differential equations, the [Euler method](https://en.wikipedia.org/wiki/Euler_method) ([also see the notes in the course book](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/numerical-integration-to-simulate-continuous-time.html)).    
 
 
 ### Euler's Method {-}
@@ -1161,7 +1161,15 @@ If you want to learn how to put mathematical operators in legends and axes using
 
 When `delta` is relatively large, the fluctuations still resemble deterministic chaos, as delta gets closer to 0, this 'smooths out' the fluctuations and the analytic solution is approached. As a consequence, it takes longer and longer to reach `K`. However, 'longer' is of course relative to the unit of time represented on the x-axis, because we're simulating, they are arbitrary units.
 
+
+
+## **Beyond Foxes and Rabbits**
+
+In the [course book](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/advmodels.html
+) we listed some more advanced models that build on the basic models we discussed here.
+
 ----
+
 
 </br>
 </br>

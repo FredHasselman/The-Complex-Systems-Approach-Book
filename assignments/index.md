@@ -27,7 +27,7 @@ output:
 **Quick links**
 
 * [Assignments Part 1A: Introduction to the mathematics of change](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1A.html)
-* [Assignments Part 1B: Fitting Parameters and Potential Functions](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1B.html)
+* [Assignments Part 1B: Analytic Solutions and Potential Functions](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1B.html)
 * [Assignments Part 2: Time Series Analysis: Temporal Correlations and Fractal Scaling](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)
 * [Assignments Part 3: Quantifying Recurrences in State Space](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)
 * [Assignments Part 4: Complex Networks](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)
@@ -52,33 +52,34 @@ These assignments were designed to prepare you for "real world" modelling and da
 
 **I. Introduction to the mathematics of change**
 
-- Modelling (nonlinear) growth and Deterministic Chaos (Lecture 1 - Assignments [Part 1]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1.html)))
-- Multivariate systems: Predator-Prey dynamics (Lecture 2 - Assignments [Part 1]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1.html)))
-- Potential theory, Agent-based models, Dynamic field models (Lecture 2 - Assignments [Part 1]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1.html)))
+- Modelling (nonlinear) growth and Deterministic Chaos (Lecture 1 - Assignments [Part 1]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1A.html)))
+- Multivariate systems: Predator-Prey dynamics (Lecture 2 - Assignments [Part 1]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1A.html)))
+- Nonlinear regression: Fitting parameters of analytic solutions. Potential functions (Lecture 2 - Assignments [Part 1]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1B.html)))
 
 **II. Time Series Analysis: Temporal Correlations and Fractal Scaling**
 
-- Nonlinear regression: Fitting analytic solutions and Catastrophe Theory (Lecture 3 - Assignments [Part 2]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)))
-- Basic timeseries analysis: Quantifying temporal correlations and order transitions (Lecture 4 - Assignments [Part 2]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)))
-- Scaling phenomena: Fluctuation analyses and (multi-)fractal geometry (Lecture 5 - Assignments [Part 2]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)))
+- Basic timeseries analysis: Quantifying order (auto/cross correlation functions) and disorder (sample entropy, relative roughness) in time series (Lecture 3 - Assignments [Part 2]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html))
+- Scaling phenomena I: How to measure complexity? Fluctuation analyses (DFA, SDA and spectral slope) and global fractal dimension (Lecture 4 - Assignments [Part 2](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html))
+- Scaling phenomena II: Global versus local fractal dimension, fractal physiology and complexity matching (Lecture 5 - Assignments [Part 2](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html))
 
 **III. Quantifying Recurrences in State Space**
 
 - Takens’ Theorem and State-Space reconstruction (Lecture 6 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
-- Recurrence Quantification Analysis of continuous and categorical data (Lecture 6 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
-- Cross-Recurrence Quantification Analysis of dyadic interaction (Lecture 7 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
-- Early Warning Signals of order transitions (Lecture 7 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
+- Recurrence Quantification Analysis (RQA) of continuous and categorical data (Lecture 6 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
+- Cross-Recurrence Quantification Analysis (CRQA) of dyadic interaction (Lecture 7 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
+- Early Warning Signals of order transitions in complex systems (Lecture 7 - Assignments [Part 3]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)))
 
 **IV. Complex Networks**
 
-- Small-world and Scale-free networks (Lecture 8 - Assignments [Part 4]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)))
-- Symptom networks and Networks of Quantified Recurrences (Lecture 8 - Assignments [Part 4]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)))
-- Early Warning Signals of order transitions in clinical settings (Lecture 8 - Assignments [Part 4]((https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)))
+- Small-world and Scale-free networks (Lecture 8 - Assignments [Part 4](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html))
+- Symptom networks and Networks of Quantified Recurrences (Lecture 8 - Assignments [Part 4](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html))
+- Early Warning Signals of order transitions in clinical settings (Lecture 8 - Assignments [Part 4](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html))
 
 
 ## Using `R`! {-}
 
-We recommend installing the latest version of [**R**](https://www.r-project.org) and [**RStudio**](https://www.rstudio.com). Rstudio is not strictly necessary, but especially new users will have a somewhat more comfortable expe**R**ience. If you are completeley new to `R` you might want to [check these notes](#prep)
+We recommend installing the latest version of [**R**](https://www.r-project.org) and [**RStudio**](https://www.rstudio.com). Rstudio is not strictly necessary, but especially new users will have a somewhat more comfortable expe**R**ience. If you are completeley new to `R` you might want to [check these notes in the course book](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/some-notes-on-using-r.html)
+
 
 ### Packages needed for the assignments {-}
 
@@ -116,11 +117,6 @@ source_url("https://raw.githubusercontent.com/FredHasselman/casnet/master/R/prep
 source_url("https://raw.githubusercontent.com/FredHasselman/casnet/master/R/nlRtsa_SOURCE.R")
 ```
 
-### Timeseries in `R` {-}
+### Working with timeseries in `R` {-}
 
-There are many different ways to handle and plot timeseries data in `R`, I summarised some of them [in the notes](#tsPlot)
-
-### This document {-}
-
-This text was transformed to `HTML`, `PDF` using `bookdown` @R-bookdown in [**RStudio**](https://www.rstudio.com), the graphical user interface of the statistical language [**R**](https://www.r-project.org) [@R-base]. `bookdown` makes use of the `R` version of [markdown](https://en.wikipedia.org/wiki/Markdown) called [Rmarkdown](http://rmarkdown.rstudio.com) [@R-rmarkdown], together with [knitr](http://yihui.name/knitr/) [@R-knitr] and [pandoc](http://pandoc.org). 
-
+There are many different ways to handle and plot timeseries data in `R`, I summarised some of them [in the course book](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/plotTS.html)
