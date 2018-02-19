@@ -3,7 +3,7 @@ GRAPH
 
 * NonLinear Regression.
 MODEL PROGRAM  Yzero=0.01 r=0.01 K=0.01.
-COMPUTE  PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * K * Time))).
+COMPUTE  PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * Time))).
 NLR Yt
   /PRED PRED_
   /SAVE PRED
