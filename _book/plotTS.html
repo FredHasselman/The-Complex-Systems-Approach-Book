@@ -154,6 +154,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#eulers-method-and-more"><i class="fa fa-check"></i>Euler’s method and more…</a></li>
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#analytical-solution"><i class="fa fa-check"></i>Analytical solution</a></li>
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#numerical-solution-discrete"><i class="fa fa-check"></i>Numerical solution (discrete)</a></li>
+<li class="chapter" data-level="4.5.1" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#eulers-method"><i class="fa fa-check"></i><b>4.5.1</b> Euler’s method</a></li>
+<li class="chapter" data-level="4.5.2" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#runge-kuttas-method"><i class="fa fa-check"></i><b>4.5.2</b> Runge Kutta’s Method</a></li>
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="advmodels.html"><a href="advmodels.html"><i class="fa fa-check"></i><b>4.6</b> <strong>Modeling interactions between processes and agents</strong></a><ul>
 <li class="chapter" data-level="4.6.1" data-path="advmodels.html"><a href="advmodels.html#the-competetive-lottka-volterra-equations"><i class="fa fa-check"></i><b>4.6.1</b> The Competetive Lottka-Volterra Equations</a></li>
@@ -278,7 +280,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><code>Frequency</code> - The amount of time that passed between two samples, or, the sample rate (e.g., <span class="math inline">\(0.5\)</span>, or <span class="math inline">\(10\)</span>)</li>
 </ul>
 <p>Examples of using the time series object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get a timeseries of 100 random numbers </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2718282</span>)
+<span class="co"># Get a timeseries of 100 random numbers </span>
 Y &lt;-<span class="st"> </span><span class="kw">ts</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>))
 <span class="co"># plot.ts</span>
 <span class="kw">plot</span>(Y)</code></pre></div>
@@ -322,6 +325,7 @@ Y &lt;-<span class="st"> </span><span class="kw">ts</span>(<span class="kw">rnor
 <p>Depending on which packages you use, there will be different settings applied to time series objects created by <code>ts()</code>. Below are some examples of differences between plotting routines.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(lattice)       <span class="co"># Needed for plotting</span>
 <span class="kw">require</span>(latticeExtra)  <span class="co"># Needed for plotting</span>
+<span class="kw">require</span>(casnet)        <span class="co"># Need for center()</span>
 
 <span class="co"># stats::plot.ts</span>
 <span class="kw">plot</span>(Y, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;stats::plot.ts&quot;</span>)</code></pre></div>
@@ -336,18 +340,16 @@ Y &lt;-<span class="st"> </span><span class="kw">ts</span>(<span class="kw">rnor
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># stats::plot.ts  </span>
 <span class="kw">plot</span>(<span class="kw">cbind</span>(Y,
            <span class="kw">cumsum</span>(Y), 
-           <span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y)))
+           <span class="kw">cumsum</span>(<span class="kw">center</span>(Y))
            ), 
-     <span class="dt">yax.flip =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">TRUE</span>) 
-<span class="kw">title</span>(<span class="dt">main =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Random Numbers: &quot;</span>,<span class="kw">N</span>(<span class="dv">0</span>,sigma))), 
-      <span class="dt">xlab =</span> <span class="st">&quot;time (a.u.)&quot;</span>)</code></pre></div>
+     <span class="dt">yax.flip =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">TRUE</span>, 
+     <span class="dt">main =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Random Numbers: &quot;</span>,<span class="kw">N</span>(<span class="dv">0</span>,sigma))), <span class="dt">xlab =</span> <span class="st">&quot;time (a.u.)&quot;</span>)</code></pre></div>
 <p><img src="DCS1718_files/figure-html/unnamed-chunk-8-1.png" width="99%" style="display: block; margin: auto;" /></p>
 <p>Plot multiple time series in one graph with <code>ts.plot()</code> in <code>package::graphics</code>. This function can handle multiple <code>ts</code> objects as arguments.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># graphics::ts.plot</span>
 <span class="kw">ts.plot</span>(Y,
-           <span class="kw">cumsum</span>(Y), 
-           <span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y))),
-        
+        <span class="kw">cumsum</span>(Y), 
+        <span class="kw">cumsum</span>(<span class="kw">center</span>(Y)),
         <span class="dt">gpars =</span> <span class="kw">list</span>(<span class="dt">xlab =</span> <span class="st">&quot;time (a.u.)&quot;</span>,
                      <span class="dt">ylab =</span> <span class="kw">expression</span>(<span class="kw">Y</span>(t)),
                      <span class="dt">main =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Random Numbers: &quot;</span>,<span class="kw">N</span>(<span class="dv">0</span>,sigma))),
@@ -356,16 +358,16 @@ Y &lt;-<span class="st"> </span><span class="kw">ts</span>(<span class="kw">rnor
                      <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;darkred&quot;</span>,<span class="st">&quot;darkblue&quot;</span>,<span class="st">&quot;darkgreen&quot;</span>)
                      )
         )
-<span class="kw">legend</span>(<span class="dv">0</span>, <span class="op">-</span><span class="dv">10</span>, <span class="kw">c</span>(<span class="st">&quot;Y&quot;</span>,<span class="st">&quot;cumsum(Y)&quot;</span>, <span class="st">&quot;cumprod(Y)&quot;</span>), <span class="dt">lwd =</span> <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;darkred&quot;</span>,<span class="st">&quot;darkblue&quot;</span>,<span class="st">&quot;darkgreen&quot;</span>), <span class="dt">merge =</span> <span class="ot">TRUE</span>, <span class="dt">cex=</span>.<span class="dv">9</span>)</code></pre></div>
+<span class="kw">legend</span>(<span class="dv">0</span>, <span class="dv">18</span>, <span class="kw">c</span>(<span class="st">&quot;Y&quot;</span>,<span class="st">&quot;cumsum(Y)&quot;</span>, <span class="st">&quot;cumsum(center(Y))&quot;</span>), <span class="dt">lwd =</span> <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;darkred&quot;</span>,<span class="st">&quot;darkblue&quot;</span>,<span class="st">&quot;darkgreen&quot;</span>), <span class="dt">merge =</span> <span class="ot">TRUE</span>, <span class="dt">cex=</span>.<span class="dv">9</span>)</code></pre></div>
 <p><img src="DCS1718_files/figure-html/unnamed-chunk-9-1.png" width="99%" style="display: block; margin: auto;" /></p>
 <p>Use <code>xyplot()</code> in <code>package::lattice</code> to create a plot with panels. The easiest way to do this is to create a dataset in so-called “long” format. This means the variable to plot is in 1 column and other variables indicate different levels, or conditions under which the variable was observed or simulated.</p>
 <p>Function <code>ldply()</code> is used to generate <span class="math inline">\(Y\)</span> for three different settings of <span class="math inline">\(r\)</span>. The values of <span class="math inline">\(r\)</span> are passed as a <strong>l</strong>ist and after a function is applied the result is returned as a <strong>d</strong>ataframe.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(plyr)          <span class="co"># Needed for function ldply()</span>
 
 <span class="co"># Create a long format dataframe for various values for `r`</span>
-data &lt;-<span class="st"> </span><span class="kw">cbind.data.frame</span>(<span class="dt">Y     =</span> <span class="kw">c</span>(<span class="kw">as.numeric</span>(Y), <span class="kw">cumsum</span>(Y), <span class="kw">cumsum</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="kw">diff</span>(Y)))),
+data &lt;-<span class="st"> </span><span class="kw">cbind.data.frame</span>(<span class="dt">Y     =</span> <span class="kw">c</span>(<span class="kw">as.numeric</span>(Y), <span class="kw">cumsum</span>(Y), <span class="kw">cumsum</span>(<span class="kw">center</span>(Y))),
                          <span class="dt">time  =</span> <span class="kw">c</span>(<span class="kw">time</span>(Y), <span class="kw">time</span>(Y), <span class="kw">time</span>(Y)),
-                         <span class="dt">label =</span> <span class="kw">factor</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;Y&quot;</span>,<span class="kw">length</span>(Y)),  <span class="kw">rep</span>(<span class="st">&quot;cumsum(Y)&quot;</span>,<span class="kw">length</span>(Y)), <span class="kw">rep</span>(<span class="st">&quot;cumsum(diff(Y))&quot;</span>,<span class="kw">length</span>(Y))))
+                         <span class="dt">label =</span> <span class="kw">factor</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;Y&quot;</span>,<span class="kw">length</span>(Y)),  <span class="kw">rep</span>(<span class="st">&quot;cumsum(Y)&quot;</span>,<span class="kw">length</span>(Y)), <span class="kw">rep</span>(<span class="st">&quot;cumsum(center(Y))&quot;</span>,<span class="kw">length</span>(Y))))
                          )
 <span class="co"># Plot using the formula interface</span>
 <span class="kw">xyplot</span>(Y <span class="op">~</span><span class="st"> </span>time <span class="op">|</span><span class="st"> </span>label, <span class="dt">data =</span> data, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Random Numbers: &quot;</span>,<span class="kw">N</span>(<span class="dv">0</span>,sigma))))</code></pre></div>
@@ -379,8 +381,8 @@ data &lt;-<span class="st"> </span><span class="kw">cbind.data.frame</span>(<spa
 <span class="kw">library</span>(casnet)
 
 <span class="co"># Get exponential growth</span>
-Y &lt;-<span class="st"> </span><span class="kw">growth_ac</span>(<span class="dt">N=</span><span class="dv">1000</span>,<span class="dt">r=</span><span class="fl">1.5</span>,<span class="dt">type =</span> <span class="st">&quot;driving&quot;</span>)
-Y1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(Y<span class="op">/</span><span class="kw">max</span>(Y))
+YY &lt;-<span class="st"> </span><span class="kw">growth_ac</span>(<span class="dt">N=</span><span class="dv">1000</span>,<span class="dt">r=</span><span class="fl">1.5</span>,<span class="dt">type =</span> <span class="st">&quot;driving&quot;</span>)
+Y1 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(YY<span class="op">/</span><span class="kw">max</span>(YY))
 <span class="co"># Get logistic growth in the chaotic regime</span>
 Y2 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">growth_ac</span>(<span class="dt">N=</span><span class="dv">1000</span>,<span class="dt">r=</span><span class="dv">4</span>,<span class="dt">type =</span> <span class="st">&quot;logistic&quot;</span>))
 <span class="co"># Use the `lag` function from package `dplyr`</span>
@@ -389,13 +391,13 @@ op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">mf
      <span class="dt">main =</span> <span class="st">&quot;exponential / max&quot;</span>)
 <span class="kw">plot</span>(dplyr<span class="op">::</span><span class="kw">lag</span>(Y2), Y2, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Y(t+1)&quot;</span>,
      <span class="dt">main =</span> <span class="st">&quot;logistic / max&quot;</span>)</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-11-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-12-1.png" width="99%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(op)</code></pre></div>
 <p>Use <code>l_ply()</code> from <code>package::plyr</code> to create return plots with different lags. The <strong>l_</strong> before <strong>ply</strong> means the function will take a <strong>l</strong>ist as input to a function, but it will not expect any data to be returned, for example in the case of a function that is used to plot something.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Explore different lags</span>
 op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">pty =</span> <span class="st">&quot;s&quot;</span>)
 plyr<span class="op">::</span><span class="kw">l_ply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="cf">function</span>(l) <span class="kw">plot</span>(dplyr<span class="op">::</span><span class="kw">lag</span>(Y2, <span class="dt">n =</span> l), Y2, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="kw">paste0</span>(<span class="st">&quot;Y(t+&quot;</span>,l,<span class="st">&quot;)&quot;</span>), <span class="dt">cex =</span> .<span class="dv">8</span>))</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-12-1.png" width="99%" style="display: block; margin: auto;" /><img src="DCS1718_files/figure-html/unnamed-chunk-12-2.png" width="99%" style="display: block; margin: auto;" /></p>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-1.png" width="99%" style="display: block; margin: auto;" /><img src="DCS1718_files/figure-html/unnamed-chunk-13-2.png" width="99%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(op)</code></pre></div>
 </div>
 <div id="using-ggplot2" class="section level3">
@@ -405,48 +407,50 @@ plyr<span class="op">::</span><span class="kw">l_ply</span>(<span class="dv">1</
 <p>Tidy data is a standard way of mapping the meaning of a dataset to its structure. A dataset is messy or tidy depending on how rows, columns and tables are matched up with observations, variables and types. In tidy data: 1. Each variable forms a column. 2. Each observation forms a row. 3. Each type of observational unit forms a table.</p>
 <p>—<span class="citation">Wickham &amp; others (<a href="references.html#ref-wickham2014a">2014</a>)</span></p>
 </blockquote>
-<p>So if we have a set of timeseries as in the previous examples, we need to change it to long format.</p>
+<p>So if we have a set of time series as in the previous examples, we need to change it to long format.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
 
-Y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
-
 <span class="co"># A wide data frame</span>
-df.wide &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Ynrm =</span> Y<span class="op">^</span><span class="dv">2</span>,
-                      <span class="dt">Ycum =</span> <span class="kw">cumsum</span>(Y), 
-                      <span class="dt">Yuni =</span> <span class="kw">cumsum</span>(Y<span class="op">-</span><span class="kw">median</span>(Y)),
-                      <span class="dt">t    =</span> <span class="kw">seq_along</span>(Y)
+df.wide &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">rnormY        =</span> Y,
+                      <span class="dt">cumsumY       =</span> <span class="kw">cumsum</span>(Y), 
+                      <span class="dt">centercumsumY =</span> <span class="kw">cumsum</span>(<span class="kw">center</span>(Y)),
+                      <span class="dt">time          =</span> <span class="kw">seq_along</span>(Y)
                       )
 
 <span class="kw">glimpse</span>(df.wide)</code></pre></div>
-<pre><code>## Observations: 1,000
+<pre><code>## Observations: 100
 ## Variables: 4
-## $ Ynrm &lt;dbl&gt; 0.021619297, 1.150044858, 1.998677976, 0.931738059, 0.521...
-## $ Ycum &lt;dbl&gt; 0.1470350, -0.9253664, -2.3391125, -1.3738467, -2.0963197...
-## $ Yuni &lt;dbl&gt; 0.1696797, -0.8800770, -2.2711784, -1.2832679, -1.9830963...
-## $ t    &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17...</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># A long dataframe</span>
-df.long &lt;-<span class="st"> </span>df.wide <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(<span class="dt">key=</span>TimeSeries,<span class="dt">value=</span>Y,<span class="op">-</span>t)
+## $ rnormY        &lt;dbl&gt; 0.78482166, 0.19776074, 1.07957851, 1.52605836, ...
+## $ cumsumY       &lt;dbl&gt; 0.7848217, 0.9825824, 2.0621609, 3.5882193, 3.98...
+## $ centercumsumY &lt;dbl&gt; 0.6249966, 0.6629322, 1.5826857, 2.9489189, 3.18...
+## $ time          &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create a long dataframe using gather()</span>
+df.long &lt;-<span class="st"> </span>df.wide <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key=</span>TimeSeries,<span class="dt">value=</span>Y,<span class="op">-</span><span class="st">&quot;time&quot;</span>)
 
 <span class="kw">glimpse</span>(df.long)</code></pre></div>
-<pre><code>## Observations: 3,000
+<pre><code>## Observations: 300
 ## Variables: 3
-## $ t          &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ...
-## $ TimeSeries &lt;chr&gt; &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Ynrm&quot;, &quot;Yn...
-## $ Y          &lt;dbl&gt; 0.021619297, 1.150044858, 1.998677976, 0.931738059,...</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>t, <span class="dt">y=</span>Y, <span class="dt">colour=</span>TimeSeries)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+## $ time       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ...
+## $ TimeSeries &lt;chr&gt; &quot;rnormY&quot;, &quot;rnormY&quot;, &quot;rnormY&quot;, &quot;rnormY&quot;, &quot;rnormY&quot;, &quot;...
+## $ Y          &lt;dbl&gt; 0.78482166, 0.19776074, 1.07957851, 1.52605836, 0.4...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1 plot</span>
+<span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>time, <span class="dt">y=</span>Y, <span class="dt">colour=</span>TimeSeries)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-1.png" width="99%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>t,<span class="dt">y=</span>Y)) <span class="op">+</span>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># using facets</span>
+<span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>time,<span class="dt">y=</span>Y)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>TimeSeries) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-2.png" width="99%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>t,<span class="dt">y=</span>Y)) <span class="op">+</span>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-2.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># using facets</span>
+<span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>time,<span class="dt">y=</span>Y)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_grid</span>(TimeSeries<span class="op">~</span>.) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-3.png" width="99%" style="display: block; margin: auto;" /></p>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-3.png" width="99%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
             </section>

@@ -154,6 +154,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#eulers-method-and-more"><i class="fa fa-check"></i>Euler’s method and more…</a></li>
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#analytical-solution"><i class="fa fa-check"></i>Analytical solution</a></li>
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#numerical-solution-discrete"><i class="fa fa-check"></i>Numerical solution (discrete)</a></li>
+<li class="chapter" data-level="4.5.1" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#eulers-method"><i class="fa fa-check"></i><b>4.5.1</b> Euler’s method</a></li>
+<li class="chapter" data-level="4.5.2" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#runge-kuttas-method"><i class="fa fa-check"></i><b>4.5.2</b> Runge Kutta’s Method</a></li>
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="advmodels.html"><a href="advmodels.html"><i class="fa fa-check"></i><b>4.6</b> <strong>Modeling interactions between processes and agents</strong></a><ul>
 <li class="chapter" data-level="4.6.1" data-path="advmodels.html"><a href="advmodels.html#the-competetive-lottka-volterra-equations"><i class="fa fa-check"></i><b>4.6.1</b> The Competetive Lottka-Volterra Equations</a></li>
@@ -280,7 +282,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3>Analytical solution</h3>
 <p>Remember that the analytical solution for the logistic equation is:</p>
 <p><span class="math display">\[
-Y(t)  =  \frac{K}{1 + \left(\frac{K}{Y_{0} - 1}\right) * e^{-r*t} }
+Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K - Y_0 \right) * e^{-r*t} }
+\]</span> This can be ‘simplified’ to</p>
+<p><span class="math display">\[
+Y(t)  =  \frac{K}{1 + \left(\frac{K}{Y_0-1} \right) * e^{-r*t} }
 \]</span></p>
 <p>If we want to know the growth level <span class="math inline">\(Y_t\)</span> at <span class="math inline">\(t=10\)</span>, with <span class="math inline">\(Y_0=.0001\)</span>, <span class="math inline">\(r=1.1\)</span> and <span class="math inline">\(K=4\)</span>, we can just <code>fill it in</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Define a function for the solution</span>
@@ -289,13 +294,13 @@ logSol &lt;-<span class="st"> </span><span class="cf">function</span>(Y0, r, K, 
 <span class="co"># Call the function</span>
 <span class="kw">logSol</span>(<span class="dt">Y0=</span>.<span class="dv">0001</span>, <span class="dt">r=</span><span class="fl">1.1</span>, <span class="dt">K=</span><span class="dv">4</span>, <span class="dt">t=</span><span class="dv">10</span>)</code></pre></div>
 <pre><code>## [1] 2.398008</code></pre>
-<p>We can pas a vector of time points to create the exact solution, the same we would get if we were to iterate the differential/difference equation.</p>
+<p>We can pass a vector of time points to create the exact solution, the same we would get if we were to iterate the differential/difference equation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot from t=1 to t=100</span>
 <span class="kw">plot</span>(<span class="kw">logSol</span>(<span class="dt">Y0=</span>.<span class="dv">0001</span>, <span class="dt">r=</span><span class="fl">1.1</span>, <span class="dt">K=</span><span class="dv">4</span>, <span class="dt">t=</span><span class="kw">seq</span>(<span class="dv">1</span>,<span class="dv">20</span>)), <span class="dt">type =</span> <span class="st">&quot;b&quot;</span>, 
      <span class="dt">ylab =</span> <span class="kw">expression</span>(Y[t]), <span class="dt">xlab =</span> <span class="st">&quot;t&quot;</span>)
 <span class="co"># Plot t=10 in red</span>
 <span class="kw">points</span>(<span class="dv">10</span>,<span class="kw">logSol</span>(<span class="dt">Y0=</span>.<span class="dv">0001</span>, <span class="dt">r=</span><span class="fl">1.1</span>, <span class="dt">K=</span><span class="dv">4</span>, <span class="dt">t=</span><span class="dv">10</span>), <span class="dt">col=</span><span class="st">&quot;red&quot;</span>, <span class="dt">pch=</span><span class="dv">16</span>)</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-16-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-17-1.png" width="99%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="numerical-solution-discrete" class="section level3 unnumbered">
 <h3>Numerical solution (discrete)</h3>
@@ -303,7 +308,10 @@ logSol &lt;-<span class="st"> </span><span class="cf">function</span>(Y0, r, K, 
 <p><span class="math display">\[
 \frac{dY}{dt} = Y_t * (1 + r - r * \frac{Y_t}{K})
 \]</span></p>
-<p>… as if it were a difference equation, that is, <em>not</em> simulating continuous time.</p>
+<p>… as if it were a difference equation, we are <em>not</em> simulating continuous time, but a discrete time version of the model:</p>
+<p><span class="math display">\[
+Y_{i+1} = Y_i * (1 + r - r * \frac{Y_i}{K})
+\]</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">logIter &lt;-<span class="st">  </span><span class="cf">function</span>(Y0,r,K,t){
   N &lt;-<span class="st"> </span><span class="kw">length</span>(t)
   Y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">c</span>(Y0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">2</span>)))
@@ -315,7 +323,13 @@ logSol &lt;-<span class="st"> </span><span class="cf">function</span>(Y0, r, K, 
      <span class="dt">ylab =</span> <span class="kw">expression</span>(Y[t]), <span class="dt">xlab =</span> <span class="st">&quot;t&quot;</span>)
 <span class="co"># Plot t=10 in red</span>
 <span class="kw">points</span>(<span class="dv">10</span>,<span class="kw">logSol</span>(<span class="dt">Y0=</span>.<span class="dv">0001</span>, <span class="dt">r=</span><span class="fl">1.1</span>, <span class="dt">K=</span><span class="dv">4</span>, <span class="dt">t=</span><span class="dv">10</span>), <span class="dt">col=</span><span class="st">&quot;red&quot;</span>, <span class="dt">pch=</span><span class="dv">16</span>)</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-17-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-18-1.png" width="99%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="eulers-method" class="section level3">
+<h3><span class="header-section-number">4.5.1</span> Euler’s method</h3>
+</div>
+<div id="runge-kuttas-method" class="section level3">
+<h3><span class="header-section-number">4.5.2</span> Runge Kutta’s Method</h3>
 </div>
 </div>
             </section>

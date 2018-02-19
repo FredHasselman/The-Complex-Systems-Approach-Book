@@ -157,6 +157,7 @@ A time series object is expected to have a time-dimension on the x-axis. This is
 
 Examples of using the time series object.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
+set.seed(2718282)
 # Get a timeseries of 100 random numbers 
 Y <- ts(rnorm(100))
 # plot.ts
@@ -184,6 +185,7 @@ Depending on which packages you use, there will be different settings applied to
 ```{r, echo=TRUE, message=FALSE, warning=FALSE, collapse=TRUE, tidy=FALSE}
 require(lattice)       # Needed for plotting
 require(latticeExtra)  # Needed for plotting
+require(casnet)        # Need for center()
 
 # stats::plot.ts
 plot(Y, lwd = 2, main = "stats::plot.ts")
@@ -199,11 +201,10 @@ This function takes a matrix as input, here we use `cbind( ... )`.
 # stats::plot.ts  
 plot(cbind(Y,
            cumsum(Y), 
-           cumsum(c(0,diff(Y)))
+           cumsum(center(Y))
            ), 
-     yax.flip = TRUE, col = "blue", frame.plot = TRUE) 
-title(main = expression(paste("Random Numbers: ",N(0,sigma))), 
-      xlab = "time (a.u.)")
+     yax.flip = TRUE, col = "blue", frame.plot = TRUE, 
+     main = expression(paste("Random Numbers: ",N(0,sigma))), xlab = "time (a.u.)")
 ```
 
 Plot multiple time series in one graph with `ts.plot()` in `package::graphics`.
@@ -211,9 +212,8 @@ This function can handle multiple `ts` objects as arguments.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE, collapse=TRUE, tidy=FALSE}
 # graphics::ts.plot
 ts.plot(Y,
-           cumsum(Y), 
-           cumsum(c(0,diff(Y))),
-        
+        cumsum(Y), 
+        cumsum(center(Y)),
         gpars = list(xlab = "time (a.u.)",
                      ylab = expression(Y(t)),
                      main = expression(paste("Random Numbers: ",N(0,sigma))),
@@ -222,7 +222,7 @@ ts.plot(Y,
                      col = c("darkred","darkblue","darkgreen")
                      )
         )
-legend(0, -10, c("Y","cumsum(Y)", "cumprod(Y)"), lwd = rep(2,3), lty = c(1:3), col = c("darkred","darkblue","darkgreen"), merge = TRUE, cex=.9)
+legend(0, 18, c("Y","cumsum(Y)", "cumsum(center(Y))"), lwd = rep(2,3), lty = c(1:3), col = c("darkred","darkblue","darkgreen"), merge = TRUE, cex=.9)
 ```
 
 Use `xyplot()` in `package::lattice` to create a plot with panels. The easiest way to do this is to create a dataset in so-called "long" format. This means the variable to plot is in 1 column and other variables indicate different levels, or conditions under which the variable was observed or simulated.
@@ -232,13 +232,18 @@ Function `ldply()` is used to generate $Y$ for three different settings of $r$. 
 require(plyr)          # Needed for function ldply()
 
 # Create a long format dataframe for various values for `r`
-data <- cbind.data.frame(Y     = c(as.numeric(Y), cumsum(Y), cumsum(c(0,diff(Y)))),
+data <- cbind.data.frame(Y     = c(as.numeric(Y), cumsum(Y), cumsum(center(Y))),
                          time  = c(time(Y), time(Y), time(Y)),
-                         label = factor(c(rep("Y",length(Y)),  rep("cumsum(Y)",length(Y)), rep("cumsum(diff(Y))",length(Y))))
+                         label = factor(c(rep("Y",length(Y)),  rep("cumsum(Y)",length(Y)), rep("cumsum(center(Y))",length(Y))))
                          )
 # Plot using the formula interface
 xyplot(Y ~ time | label, data = data, type = "l", main = expression(paste("Random Numbers: ",N(0,sigma))))
 ```
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE, collapse=TRUE, tidy=FALSE}
+
+```
+
 
 ### The return plot
 
@@ -249,8 +254,8 @@ library(dplyr)
 library(casnet)
 
 # Get exponential growth
-Y <- growth_ac(N=1000,r=1.5,type = "driving")
-Y1 <- as.numeric(Y/max(Y))
+YY <- growth_ac(N=1000,r=1.5,type = "driving")
+Y1 <- as.numeric(YY/max(YY))
 # Get logistic growth in the chaotic regime
 Y2 <- as.numeric(growth_ac(N=1000,r=4,type = "logistic"))
 # Use the `lag` function from package `dplyr`
@@ -284,39 +289,39 @@ variables and types. In tidy data:
 >
 > ---@wickham2014a
 
-So if we have a set of timeseries as in the previous examples, we need to change it to long format.
+So if we have a set of time series as in the previous examples, we need to change it to long format.
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 
-Y <- rnorm(1000)
-
 # A wide data frame
-df.wide <- data.frame(Ynrm = Y^2,
-                      Ycum = cumsum(Y), 
-                      Yuni = cumsum(Y-median(Y)),
-                      t    = seq_along(Y)
+df.wide <- data.frame(rnormY        = Y,
+                      cumsumY       = cumsum(Y), 
+                      centercumsumY = cumsum(center(Y)),
+                      time          = seq_along(Y)
                       )
 
 glimpse(df.wide)
 
-# A long dataframe
-df.long <- df.wide %>% gather(key=TimeSeries,value=Y,-t)
+# Create a long dataframe using gather()
+df.long <- df.wide %>% 
+  gather(key=TimeSeries,value=Y,-"time")
 
 glimpse(df.long)
 
-ggplot(df.long, aes(x=t, y=Y, colour=TimeSeries)) +
-  geom_line() + 
+# 1 plot
+ggplot(df.long, aes(x=time, y=Y, colour=TimeSeries)) +
+  geom_line() +
   theme_bw()
 
-
-ggplot(df.long, aes(x=t,y=Y)) +
+# using facets
+ggplot(df.long, aes(x=time,y=Y)) +
   geom_line() + 
   facet_wrap(~TimeSeries) +
   theme_bw()
 
-
-ggplot(df.long, aes(x=t,y=Y)) +
+# using facets
+ggplot(df.long, aes(x=time,y=Y)) +
   geom_line() + 
   facet_grid(TimeSeries~.) +
   theme_bw()
@@ -375,7 +380,12 @@ The result of applying a method of numerical integration is called a **numerical
 Remember that the analytical solution for the logistic equation is:
 
 $$
-Y(t)  =  \frac{K}{1 + \left(\frac{K}{Y_{0} - 1}\right) * e^{-r*t} }
+Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K - Y_0 \right) * e^{-r*t} }
+$$
+This can be 'simplified' to
+
+$$
+Y(t)  =  \frac{K}{1 + \left(\frac{K}{Y_0-1} \right) * e^{-r*t} }
 $$
 
 If we want to know the growth level $Y_t$ at $t=10$, with $Y_0=.0001$, $r=1.1$ and $K=4$, we can just `fill it in`:
@@ -388,7 +398,7 @@ logSol(Y0=.0001, r=1.1, K=4, t=10)
 
 ```
 
-We can pas a vector of time points to create the exact solution, the same we would get if we were to iterate the differential/difference equation.
+We can pass a vector of time points to create the exact solution, the same we would get if we were to iterate the differential/difference equation.
 ```{r, echo=TRUE, include=TRUE}
 # Plot from t=1 to t=100
 plot(logSol(Y0=.0001, r=1.1, K=4, t=seq(1,20)), type = "b", 
@@ -405,7 +415,12 @@ $$
 \frac{dY}{dt} = Y_t * (1 + r - r * \frac{Y_t}{K})
 $$
 
-... as if it were a difference equation, that is, *not* simulating continuous time.
+... as if it were a difference equation, we are *not* simulating continuous time, but a discrete time version of the model:
+
+$$
+Y_{i+1} = Y_i * (1 + r - r * \frac{Y_i}{K})
+$$
+
 
 ```{r, echo=TRUE, include=TRUE}
 logIter <-  function(Y0,r,K,t){
@@ -420,6 +435,15 @@ plot(logIter(Y0=.0001, r=1.1, K=4, t=seq(1,20)), type = "b",
 # Plot t=10 in red
 points(10,logSol(Y0=.0001, r=1.1, K=4, t=10), col="red", pch=16)
 ```
+
+### Euler's method
+
+
+
+### Runge Kutta's Method
+
+
+
 
 
 ## **Modeling interactions between processes and agents** {#advmodels}

@@ -1100,7 +1100,7 @@ The result of applying a method of **numerical integration** such a s Euler's me
 The logistic differential equation $\frac{dY}{dt} = r*Y_t*\left(1-\frac{Y_t}{K}\right)$ has an analytic solution given as:
 
 $$
-\frac{K * Y_0}{Y_0 + \left(K-Y_0\right) * e^{(-K*r*t)} }
+\frac{K * Y_0}{Y_0 + \left(K-Y_0\right) * e^{-r*t} }
 $$
 We have the implemented discrete time growth function in `growth_ac()`, but could easily adapt all those functions to make them continuous by using Euler's method. 
 
@@ -1134,7 +1134,7 @@ Y.euler <- llply(deltas, function(d){
 
 # Analytical solution
 # We have to scale TIME a bit, normally we would use 1/TIME
-Y.analytic <- ts( K * Y0 / (Y0 + (K - Y0) * exp(-1*(r*K*TIME/250))) )
+Y.analytic <- ts( K * Y0 / (Y0 + (K - Y0) * exp(-1*(r*TIME/30))) )
 
 ts.plot(Y.euler[[1]], Y.euler[[2]] ,Y.euler[[3]], Y.euler[[4]], Y.euler[[5]], Y.euler[[6]], Y.euler[[7]], Y.analytic,
         gpars = list(xlab = "time (a.u.)",

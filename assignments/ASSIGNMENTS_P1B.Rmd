@@ -72,7 +72,7 @@ This is data from an iteration of the logistic growth differential equation you 
 Take a good look at the analytic solution of the (stilized) logistic flow:
 
 $$
-Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K-Y_{0}\right) * e^{(-K*r*t)} }
+Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K-Y_{0}\right) * e^{-r*t} }
 $$
 
 Try to build this equation, the function for $e$ is called `EXP` in `SPSS` (`Function Group` >> `Arithmetic`)
@@ -121,7 +121,7 @@ GRAPH
 
 * NonLinear Regression.
 MODEL PROGRAM  Yzero=0.01 r=0.01 K=0.01.
-COMPUTE  PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * K * Time))).
+COMPUTE  PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * Time))).
 NLR Yt
   /PRED PRED_
   /SAVE PRED
@@ -165,9 +165,9 @@ library(rio)
 df <- import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/BasicTSA_nonlinreg/GrowthRegression.sav", setclass = "tbl_df")
 
 # Create the function for the analytic solution
-# Same as SPSS syntax: PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * K * Time))).
+# Same as SPSS syntax: PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * Time))).
 log.eq <- function(Yzero, r, K, Time) {
-    K*Yzero/(Yzero + (K-Yzero) * exp(-1*(r * K * Time)))
+    K*Yzero/(Yzero + (K-Yzero) * exp(-1*(r * Time)))
 }
 ```
 
@@ -181,7 +181,7 @@ So, this will give an error:
 ```{r, echo=TRUE, message=TRUE, warning=TRUE, cache=FALSE, eval=FALSE}
 # Fit this function ... gives an error
 # The list after 'start' provides the initial values
-m.log <- nls(Yt ~ log.eq(Yzero, r, K, Time), data = df, start = list(Yzero=.01, r=.01, K=1), trace = T)
+m.log <- nls(Yt ~ log.eq(Yzero, r, K, Time), data = df, start = list(Yzero=.01, r=.01, K=1), trace = TRUE)
 ```
 
 
@@ -242,7 +242,6 @@ Slightly less residual error for the analytic solution, using less parameters to
 
 
 # **Potential Functions**
-
 
 
 ### The Phoneme Boundary Model {.tabset .tabset-fade .tabset-pills}

@@ -70,7 +70,7 @@ This is data from an iteration of the logistic growth differential equation you 
 Take a good look at the analytic solution of the (stilized) logistic flow:
 
 $$
-Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K-Y_{0}\right) * e^{(-K*r*t)} }
+Y(t)  =  \frac{K * Y_0}{Y_0 + \left(K-Y_{0}\right) * e^{-r*t} }
 $$
 
 Try to build this equation, the function for $e$ is called `EXP` in `SPSS` (`Function Group` >> `Arithmetic`)
@@ -117,7 +117,7 @@ GRAPH
 
 * NonLinear Regression.
 MODEL PROGRAM  Yzero=0.01 r=0.01 K=0.01.
-COMPUTE  PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * K * Time))).
+COMPUTE  PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * Time))).
 NLR Yt
   /PRED PRED_
   /SAVE PRED
@@ -162,9 +162,9 @@ library(rio)
 df <- import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/BasicTSA_nonlinreg/GrowthRegression.sav", setclass = "tbl_df")
 
 # Create the function for the analytic solution
-# Same as SPSS syntax: PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * K * Time))).
+# Same as SPSS syntax: PRED_=K*Yzero/(Yzero + (K-Yzero) * EXP(-1*(r * Time))).
 log.eq <- function(Yzero, r, K, Time) {
-    K*Yzero/(Yzero + (K-Yzero) * exp(-1*(r * K * Time)))
+    K*Yzero/(Yzero + (K-Yzero) * exp(-1*(r * Time)))
 }
 ```
 
@@ -179,7 +179,7 @@ So, this will give an error:
 ```r
 # Fit this function ... gives an error
 # The list after 'start' provides the initial values
-m.log <- nls(Yt ~ log.eq(Yzero, r, K, Time), data = df, start = list(Yzero=.01, r=.01, K=1), trace = T)
+m.log <- nls(Yt ~ log.eq(Yzero, r, K, Time), data = df, start = list(Yzero=.01, r=.01, K=1), trace = TRUE)
 ```
 
 
@@ -208,14 +208,14 @@ summary(m.log)
 ## Parameters:
 ##        Estimate Std. Error t value Pr(>|t|)    
 ## Yzero 7.055e-03  8.983e-05   78.53   <2e-16 ***
-## r     1.491e-01  4.170e-04  357.59   <2e-16 ***
+## r     1.494e-01  3.878e-04  385.18   <2e-16 ***
 ## K     1.002e+00  4.376e-04 2289.42   <2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 0.002865 on 97 degrees of freedom
 ## 
-## Number of iterations to convergence: 13 
+## Number of iterations to convergence: 21 
 ## Achieved convergence tolerance: 1.49e-08
 ```
 
@@ -290,7 +290,6 @@ Slightly less residual error for the analytic solution, using less parameters to
 
 
 # **Potential Functions**
-
 
 
 ### The Phoneme Boundary Model {.tabset .tabset-fade .tabset-pills}
