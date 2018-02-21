@@ -83,7 +83,7 @@ To prepare for each lecture students should read the assigned chapters in this b
 
 ### Using Cerego {-}
 
-We have to introduce a lot of new terminology and to help students get acquainted with these terms, they can use [Cerego](https://www.cerego.com). An invitation will be sent to all participants of the course. The list of term is also included as [Appendix A](). 
+We have to introduce a lot of new terminology and to help students get acquainted with these terms, they can use [Cerego](https://www.cerego.com). An invitation will be sent to all participants of the course. The list of term is also included as [Appendix A](#Adap1). 
 
 
 ### Test information {-}

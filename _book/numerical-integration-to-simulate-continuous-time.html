@@ -154,12 +154,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#eulers-method-and-more"><i class="fa fa-check"></i>Euler’s method and more…</a></li>
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#analytical-solution"><i class="fa fa-check"></i>Analytical solution</a></li>
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#numerical-solution-discrete"><i class="fa fa-check"></i>Numerical solution (discrete)</a></li>
-<li class="chapter" data-level="4.5.1" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#eulers-method"><i class="fa fa-check"></i><b>4.5.1</b> Euler’s method</a></li>
-<li class="chapter" data-level="4.5.2" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#runge-kuttas-method"><i class="fa fa-check"></i><b>4.5.2</b> Runge Kutta’s Method</a></li>
+<li class="chapter" data-level="4.5.1" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#euler-vs.runge-kutta"><i class="fa fa-check"></i><b>4.5.1</b> Euler vs. Runge-Kutta</a></li>
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="advmodels.html"><a href="advmodels.html"><i class="fa fa-check"></i><b>4.6</b> <strong>Modeling interactions between processes and agents</strong></a><ul>
 <li class="chapter" data-level="4.6.1" data-path="advmodels.html"><a href="advmodels.html#the-competetive-lottka-volterra-equations"><i class="fa fa-check"></i><b>4.6.1</b> The Competetive Lottka-Volterra Equations</a></li>
 <li class="chapter" data-level="4.6.2" data-path="advmodels.html"><a href="advmodels.html#predator-prey-and-other-dynamics-as-agent-based-models"><i class="fa fa-check"></i><b>4.6.2</b> Predator-Prey (and other) dynamics as Agent Based Models</a></li>
+<li class="chapter" data-level="4.6.3" data-path="advmodels.html"><a href="advmodels.html#the-dynamic-field-model"><i class="fa fa-check"></i><b>4.6.3</b> The dynamic field model</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="basic-tsa.html"><a href="basic-tsa.html"><i class="fa fa-check"></i><b>5</b> Basic TSA</a></li>
@@ -325,11 +325,95 @@ Y_{i+1} = Y_i * (1 + r - r * \frac{Y_i}{K})
 <span class="kw">points</span>(<span class="dv">10</span>,<span class="kw">logSol</span>(<span class="dt">Y0=</span>.<span class="dv">0001</span>, <span class="dt">r=</span><span class="fl">1.1</span>, <span class="dt">K=</span><span class="dv">4</span>, <span class="dt">t=</span><span class="dv">10</span>), <span class="dt">col=</span><span class="st">&quot;red&quot;</span>, <span class="dt">pch=</span><span class="dv">16</span>)</code></pre></div>
 <p><img src="DCS1718_files/figure-html/unnamed-chunk-18-1.png" width="99%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="eulers-method" class="section level3">
-<h3><span class="header-section-number">4.5.1</span> Euler’s method</h3>
-</div>
-<div id="runge-kuttas-method" class="section level3">
-<h3><span class="header-section-number">4.5.2</span> Runge Kutta’s Method</h3>
+<div id="euler-vs.runge-kutta" class="section level3">
+<h3><span class="header-section-number">4.5.1</span> Euler vs. Runge-Kutta</h3>
+<p>The method developped by Runge and Kutta takes a harmonic mean over a number of points, R-K4 takes 4 points, R-K6 takes 6, <a href="https://en.wikipedia.org/wiki/Runge–Kutta_methods">but there are many more variants</a>.</p>
+<p>Here’s an exampkle with <strong>Predator-Prey dynamics</strong> comparing Euler’s method to R-K4.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plyr)
+<span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(lattice)
+
+<span class="co"># Lotka-Volterra Euler</span>
+lvEuler &lt;-<span class="st"> </span><span class="cf">function</span>(R0,F0,N,a,b,c,d,h){
+
+  <span class="co"># Init vector</span>
+  Ra &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">c</span>(R0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>)))
+  Fx &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">c</span>(F0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>)))
+
+  <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N){
+  <span class="co"># Euler numerical solution of the predator-prey model</span>
+  Ra[t<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span>Ra[t] <span class="op">+</span><span class="st"> </span>(a <span class="op">-</span><span class="st"> </span>b <span class="op">*</span><span class="st"> </span>Fx[t]) <span class="op">*</span><span class="st"> </span>Ra[t] <span class="op">*</span><span class="st"> </span>h
+  Fx[t<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span>Fx[t] <span class="op">+</span><span class="st"> </span>(c <span class="op">*</span><span class="st"> </span>Ra[t] <span class="op">-</span><span class="st"> </span>d) <span class="op">*</span><span class="st"> </span>Fx[t] <span class="op">*</span><span class="st"> </span>h
+  }
+  
+  <span class="kw">return</span>(<span class="kw">data.frame</span>(<span class="dt">time=</span><span class="dv">1</span><span class="op">:</span><span class="kw">NROW</span>(Ra),<span class="dt">Ra=</span>Ra,<span class="dt">Fx=</span>Fx,<span class="dt">method=</span><span class="st">&quot;Euler&quot;</span>))
+}
+
+<span class="co"># Lotka-Volterra Runge Kutta 4</span>
+lvRK4 &lt;-<span class="st"> </span><span class="cf">function</span>(R0,F0,N,a,b,c,d,h){
+
+  <span class="co"># Init vector</span>
+  Ra &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">c</span>(R0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>)))
+  Fx &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">c</span>(F0, <span class="kw">rep</span>(<span class="ot">NA</span>,N<span class="op">-</span><span class="dv">1</span>)))
+
+  <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N){
+  <span class="co"># RK4 numerical solution of the predator-prey model</span>
+  k1_R=(a <span class="op">-</span><span class="st"> </span>b <span class="op">*</span><span class="st"> </span>Fx[t]) <span class="op">*</span><span class="st"> </span>Ra[t]
+  k1_F=(c <span class="op">*</span><span class="st"> </span>Ra[t] <span class="op">-</span><span class="st"> </span>d) <span class="op">*</span><span class="st"> </span>Fx[t]
+
+  k2_R=(a <span class="op">-</span><span class="st"> </span>b <span class="op">*</span><span class="st"> </span>(Fx[t]<span class="op">+</span>h<span class="op">*</span>k1_F<span class="op">/</span><span class="dv">2</span>)) <span class="op">*</span><span class="st"> </span>(Ra[t]<span class="op">+</span>h<span class="op">*</span>k1_R<span class="op">/</span><span class="dv">2</span>)
+  k2_F=(c <span class="op">*</span><span class="st"> </span>(Ra[t]<span class="op">+</span>h<span class="op">*</span>k1_R<span class="op">/</span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span>d) <span class="op">*</span><span class="st"> </span>(Fx[t]<span class="op">+</span>h<span class="op">*</span>k1_F<span class="op">/</span><span class="dv">2</span>)
+
+  k3_R=(a <span class="op">-</span><span class="st"> </span>b <span class="op">*</span><span class="st"> </span>(Fx[t]<span class="op">+</span>h<span class="op">*</span>k2_F<span class="op">/</span><span class="dv">2</span>)) <span class="op">*</span><span class="st"> </span>(Ra[t]<span class="op">+</span>h<span class="op">*</span>k2_R<span class="op">/</span><span class="dv">2</span>)
+  k3_F=(c <span class="op">*</span><span class="st"> </span>(Ra[t]<span class="op">+</span>h<span class="op">*</span>k2_R<span class="op">/</span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span>d) <span class="op">*</span><span class="st"> </span>(Fx[t]<span class="op">+</span>h<span class="op">*</span>k2_F<span class="op">/</span><span class="dv">2</span>)
+
+  k4_R=(a <span class="op">-</span><span class="st"> </span>b <span class="op">*</span><span class="st"> </span>(Fx[t]<span class="op">+</span>h<span class="op">*</span>k3_F)) <span class="op">*</span><span class="st"> </span>(Ra[t]<span class="op">+</span>h<span class="op">*</span>k3_R)
+  k4_F=(c <span class="op">*</span><span class="st"> </span>(Ra[t]<span class="op">+</span>h<span class="op">*</span>k3_R) <span class="op">-</span><span class="st"> </span>d) <span class="op">*</span><span class="st"> </span>(Fx[t]<span class="op">+</span>h<span class="op">*</span>k3_F)
+
+  <span class="co"># Iterative process</span>
+  Ra[t<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span>Ra[t] <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span><span class="dv">6</span>)<span class="op">*</span>h<span class="op">*</span>(k1_R<span class="op">+</span><span class="dv">2</span><span class="op">*</span>k2_R<span class="op">+</span><span class="dv">2</span><span class="op">*</span>k3_R<span class="op">+</span>k4_R)
+  Fx[t<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span>Fx[t] <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span><span class="dv">6</span>)<span class="op">*</span>h<span class="op">*</span>(k1_F<span class="op">+</span><span class="dv">2</span><span class="op">*</span>k2_F<span class="op">+</span><span class="dv">2</span><span class="op">*</span>k3_F<span class="op">+</span>k4_F)
+  }
+  
+  <span class="kw">return</span>(<span class="kw">data.frame</span>(<span class="dt">time=</span><span class="dv">1</span><span class="op">:</span><span class="kw">NROW</span>(Ra),<span class="dt">Ra=</span>Ra,<span class="dt">Fx=</span>Fx,<span class="dt">method=</span><span class="st">&quot;RK4&quot;</span>))
+}</code></pre></div>
+<p>Now that we have the fuctions, we’ll plot the numerical solutions for the same set of parameters. The continuous mathematics (= if you do some calculations to find the fixed points of the system) ensure us that the system should be in an equilibrium state in which the populations keep going around in the same cycle of growth and collapse. Let’s see what happens…</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Parameters</span>
+N  &lt;-<span class="st"> </span><span class="dv">2000</span>
+
+<span class="co"># Equilibrium</span>
+a  &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="dv">6</span>
+b  &lt;-<span class="st"> </span><span class="dv">4</span><span class="op">/</span><span class="dv">3</span>
+c  &lt;-<span class="st"> </span>d  &lt;-<span class="st"> </span><span class="dv">1</span>
+R0 &lt;-<span class="st"> </span>F0 &lt;-<span class="st"> </span><span class="fl">0.1</span>
+
+<span class="co"># Time constant</span>
+h &lt;-<span class="st"> </span><span class="fl">0.1</span>
+
+<span class="co"># Get the results</span>
+pp1 &lt;-<span class="st"> </span><span class="kw">lvEuler</span>(R0,F0,N,a,b,c,d,h)
+pp2 &lt;-<span class="st"> </span><span class="kw">lvRK4</span>(R0,F0,N,a,b,c,d,h)
+
+<span class="co"># Make a long dataframe</span>
+pp &lt;-<span class="st"> </span><span class="kw">rbind</span>(pp1,pp2)
+
+pp.long &lt;-<span class="st"> </span>pp <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> TimeSeries, <span class="dt">value =</span> Y, <span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;time&quot;</span>,<span class="st">&quot;method&quot;</span>))
+
+<span class="co"># Time series plots</span>
+<span class="kw">ggplot</span>(pp.long, <span class="kw">aes</span>(<span class="dt">x=</span>time,<span class="dt">y=</span>Y,<span class="dt">colour=</span>TimeSeries)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(method<span class="op">~</span>.) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-20-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Phase plane plots</span>
+<span class="kw">ggplot</span>(pp, <span class="kw">aes</span>(<span class="dt">x=</span>Ra,<span class="dt">y=</span>Fx,<span class="dt">colour=</span>time)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(method<span class="op">~</span>.) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Rabbits&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;Foxes&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-20-2.png" width="99%" style="display: block; margin: auto;" /></p>
+<p>Using the Euler method predator and prey populations do not ‘die out’, but in phase space they seem to occupy different behavioural regimes. This looks like an unstable periodic orbit, or an unstable limit cycle, but it is in fact caused by the inaccuarcy of Euler’s method. Here <em>RK4</em> clearly outperforms <em>Euler</em>.</p>
 </div>
 </div>
             </section>

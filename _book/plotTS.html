@@ -154,12 +154,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#eulers-method-and-more"><i class="fa fa-check"></i>Euler’s method and more…</a></li>
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#analytical-solution"><i class="fa fa-check"></i>Analytical solution</a></li>
 <li class="chapter" data-level="" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#numerical-solution-discrete"><i class="fa fa-check"></i>Numerical solution (discrete)</a></li>
-<li class="chapter" data-level="4.5.1" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#eulers-method"><i class="fa fa-check"></i><b>4.5.1</b> Euler’s method</a></li>
-<li class="chapter" data-level="4.5.2" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#runge-kuttas-method"><i class="fa fa-check"></i><b>4.5.2</b> Runge Kutta’s Method</a></li>
+<li class="chapter" data-level="4.5.1" data-path="numerical-integration-to-simulate-continuous-time.html"><a href="numerical-integration-to-simulate-continuous-time.html#euler-vs.runge-kutta"><i class="fa fa-check"></i><b>4.5.1</b> Euler vs. Runge-Kutta</a></li>
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="advmodels.html"><a href="advmodels.html"><i class="fa fa-check"></i><b>4.6</b> <strong>Modeling interactions between processes and agents</strong></a><ul>
 <li class="chapter" data-level="4.6.1" data-path="advmodels.html"><a href="advmodels.html#the-competetive-lottka-volterra-equations"><i class="fa fa-check"></i><b>4.6.1</b> The Competetive Lottka-Volterra Equations</a></li>
 <li class="chapter" data-level="4.6.2" data-path="advmodels.html"><a href="advmodels.html#predator-prey-and-other-dynamics-as-agent-based-models"><i class="fa fa-check"></i><b>4.6.2</b> Predator-Prey (and other) dynamics as Agent Based Models</a></li>
+<li class="chapter" data-level="4.6.3" data-path="advmodels.html"><a href="advmodels.html#the-dynamic-field-model"><i class="fa fa-check"></i><b>4.6.3</b> The dynamic field model</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="basic-tsa.html"><a href="basic-tsa.html"><i class="fa fa-check"></i><b>5</b> Basic TSA</a></li>
@@ -391,13 +391,13 @@ op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">mf
      <span class="dt">main =</span> <span class="st">&quot;exponential / max&quot;</span>)
 <span class="kw">plot</span>(dplyr<span class="op">::</span><span class="kw">lag</span>(Y2), Y2, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Y(t+1)&quot;</span>,
      <span class="dt">main =</span> <span class="st">&quot;logistic / max&quot;</span>)</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-12-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-11-1.png" width="99%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(op)</code></pre></div>
 <p>Use <code>l_ply()</code> from <code>package::plyr</code> to create return plots with different lags. The <strong>l_</strong> before <strong>ply</strong> means the function will take a <strong>l</strong>ist as input to a function, but it will not expect any data to be returned, for example in the case of a function that is used to plot something.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Explore different lags</span>
 op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">pty =</span> <span class="st">&quot;s&quot;</span>)
 plyr<span class="op">::</span><span class="kw">l_ply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="cf">function</span>(l) <span class="kw">plot</span>(dplyr<span class="op">::</span><span class="kw">lag</span>(Y2, <span class="dt">n =</span> l), Y2, <span class="dt">xy.labels =</span> <span class="ot">FALSE</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">xlab =</span> <span class="st">&quot;Y(t)&quot;</span>, <span class="dt">ylab =</span> <span class="kw">paste0</span>(<span class="st">&quot;Y(t+&quot;</span>,l,<span class="st">&quot;)&quot;</span>), <span class="dt">cex =</span> .<span class="dv">8</span>))</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-1.png" width="99%" style="display: block; margin: auto;" /><img src="DCS1718_files/figure-html/unnamed-chunk-13-2.png" width="99%" style="display: block; margin: auto;" /></p>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-12-1.png" width="99%" style="display: block; margin: auto;" /><img src="DCS1718_files/figure-html/unnamed-chunk-12-2.png" width="99%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(op)</code></pre></div>
 </div>
 <div id="using-ggplot2" class="section level3">
@@ -438,18 +438,46 @@ df.long &lt;-<span class="st"> </span>df.wide <span class="op">%&gt;%</span><spa
 <span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>time, <span class="dt">y=</span>Y, <span class="dt">colour=</span>TimeSeries)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-1.png" width="99%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># using facets</span>
 <span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>time,<span class="dt">y=</span>Y)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>TimeSeries) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-2.png" width="99%" style="display: block; margin: auto;" /></p>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-2.png" width="99%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># using facets</span>
 <span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>time,<span class="dt">y=</span>Y)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_grid</span>(TimeSeries<span class="op">~</span>.) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-13-3.png" width="99%" style="display: block; margin: auto;" /></p>
+<p>To create a return plot you can use <code>geom_path()</code> instead of <code>geom_line()</code> and make the area square using <code>coord_equal()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Add a lagged variable</span>
+df.long &lt;-<span class="st"> </span>df.long <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(TimeSeries) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Ylag =</span> dplyr<span class="op">::</span><span class="kw">lag</span>(Y))
+
+<span class="co"># Use geom-path()</span>
+<span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>Y,<span class="dt">y=</span>Ylag,<span class="dt">group=</span>TimeSeries)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(.<span class="op">~</span>TimeSeries) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Equal coordinates&quot;</span>, <span class="dt">x=</span><span class="st">&quot;Yt&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Yt+1&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_equal</span>()</code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-1.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># You could also have free axes</span>
+<span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>Y,<span class="dt">y=</span>Ylag,<span class="dt">group=</span>TimeSeries)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(.<span class="op">~</span>TimeSeries, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Free axes&quot;</span>, <span class="dt">x=</span><span class="st">&quot;Yt&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Yt+1&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() </code></pre></div>
+<p><img src="DCS1718_files/figure-html/unnamed-chunk-14-2.png" width="99%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Or free axes and a free space</span>
+<span class="kw">ggplot</span>(df.long, <span class="kw">aes</span>(<span class="dt">x=</span>Y,<span class="dt">y=</span>Ylag,<span class="dt">group=</span>TimeSeries)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(.<span class="op">~</span>TimeSeries, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>, <span class="dt">space =</span> <span class="st">&#39;free&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Free axes and free space&quot;</span>, <span class="dt">x=</span><span class="st">&quot;Yt&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Yt+1&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() </code></pre></div>
 <p><img src="DCS1718_files/figure-html/unnamed-chunk-14-3.png" width="99%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
