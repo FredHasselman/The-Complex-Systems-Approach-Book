@@ -139,7 +139,8 @@ By downloading:
 2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
 3. Download the file
 4. Load it into `R`
-```{r, eval=FALSE}
+
+```r
 library(rio)
 series <- import("series.sav", setclass = "tbl_df")
 ```
@@ -150,7 +151,8 @@ By importing from Github:
 1. Copy the `url` associated with the **Download**  button on Github (right-clik).
 2. The copied path should contain the word 'raw' somewhere in the url.
 3. Call `rio::import(url)`
-```{r}
+
+```r
 library(rio)
 series <- import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/BasicTSA_arma/series.sav", setclass = "tbl_df")
 ```
@@ -173,7 +175,8 @@ We're living in a powder keg and giving off sparks"
 
 Download three different time series of heartbeat intervals (HBI) [here](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/tree/master/assignments/assignment_data/RelativeRoughness). If you use `R` and have package `rio` installed you can run this code and the load the data into a `data.frame` directly from `Github`.
 
-```{r, echo=TRUE, eval=FALSE, include=TRUE}
+
+```r
 library(rio)
 TS1 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS1.xlsx", col_names=FALSE)
 TS2 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS2.xlsx", col_names=FALSE)
@@ -181,7 +184,8 @@ TS3 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approac
 ```
 
 The Excel files did not have any column names, so let's create them in the `data.frame`
-```{r, eval=FALSE, include=TRUE}
+
+```r
 colnames(TS1) <- "TS1"
 colnames(TS2) <- "TS2"
 colnames(TS3) <- "TS3"
@@ -191,9 +195,10 @@ colnames(TS3) <- "TS3"
 **The recordings**
 These HBI’s were constructed from the R-R intervals in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).
 
-```{r RRf1, fig.cap="Definition of Heart Beat Periods.", fig.align='center',echo=FALSE, include=TRUE}
-knitr::include_graphics('images/RRfig1.png')
-```
+<div class="figure" style="text-align: center">
+<img src="images/RRfig1.png" alt="Definition of Heart Beat Periods." width="862" />
+<p class="caption">Definition of Heart Beat Periods.</p>
+</div>
 
 
  * One HBI series is a sample from a male adult, 62 years old (called *Jimmy*). Approximately two years before the recording, the subject has had a coronary artery bypass, as advised by his physician following a diagnosis of congestive heart failure. *Jimmy* used antiarrhythmic medicines at the time of measurement.
@@ -224,9 +229,10 @@ The numerator in the formula stands for the `lag 1` autocovariance of the HBI ti
 
 *	Compare your (intuitive) visual inspection with these preliminary dynamic quantifications, and find out where each of the HIB series are positions on the ‘colorful spectrum of noises’ (i.e., line them up with Figure \@ref(fig:RRf3)).
 
-```{r, fig.cap="Coloured Noise versus Relative Roughness", fig.align='center',echo=FALSE, include=TRUE}
-knitr::include_graphics('images/RRfig3.png')
-```
+<div class="figure" style="text-align: center">
+<img src="images/RRfig3.png" alt="Coloured Noise versus Relative Roughness" width="793" />
+<p class="caption">Coloured Noise versus Relative Roughness</p>
+</div>
 
 
 **What do we know now, that we didn’t knew before?**
@@ -242,25 +248,24 @@ Don’t worry; we’ll cover the interpretation over the next two weeks in furth
 
 #### Answers {-}
 
-<<<<<<< HEAD
-```{r, echo=TRUE, eval=TRUE, include=TRUE}
+
+```r
 library(rio)
 TS1 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS1.xlsx", col_names=FALSE)
 TS2 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS2.xlsx", col_names=FALSE)
 TS3 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS3.xlsx", col_names=FALSE)
 ```
-=======
-# **Fluctuation and Dispersion analyses I** {#fda1}
->>>>>>> cd97d617791e1af128440224cbf3f1a313f917eb
 
 The Excel files did not have any column names, so let's create them in the `data.frame`
-```{r, eval=TRUE, include=TRUE}
+
+```r
 colnames(TS1) <- "TS1"
 colnames(TS2) <- "TS2"
 colnames(TS3) <- "TS3"
 ```
 
-```{r, echo=TRUE, include=TRUE, eval=TRUE}
+
+```r
 # Create a function for RR
 RR <- function(ts){
 # lag.max = n gives autocovariance of lags 0 ... n,
@@ -279,7 +284,12 @@ for(ts in list(TS1,TS2,TS3)){
          round(attributes(relR)$localAutoCoVariance, digits = 4),"/",
          round(attributes(relR)$globalAutoCoVariance,digits = 4),")\n"))
   }
+```
 
+```
+## TS1: RR = 0.485 = 2*(1-0.0016/0.0021)
+## TS2: RR = 0.118 = 2*(1-0.0018/0.0019)
+## TS3: RR = 2.052 = 2*(1--1e-04/0.002)
 ```
 
 Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which type of dynamics:
@@ -294,7 +304,8 @@ Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which ty
 
 To randomize the data you may use the function `sample` (which is easier than `randperm`)
 
-```{r}
+
+```r
 library(pracma)
 # randperm()
 TS1Random <- TS1$TS1[randperm(length(TS1$TS1))]
@@ -306,26 +317,41 @@ plot.ts(TS1Random)
 lines(ts(TS1$TS1),col="red3")
 ```
 
+![](ASSIGNMENTS_P2_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+
 If you repeat this for TS2 and TS3 and compute the Relative Roughness of each randomized time series, the outcomes should be around 2, white noise! This makes sense, you destroyed all the correlations in the data by removing the temporal order with which values were observed.
 
 
 **Integrate**
 
 Normalize the white noise time series
-```{r}
+
+```r
 TS3Norm <- scale(TS3$TS3)
 ```
 
 Now integrate it, which just means, 'take the cumulative sum'.
-```{r}
+
+```r
 TS3Int <- cumsum(TS3Norm)
 plot.ts(TS3Int)
 lines(ts(TS3Norm),col="red3")
 ```
 
+![](ASSIGNMENTS_P2_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+
 If you compute the Relative Roughness of the integrated time series, the outcome should be close to 0, Brownian noise.
-```{r}
+
+```r
 RR(TS3Int)
+```
+
+```
+## [1] 0.02783704
+## attr(,"localAutoCoVariance")
+## [1] 35.69734
+## attr(,"globalAutoCoVariance")
+## [1] 36.2012
 ```
 
 

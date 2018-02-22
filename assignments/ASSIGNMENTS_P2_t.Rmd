@@ -78,55 +78,7 @@ COMPUTE TS_1_lag1 = LAG(TS_1)
 
 #### Answers (SPSS) {-}
 
-```
-DESCRIPTIVES
-  VARIABLES=TS_1 TS_2 TS_3
-  /STATISTICS=MEAN STDDEV MIN MAX .
 
-*Sequence Charts .
-TSPLOT VARIABLES= TS_1
-  /NOLOG
-  /FORMAT NOFILL REFERENCE.
-TSPLOT VARIABLES= TS_2
-  /NOLOG
-  /FORMAT NOFILL REFERENCE.
-TSPLOT VARIABLES= TS_3
-  /NOLOG
-  /FORMAT NOFILL REFERENCE.
-
-*ACF and PCF.
-ACF
-  VARIABLES= TS_1 TS_2 TS_3
-  /NOLOG
-  /MXAUTO 30
-  /SERROR=IND
-  /PACF.
-
-
-*Return plots.
-
-COMPUTE TS_1_lag1 = LAG(TS_1) .
-COMPUTE TS_2_lag1 = LAG(TS_2) .
-COMPUTE TS_3_lag1 = LAG(TS_3) .
-EXECUTE .
-
-
-IGRAPH /VIEWNAME='Scatterplot' /X1 = VAR(TS_1_lag1) TYPE = SCALE /Y =
-  VAR(TS_1) TYPE = SCALE /COORDINATE = VERTICAL  /X1LENGTH=3.0 /YLENGTH=3.0
-  /X2LENGTH=3.0 /CHARTLOOK='NONE' /SCATTER COINCIDENT = NONE.
-EXE.
-
-IGRAPH /VIEWNAME='Scatterplot' /X1 = VAR(TS_2_lag1) TYPE = SCALE /Y =
-  VAR(TS_2) TYPE = SCALE /COORDINATE = VERTICAL  /X1LENGTH=3.0 /YLENGTH=3.0
-  /X2LENGTH=3.0 /CHARTLOOK='NONE' /SCATTER COINCIDENT = NONE.
-EXE.
-
-IGRAPH /VIEWNAME='Scatterplot' /X1 = VAR(TS_3_lag1) TYPE = SCALE /Y =
-  VAR(TS_3) TYPE = SCALE /COORDINATE = VERTICAL  /X1LENGTH=3.0 /YLENGTH=3.0
-  /X2LENGTH=3.0 /CHARTLOOK='NONE' /SCATTER COINCIDENT = NONE.
-EXE.
-
-```
 
 
 #### Notes for `R` {-}
@@ -139,6 +91,7 @@ By downloading:
 2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
 3. Download the file
 4. Load it into `R`
+
 ```{r, eval=FALSE}
 library(rio)
 series <- import("series.sav", setclass = "tbl_df")
@@ -150,6 +103,7 @@ By importing from Github:
 1. Copy the `url` associated with the **Download**  button on Github (right-clik).
 2. The copied path should contain the word 'raw' somewhere in the url.
 3. Call `rio::import(url)`
+
 ```{r}
 library(rio)
 series <- import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/BasicTSA_arma/series.sav", setclass = "tbl_df")
@@ -161,7 +115,7 @@ There are many extensions to these linear models, check the [`CRAN Task View` on
 
 
 
-### Relative Roughness of the Heart {.tabset .tabset-fade .tabset-pills}
+### Relative Roughness of the Heart
 
 > "We can take it to the end of the line
 Your love is like a shadow on me all of the time (all of the time)
@@ -172,7 +126,6 @@ We're living in a powder keg and giving off sparks"
 
 
 Download three different time series of heartbeat intervals (HBI) [here](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/tree/master/assignments/assignment_data/RelativeRoughness). If you use `R` and have package `rio` installed you can run this code and the load the data into a `data.frame` directly from `Github`.
-
 ```{r, echo=TRUE, eval=FALSE, include=TRUE}
 library(rio)
 TS1 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS1.xlsx", col_names=FALSE)
@@ -187,8 +140,7 @@ colnames(TS2) <- "TS2"
 colnames(TS3) <- "TS3"
 ```
 
-
-**The recordings**
+### The recordings
 These HBI’s were constructed from the R-R intervals in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).
 
 ```{r RRf1, fig.cap="Definition of Heart Beat Periods.", fig.align='center',echo=FALSE, include=TRUE}
@@ -206,8 +158,7 @@ Your challenge
 The assignment is to scrutinise the data and find out which time series belongs to *Jimmy*, *Tommy*, and *Dummy* respectively. ^[The HBI intervals were truncated (not rounded) to a multiple of 10 ms (e.g., an interval of 0.457s is represented as 0.450s), and to 750 data points each. The means and standard deviations among the HBI series are approximately equidistant, which might complicate your challenge.]
 
 
-#### Questions {-}
-
+### First inspection
 The chances that you are an experienced cardiologist are slim. We therefore suggest you proceed your detective work as follows:
 
 *	Construct a graphical representation of the time series, and inspect their dynamics visually ( plot your time series).
@@ -224,127 +175,32 @@ The numerator in the formula stands for the `lag 1` autocovariance of the HBI ti
 
 *	Compare your (intuitive) visual inspection with these preliminary dynamic quantifications, and find out where each of the HIB series are positions on the ‘colorful spectrum of noises’ (i.e., line them up with Figure \@ref(fig:RRf3)).
 
-```{r, fig.cap="Coloured Noise versus Relative Roughness", fig.align='center',echo=FALSE, include=TRUE}
+```{r RRf3, fig.cap="Coloured Noise versus Relative Roughness", fig.align='center',echo=FALSE, include=TRUE}
 knitr::include_graphics('images/RRfig3.png')
 ```
 
 
-**What do we know now, that we didn’t knew before?**
+### What do we know now, that we didn’t knew before?
 Any updates on Jimmy’s, Tommy’s and Dummy’s health? You may start to wonder about the 'meaning' of these dynamics, and not find immediate answers.
 
 Don’t worry; we’ll cover the interpretation over the next two weeks in further depth. Let’s focus the dynamics just a little further for now. It might give you some clues.
 
-* Use the `randperm` function (in `Matlab` or in package  [`pracma`](http://www.inside-r.org/packages/cran/pracma) in `R`) to randomize the temporal ordering of the HBI series. Or try to use the function `sample()`
+* Use the `randperm` function (in `Matlab` or in package  [`pracma`](http://www.inside-r.org/packages/cran/pracma) in `R`) to randomize the temporal ordering of the HBI series.
 * Visualize the resulting time series to check whether they were randomized successfully
 * Next estimate the Relative Roughness of the randomized series. Did the estimates change compared to your previous outcomes (if so, why)?
 * Now suppose you would repeat what you did the previous, but instead of using shuffle you would integrate the fictitious HBI series (i.e., normalize, then use `x=cumsum(x))`. You can look up `cumsum` in `R` or `Matlab`’s Help documentation). Would you get an estimate of Relative Roughness that is approximately comparable with what you got in another HBI series? If so, why?
 
 
-#### Answers {-}
-
-<<<<<<< HEAD
-```{r, echo=TRUE, eval=TRUE, include=TRUE}
-library(rio)
-TS1 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS1.xlsx", col_names=FALSE)
-TS2 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS2.xlsx", col_names=FALSE)
-TS3 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS3.xlsx", col_names=FALSE)
-```
-=======
-# **Fluctuation and Dispersion analyses I** {#fda1}
->>>>>>> cd97d617791e1af128440224cbf3f1a313f917eb
-
-The Excel files did not have any column names, so let's create them in the `data.frame`
-```{r, eval=TRUE, include=TRUE}
-colnames(TS1) <- "TS1"
-colnames(TS2) <- "TS2"
-colnames(TS3) <- "TS3"
-```
-
-```{r, echo=TRUE, include=TRUE, eval=TRUE}
-# Create a function for RR
-RR <- function(ts){
-# lag.max = n gives autocovariance of lags 0 ... n,
-VAR  <- acf(ts, lag.max = 1, type = 'covariance', plot=FALSE)
-# RR formula
-RelR   <- 2*(1-VAR$acf[2] / VAR$acf[1])
-# Add some attributes to the output
-attributes(RelR) <- list(localAutoCoVariance = VAR$acf[2], globalAutoCoVariance = VAR$acf[1])
-return(RelR)
-}
-
-# Look at the results
-for(ts in list(TS1,TS2,TS3)){
-  relR <- RR(ts[,1])
-  cat(paste0(colnames(ts),": RR = ",round(relR,digits=3), " = 2*(1-",
-         round(attributes(relR)$localAutoCoVariance, digits = 4),"/",
-         round(attributes(relR)$globalAutoCoVariance,digits = 4),")\n"))
-  }
-
-```
-
-Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which type of dynamics:
-
-**TS1**: Pink noise
-**TS2**: Brownian noise
-**TS3**: White noise
-
-
-
-**Randomize**
-
-To randomize the data you may use the function `sample` (which is easier than `randperm`)
-
-```{r}
-library(pracma)
-# randperm()
-TS1Random <- TS1$TS1[randperm(length(TS1$TS1))]
-
-# sample()
-TS1Random <- sample(TS1$TS1, length(TS1$TS1))
-
-plot.ts(TS1Random)
-lines(ts(TS1$TS1),col="red3")
-```
-
-If you repeat this for TS2 and TS3 and compute the Relative Roughness of each randomized time series, the outcomes should be around 2, white noise! This makes sense, you destroyed all the correlations in the data by removing the temporal order with which values were observed.
-
-
-**Integrate**
-
-Normalize the white noise time series
-```{r}
-TS3Norm <- scale(TS3$TS3)
-```
-
-Now integrate it, which just means, 'take the cumulative sum'.
-```{r}
-TS3Int <- cumsum(TS3Norm)
-plot.ts(TS3Int)
-lines(ts(TS3Norm),col="red3")
-```
-
-If you compute the Relative Roughness of the integrated time series, the outcome should be close to 0, Brownian noise.
-```{r}
-RR(TS3Int)
-```
-
-
-
-
 ### Sample Entropy
 
-Use the `sample_entropy()` function in package `pracma`.
 
-#### Questions {-}
-
-* Calculate the Sample Entropy of the two sets of three timeseries you now have.
+* Calculate the Sample Entropy
     + Use your favourite function to estimate the sample entropy of the three time series. Use for instance a segment length m of 3 datapoints, and a tolerance range r of 1 standard deviation. What values do you observe?
-    + Can you change the absolute SampEn outcomes by 'playing' with the m parameter? If so, how does the outcome change, and why?
+    +Can you change the absolute SampEn outcomes by 'playing' with the m parameter? If so, how does the outcome change, and why?
 ( Can you change the absolute SampEn outcomes by 'playing' with the r parameter If so, how does the outcome change, and why?
     + Do changes in the relative SampEn outcome change the outcomes for the three time series relative to each other?
 
 *	Extra: Go back to the assignment where you generated simulated time series from the logistic map.
-
 
 
 
@@ -413,7 +269,6 @@ Use the `sample_entropy()` function in package `pracma`.
 <!--     + Compare the results between the three different methods. -->
 
 <!-- [| jump to solution |](#dfasol) -->
-
 
 <!-- ## Heartbeat dynamics II {#hrv2} -->
 <!-- In the [previous assignment](#relR), you were presented with three different time series of heartbeat intervals (HBI), and you analyzed them using a measure of Relative Roughness (RR; cf. Marmelat & Delignières, 2012). -->

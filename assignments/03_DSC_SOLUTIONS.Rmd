@@ -534,84 +534,84 @@ Slightly less residual error for the analytic solution, using less parameters to
 
 <!-- [| jump to assignment |](#hrv) -->
 
-<!-- ```{r, echo=TRUE, eval=TRUE, include=TRUE} -->
-<!-- library(rio) -->
-<!-- TS1 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS1.xlsx", col_names=FALSE) -->
-<!-- TS2 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS2.xlsx", col_names=FALSE) -->
-<!-- TS3 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS3.xlsx", col_names=FALSE) -->
-<!-- ``` -->
+```{r, echo=TRUE, eval=TRUE, include=TRUE}
+library(rio)
+TS1 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS1.xlsx", col_names=FALSE)
+TS2 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS2.xlsx", col_names=FALSE)
+TS3 <- rio::import("https://github.com/FredHasselman/DCS/raw/master/assignmentData/RelativeRoughness/TS3.xlsx", col_names=FALSE)
+```
 
-<!-- The Excel files did not have any column names, so let's create them in the `data.frame` -->
-<!-- ```{r, eval=TRUE, include=TRUE} -->
-<!-- colnames(TS1) <- "TS1" -->
-<!-- colnames(TS2) <- "TS2" -->
-<!-- colnames(TS3) <- "TS3" -->
-<!-- ``` -->
+The Excel files did not have any column names, so let's create them in the `data.frame`
+```{r, eval=TRUE, include=TRUE}
+colnames(TS1) <- "TS1"
+colnames(TS2) <- "TS2"
+colnames(TS3) <- "TS3"
+```
 
-<!-- ```{r, echo=TRUE, include=TRUE, eval=TRUE} -->
-<!-- # Create a function for RR -->
-<!-- RR <- function(ts){ -->
-<!-- # lag.max = n gives autocovariance of lags 0 ... n,  -->
-<!-- VAR  <- acf(ts, lag.max = 1, type = 'covariance', plot=FALSE) -->
-<!-- # RR formula -->
-<!-- RelR   <- 2*(1-VAR$acf[2] / VAR$acf[1]) -->
-<!-- # Add some attributes to the output -->
-<!-- attributes(RelR) <- list(localAutoCoVariance = VAR$acf[2], globalAutoCoVariance = VAR$acf[1])  -->
-<!-- return(RelR) -->
-<!-- } -->
+```{r, echo=TRUE, include=TRUE, eval=TRUE}
+# Create a function for RR
+RR <- function(ts){
+# lag.max = n gives autocovariance of lags 0 ... n,
+VAR  <- acf(ts, lag.max = 1, type = 'covariance', plot=FALSE)
+# RR formula
+RelR   <- 2*(1-VAR$acf[2] / VAR$acf[1])
+# Add some attributes to the output
+attributes(RelR) <- list(localAutoCoVariance = VAR$acf[2], globalAutoCoVariance = VAR$acf[1])
+return(RelR)
+}
 
-<!-- # Look at the results -->
-<!-- for(ts in list(TS1,TS2,TS3)){ -->
-<!--   relR <- RR(ts[,1]) -->
-<!--   cat(paste0(colnames(ts),": RR = ",round(relR,digits=3), " = 2*(1-", -->
-<!--          round(attributes(relR)$localAutoCoVariance, digits = 4),"/", -->
-<!--          round(attributes(relR)$globalAutoCoVariance,digits = 4),")\n")) -->
-<!--   } -->
+# Look at the results
+for(ts in list(TS1,TS2,TS3)){
+  relR <- RR(ts[,1])
+  cat(paste0(colnames(ts),": RR = ",round(relR,digits=3), " = 2*(1-",
+         round(attributes(relR)$localAutoCoVariance, digits = 4),"/",
+         round(attributes(relR)$globalAutoCoVariance,digits = 4),")\n"))
+  }
 
-<!-- ``` -->
+```
 
-<!-- Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which type of noise: -->
+Use Figure \@ref(fig:RRf3) to lookup which value of $RR$ corresponds to which type of noise:
 
-<!-- **TS1**: Pink noise -->
-<!-- **TS2**: Brownian noise -->
-<!-- **TS3**: White noise -->
+**TS1**: Pink noise
+**TS2**: Brownian noise
+**TS3**: White noise
 
-<!-- ### Randomise -->
+### Randomise
 
-<!-- To randomize the data you may use the function `sample` (which is easier than `randperm`) -->
+To randomize the data you may use the function `sample` (which is easier than `randperm`)
 
-<!-- ```{r} -->
-<!-- library(pracma) -->
-<!-- # randperm() -->
-<!-- TS1Random <- TS1$TS1[randperm(length(TS1$TS1))] -->
+```{r}
+library(pracma)
+# randperm()
+TS1Random <- TS1$TS1[randperm(length(TS1$TS1))]
 
-<!-- # sample() -->
-<!-- TS1Random <- sample(TS1$TS1, length(TS1$TS1)) -->
+# sample()
+TS1Random <- sample(TS1$TS1, length(TS1$TS1))
 
-<!-- plot.ts(TS1Random) -->
-<!-- lines(ts(TS1$TS1),col="red3") -->
-<!-- ``` -->
+plot.ts(TS1Random)
+lines(ts(TS1$TS1),col="red3")
+```
 
-<!-- If you repeat this for TS2 and TS3 and compute the Relative Roughness of each randomized time series, the outcomes should be around 2, white noise! This makes sense, you destroyed all the correlations in the data by removing the temporal order with which values were observed. -->
+If you repeat this for TS2 and TS3 and compute the Relative Roughness of each randomized time series, the outcomes should be around 2, white noise! This makes sense, you destroyed all the correlations in the data by removing the temporal order with which values were observed.
 
-<!-- ### Integrate -->
+### Integrate
 
-<!-- Normalize the white noise time series -->
-<!-- ```{r} -->
-<!-- TS3Norm <- scale(TS3$TS3) -->
-<!-- ``` -->
+Normalize the white noise time series
+```{r}
+TS3Norm <- scale(TS3$TS3)
+```
 
-<!-- Now integrate it, which just means, 'take the cumulative sum'. -->
-<!-- ```{r} -->
-<!-- TS3Int <- cumsum(TS3Norm) -->
-<!-- plot.ts(TS3Int) -->
-<!-- lines(ts(TS3Norm),col="red3") -->
-<!-- ``` -->
+Now integrate it, which just means, 'take the cumulative sum'.
+```{r}
+TS3Int <- cumsum(TS3Norm)
+plot.ts(TS3Int)
+lines(ts(TS3Norm),col="red3")
+```
 
-<!-- If you compute the Relative Roughness of the integrated time series, the outcome should be close to 0, Brownian noise. -->
-<!-- ```{r} -->
-<!-- RR(TS3Int) -->
-<!-- ``` -->
+If you compute the Relative Roughness of the integrated time series, the outcome should be close to 0, Brownian noise.
+```{r}
+RR(TS3Int)
+```
 
 <!-- # **Fluctuation and Disperion analyses I** {#fda1sol} -->
 
