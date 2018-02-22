@@ -154,7 +154,7 @@ Don’t worry; we’ll cover the interpretation over the next two weeks in furth
 
 
 
-# **Fluctuation and Disperion analyses I** {#fda1}
+# **Fluctuation and Dispersion analyses I** {#fda1}
 
 ```{block2, L5, type='rmdimportant'}
 Before you begin, look at the notes for [Lecture 4](#lecture-4).
