@@ -243,12 +243,16 @@ Don’t worry; we’ll cover the interpretation over the next two weeks in furth
 #### Answers {-}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ```{r, echo=TRUE, eval=TRUE, include=TRUE}
 library(rio)
 TS1 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS1.xlsx", col_names=FALSE)
 TS2 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS2.xlsx", col_names=FALSE)
 TS3 <- rio::import("https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/raw/master/assignments/assignment_data/RelativeRoughness/TS3.xlsx", col_names=FALSE)
 ```
+=======
+# **Fluctuation and Dispersion analyses I** {#fda1}
+>>>>>>> cd97d617791e1af128440224cbf3f1a313f917eb
 =======
 # **Fluctuation and Dispersion analyses I** {#fda1}
 >>>>>>> cd97d617791e1af128440224cbf3f1a313f917eb
