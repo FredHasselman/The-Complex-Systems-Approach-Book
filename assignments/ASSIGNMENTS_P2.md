@@ -1,22 +1,43 @@
 ---
-title: "Time Series Analysis: Temporal Correlations and Fractal Scaling"
+title: "DCS Assignments Part II"
 author: "Fred Hasselman & Maarten Wijnants"
 date: "1/14/2018"
 output: 
-  html_document: 
+  bookdown::html_document2: 
+    variant: markdown+hard_line_breaks
     fig_caption: yes
     highlight: pygments
     keep_md: yes
-    number_sections: no
+    number_sections: yes
     theme: spacelab
     toc: yes
     toc_float: true
     collapsed: false
     smooth_scroll: true
     code_folding: show
-
+    bibliography: [refs.bib, packages.bib]
+    biblio-style: apalike
+    csl: apa.csl
+    includes:
+        before_body: assignmentstyle.html
+    pandoc_args: ["--number-offset","4"]
+    
 ---
 
+
+
+
+
+# **Quick Links** {-}
+
+* [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
+* [Assignments Part 1A: Introduction to the mathematics of change](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1A.html)
+* [Assignments Part 1B: Fitting Parameters and Potential Functions](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1B.html)
+* [Assignments Part 3: Quantifying Recurrences in State Space](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)
+* [Assignments Part 4: Complex Networks](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P4.html)
+  
+</br>
+</br>
 
 # **Basic Timeseries Analysis** 
 
@@ -33,7 +54,7 @@ Correlation functions are intuitive tools for quantifiying the temporal structur
 You can do the analyses in SPSS or in `R`, but this analysis is very common so you'll find functions called `acf`, `pacf`and `ccf` in many other statistical software packages,
 
 
-#### Questions (SPSS) {-}
+#### Questions (SPSS/R) {-}
 
 * Download the file [`series.sav`](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/blob/master/assignments/assignment_data/BasicTSA_arma/series.sav) from Github. 
 
@@ -58,25 +79,20 @@ All zero or close to zero  | Data is essentially random.|
 | No decay to zero  | Series is not stationary. |
 
 
-<!-- 4. You should have identified just one time series with autocorrelations: `TS_2`. Try to fit an `ARIMA(p,0,q)` model on this time series.  -->
-<!--     - Go to `Analyze` >> `Forecasting` >> `Create Model`, and at `Method` (Expert modeler) choose `ARIMA`.  -->
-<!--     - Look back at the `PACF` to identify which order (`p`) you need (last lag value at which the correlation is still significant). This lag value should go in the Autocorrelation p box.  -->
-<!--     - Start with a Moving Average `q` of one. The time series variable `TS_2` is the `Dependent`.  -->
-<!--     - You can check the statistical significance of the parameters in the output under `Statistics`, by checking the box `Parameter Estimates`.  -->
-<!--     - This value for `p` is probably too high, because not all AR parameters are significant.  -->
-<!--     - Run ARIMA again and decrease the number of AR parameters by leaving out the non-significant ones.   -->
-
-<!-- 5. By default `SPSS` saves the predicted values and 95% confidence limits (check the data file). We can now check how well the prediction is: Go to `Graphs` >> `Legacy Dialogs` >> `Line.` Select `Multiple` and `Summaries of Separate Variables`. Now enter `TS_2`, `Fit_X`, `LCL_X` and `UCL_X` in `Lines Represent`. `X` should be the number of the last (best) model you fitted, probably 2. Enter `TIME` as the `Category Axis`.   -->
-
 * In the simulation part of this course we have learned a very simple way to explore the dynamics of a system: The return plot. The time series is plotted against itself shifted by 1 step in time. 
-    * Create return plots (use a Scatterplot) for the three time series. Tip: You can easily create a `t+1` version of the time series by using the LAG function in a `COMPUTE` statement. For instance: 
-    
+
+* Create return plots (use a Scatterplot) for the three time series. Tip: You can easily create a `t+1` version of the time series by using the LAG function in a `COMPUTE` statement. For instance:
+
 ```
 COMPUTE TS_1_lag1 = LAG(TS_1)
-``` 
-    * Are your conclusions about the time series the same as in 3. after interpreting these return plots? 
-
+```
+    
+* Are your conclusions about the time series based on interpreting these return plots the same as based on the `acf` and `pacf`?
+     
+     
 #### Answers (SPSS) {-}
+
+If you run this syntax in `SPSS` you'll get the correct output.
 
 ```
 DESCRIPTIVES
@@ -95,6 +111,7 @@ TSPLOT VARIABLES= TS_3
   /FORMAT NOFILL REFERENCE.
 
 *ACF and PCF.
+
 ACF
   VARIABLES= TS_1 TS_2 TS_3
   /NOLOG
@@ -131,6 +148,8 @@ EXE.
 
 #### Notes for `R` {-}
 
+If you want to use `R`, just go through the questions and ignore the `SPSS` specific comments. Here are some tips:
+
 **Importing data in `R`**
 
 By downloading:
@@ -139,6 +158,7 @@ By downloading:
 2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
 3. Download the file
 4. Load it into `R`
+
 
 ```r
 library(rio)
@@ -165,10 +185,10 @@ There are many extensions to these linear models, check the [`CRAN Task View` on
 
 ### Relative Roughness of the Heart {.tabset .tabset-fade .tabset-pills}
 
-> "We can take it to the end of the line
-Your love is like a shadow on me all of the time (all of the time)
-I don't know what to do and I'm always in the dark
-We're living in a powder keg and giving off sparks"
+> "We can take it to the end of the *line*     
+>  Your love is like a shadow on me all of the *time*     
+>  I don't know what to do and I'm always in the dark     
+>  We're living in a powder keg and giving off *sparks*"     
 >
 > --- Bonnie Tyler/James R. Steinman, Total Eclipse of the Heart
 
@@ -193,11 +213,11 @@ colnames(TS3) <- "TS3"
 
 
 **The recordings**
-These HBI’s were constructed from the R-R intervals in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).
+These HBI’s were constructed from the[] R-R interbeat intervals](https://www.physionet.org/tutorials/hrv/) in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).
 
 <div class="figure" style="text-align: center">
 <img src="images/RRfig1.png" alt="Definition of Heart Beat Periods." width="862" />
-<p class="caption">Definition of Heart Beat Periods.</p>
+<p class="caption">(\#fig:RRf1)Definition of Heart Beat Periods.</p>
 </div>
 
 
@@ -206,12 +226,11 @@ These HBI’s were constructed from the R-R intervals in electrocardiogram (ECG)
  * Another HBI series is a sample from a healthy male adult, 21 years old (called *Tommy*). This subject never reported any cardiac complaint. Tommy was playing the piano during the recording.
 
  * A third supposed HBI series is fictitious, and was never recorded from a human subject (let’s call this counterfeit *Dummy*).
-Your challenge
-
-The assignment is to scrutinise the data and find out which time series belongs to *Jimmy*, *Tommy*, and *Dummy* respectively. ^[The HBI intervals were truncated (not rounded) to a multiple of 10 ms (e.g., an interval of 0.457s is represented as 0.450s), and to 750 data points each. The means and standard deviations among the HBI series are approximately equidistant, which might complicate your challenge.]
 
 
 #### Questions {-}
+
+The assignment is to scrutinise the data and find out which time series belongs to *Jimmy*, *Tommy*, and *Dummy* respectively. ^[The HBI intervals were truncated (not rounded) to a multiple of 10 ms (e.g., an interval of 0.457s is represented as 0.450s), and to 750 data points each. The means and standard deviations among the HBI series are approximately equidistant, which might complicate your challenge.]
 
 The chances that you are an experienced cardiologist are slim. We therefore suggest you proceed your detective work as follows:
 
@@ -231,7 +250,7 @@ The numerator in the formula stands for the `lag 1` autocovariance of the HBI ti
 
 <div class="figure" style="text-align: center">
 <img src="images/RRfig3.png" alt="Coloured Noise versus Relative Roughness" width="793" />
-<p class="caption">Coloured Noise versus Relative Roughness</p>
+<p class="caption">(\#fig:RRf3)Coloured Noise versus Relative Roughness</p>
 </div>
 
 
@@ -312,6 +331,9 @@ TS1Random <- TS1$TS1[randperm(length(TS1$TS1))]
 
 # sample()
 TS1Random <- sample(TS1$TS1, length(TS1$TS1))
+TS2Random <- sample(TS2$TS2, length(TS2$TS2))
+TS3Random <- sample(TS3$TS3, length(TS3$TS3))
+
 
 plot.ts(TS1Random)
 lines(ts(TS1$TS1),col="red3")
@@ -321,6 +343,56 @@ lines(ts(TS1$TS1),col="red3")
 
 If you repeat this for TS2 and TS3 and compute the Relative Roughness of each randomized time series, the outcomes should be around 2, white noise! This makes sense, you destroyed all the correlations in the data by removing the temporal order with which values were observed.
 
+
+```r
+cat("TS1random\n")
+```
+
+```
+## TS1random
+```
+
+```r
+cat(RR(TS1Random))
+```
+
+```
+## 1.947649
+```
+
+```r
+cat("\nTS2random\n")
+```
+
+```
+## 
+## TS2random
+```
+
+```r
+cat(RR(TS2Random))
+```
+
+```
+## 1.926426
+```
+
+```r
+cat("\nTS3random\n")
+```
+
+```
+## 
+## TS3random
+```
+
+```r
+cat(RR(TS3Random))
+```
+
+```
+## 2.038294
+```
 
 **Integrate**
 
@@ -338,129 +410,145 @@ plot.ts(TS3Int)
 lines(ts(TS3Norm),col="red3")
 ```
 
-![](ASSIGNMENTS_P2_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](ASSIGNMENTS_P2_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 If you compute the Relative Roughness of the integrated time series, the outcome should be close to 0, Brownian noise.
 
 ```r
-RR(TS3Int)
+cat("\nTS3Int\n")
 ```
 
 ```
-## [1] 0.02783704
-## attr(,"localAutoCoVariance")
-## [1] 35.69734
-## attr(,"globalAutoCoVariance")
-## [1] 36.2012
+## 
+## TS3Int
+```
+
+```r
+cat(RR(TS3Int))
+```
+
+```
+## 0.02783704
 ```
 
 
-
-
-### Sample Entropy
+### Sample Entropy  {.tabset .tabset-fade .tabset-pills}
 
 Use the `sample_entropy()` function in package `pracma`.
 
 #### Questions {-}
 
 * Calculate the Sample Entropy of the two sets of three timeseries you now have.
-    + Use your favourite function to estimate the sample entropy of the three time series. Use for instance a segment length m of 3 datapoints, and a tolerance range r of 1 standard deviation. What values do you observe?
+    + Use your favourite function to estimate the sample entropy of the three time series. Use for instance a segment length `edim` of 3 datapoints, and a tolerance range `r` of 1 * the standard deviation of the series. What values do you observe?
     + Can you change the absolute SampEn outcomes by 'playing' with the m parameter? If so, how does the outcome change, and why?
-( Can you change the absolute SampEn outcomes by 'playing' with the r parameter If so, how does the outcome change, and why?
+    + Can you change the absolute SampEn outcomes by 'playing' with the r parameter If so, how does the outcome change, and why?
     + Do changes in the relative SampEn outcome change the outcomes for the three time series relative to each other?
 
 *	Extra: Go back to the assignment where you generated simulated time series from the logistic map.
 
 
+#### Answers {-}
+
+Change some of the parameters.
 
 
+```r
+library(rio)
+library(pracma)
+
+# ACF assignment data `series`
+cat(paste0("\nseries.TS1 m=3\n",sample_entropy(series$TS_1, edim = 3, r = sd(series$TS_1))))
+## 
+## series.TS1 m=3
+## 0.652582760511648
+cat(paste0("\nseries.TS2 m=3\n",sample_entropy(series$TS_2, edim = 3, r = sd(series$TS_2))))
+## 
+## series.TS2 m=3
+## 0.195888185092471
+cat(paste0("\nseries.TS3 m=3\n",sample_entropy(series$TS_3, edim = 3, r = sd(series$TS_3))))
+## 
+## series.TS3 m=3
+## 0.528115883767288
 
 
-<!-- # **Fluctuation and Disperion analyses I** {#fda1} -->
-
-<!-- ```{block2, L5, type='rmdimportant'} -->
-<!-- Before you begin, look at the notes for [Lecture 4](#lecture-4). -->
-<!-- ``` -->
-
-<!-- ## The Spectral Slope {#psd} -->
-
-<!-- We can use the power spectrum to estimate a **self-affinity parameter**, or scaling exponent. -->
-
-<!-- * Download `ts1.txt`, `ts2.txt`, `ts3.txt` [here](https://github.com/FredHasselman/DCS/tree/master/assignmentData/Fluctuation_PSDslope). If you use `R` and have package `rio` installed you can run this code. It loads the data into a `data.frame` object directly from `Github`. -->
-<!-- ```{r, echo=TRUE, eval=FALSE, include=TRUE} -->
-<!-- library(rio) -->
-<!-- TS1 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts1.txt") -->
-<!-- TS2 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts2.txt") -->
-<!-- TS3 <- rio::import("https://raw.githubusercontent.com/FredHasselman/DCS/master/assignmentData/Fluctuation_PSDslope/ts3.txt") -->
-
-<!-- # These objects are now data.frames with one column named V1. -->
-<!-- # If you want to change the column names -->
-<!-- colnames(TS1) <- "TS1" -->
-<!-- colnames(TS2) <- "TS2" -->
-<!-- colnames(TS3) <- "TS3" -->
-<!-- ``` -->
-
-<!-- * Plot the three 'raw' time series. -->
-
-<!-- ### Basic data checks and preparations -->
-
-<!-- For spectral analysis we need to check some data assumptions (see [notes on data preparation, Lecture 4](#data-considerations)). -->
-
-<!-- #### Normalize {-} -->
-<!-- 1. Are the lengths of the time series a power of 2? (Use `log2(length of var)` ) -->
-<!--   + Computation of the frequency domain is greatly enhanced if data length is a power (of 2). -->
-<!-- 2. Are the data normalized? (we will *not* remove datapoints outside 3SD) -->
-<!--     + To normalize we have to subtract the mean from each value in the time series and divide it by the standard deviation, the function `scale()` can do this for you, but you could also use `mean()` and `sd()` to construct your own function. -->
-<!-- 3. Plot the normalized time series. -->
-
-<!-- #### Detrend {-} -->
-<!-- Before a spectral analysis you should remove any linear trends (it cannot deal with nonstationary signals!) -->
-
-<!-- 1. Detrend the normalized data (just the linear trend). -->
-<!--     + This can be done using the function `pracma::detrend()`. -->
-<!--     + Extra: Try to figure out how to detrend the data using `stats::lm()` or `stats::poly()` -->
-<!-- 2. Plot the detrended data. -->
-
-<!-- #### Get the log-log slope in Power Spectral Density {-} -->
-<!-- The function `fd.psd()` will perform the spectral slope fitting procedure. -->
-
-<!-- 1. Look at the manual pages to figure out how to call the function. The manual is on blackboard and [Github](https://github.com/FredHasselman/DCS/blob/master/functionLib/) -->
-<!--     + Remember, we have already normalized and detrended the data. -->
-<!--     + You can also look at the code itself by selecting the function name in`R` and pressing `F2` -->
-<!-- 2. Calculate the spectral slopes for the three normalized and detrended time series. -->
-<!--     + Call with `plot = TRUE` -->
-<!--     + Compare the results... What is your conclusion? -->
+# ACF assignment data `series`
+cat(paste0("\nseries.TS1 m=6\n",sample_entropy(series$TS_1, edim = 6, r = sd(series$TS_1))))
+## 
+## series.TS1 m=6
+## 0.676004479826967
+cat(paste0("\nseries.TS2 m=6\n",sample_entropy(series$TS_2, edim = 6, r = sd(series$TS_2))))
+## 
+## series.TS2 m=6
+## 0.167801266934409
+cat(paste0("\nseries.TS3 m=6\n",sample_entropy(series$TS_3, edim = 6, r = sd(series$TS_3))))
+## 
+## series.TS3 m=6
+## 0.527677852462416
 
 
-<!-- ## DFA and SDA {#dfa} -->
+# ACF assignment data `series`
+cat(paste0("\nseries.TS1 m=6, r=.5\n",sample_entropy(series$TS_1, edim = 3, r = .5*sd(series$TS_1))))
+## 
+## series.TS1 m=6, r=.5
+## 1.26945692316692
+cat(paste0("\nseries.TS2 m=6, r=.5\n",sample_entropy(series$TS_2, edim = 3, r = .5*sd(series$TS_2))))
+## 
+## series.TS2 m=6, r=.5
+## 0.641584864066123
+cat(paste0("\nseries.TS3 m=6, r=.5\n",sample_entropy(series$TS_3, edim = 3, r = .5*sd(series$TS_3))))
+## 
+## series.TS3 m=6, r=.5
+## 0.5894301000077
+```
 
-<!-- * Use the functions `fd.dfa()` and `fd.sda()` to estimate the self-affinity parameter and Dimension of the series. -->
-<!--     + Check what kind of data preparation is required for SDA and DFA in [notes on data preparation, Lecture 4](#data-considerations). -->
-<!--     + Compare the results between the three different methods. -->
+The change of `m` keeps the relaive order, change of `r` for the same `m` does not.
 
-<!-- [| jump to solution |](#dfasol) -->
+**Values of other time series**
 
 
-<!-- ## Heartbeat dynamics II {#hrv2} -->
-<!-- In the [previous assignment](#relR), you were presented with three different time series of heartbeat intervals (HBI), and you analyzed them using a measure of Relative Roughness (RR; cf. Marmelat & Delignières, 2012). -->
+```r
 
-<!-- A logical step is to unleash the full force of your new analytic toolbox onto the HBI series. -->
+# RR assignment data `TS1,TS2,TS3`
+cat(paste0("\nTS1\n",sample_entropy(TS1$TS1, edim = 3, r = sd(TS1$TS1))))
+## 
+## TS1
+## 0.260297595725622
+cat(paste0("TS1Random\n",sample_entropy(TS1Random, edim = 3, r = sd(TS1Random))))
+## TS1Random
+## 0.641042706599136
 
-<!-- * Keep track of the outcomes of each time series for 4 different analyses (RR, PSD, SDA, DFA). -->
-<!--     + Do the outcomes of the different methods converge on the continuum of blue, white and pink, to Brownian and black noise? That is, do they indicate the same type of temporal structure? -->
-<!-- * As a final step, construct return plots for each time series and try to interpret what you observe, given the outcomes of the scaling parameter estimates. -->
+cat(paste0("\nTS2\n",sample_entropy(TS2$TS2, edim = 3, r = sd(TS2$TS2))))
+## 
+## TS2
+## 0.0477314028211898
+cat(paste0("TS2Random\n",sample_entropy(TS2Random, edim = 3, r = sd(TS2Random))))
+## TS2Random
+## 0.572420561420811
+
+cat(paste0("\nTS3\n",sample_entropy(TS3$TS3, edim = 3, r = sd(TS3$TS3))))
+## 
+## TS3
+## 0.612955347930071
+cat(paste0("TS3Int\n",sample_entropy(TS3Norm, edim = 3, r = sd(TS3Norm))))
+## TS3Int
+## 0.612955347930071
 
 
-<!-- ## Analysis of Deterministic Chaos {#chaos} -->
-
-<!-- * Generate a chaotic timeseries (e.g. $r = 4$ ) of equal length as the time series used above (use the function `growth.ac( ..., type = "logistic")` in `nlRtsa_SOURCE`, see the [solutions of Lecture 1 and 2](#linear-and-logistic-growth)) -->
-<!--     + This is in fact one of the series you analysed in a [previous assignment](#pacf). If you still have the results use them for the next part. -->
-<!-- * Get all the scaling quantities for this series as well as the ACF and PACF and [some return plots](#the-return-plot) just like in the previous assignments. -->
-<!--     + Compare the results to e.g. the heartbeat series. -->
-
-<!-- [| jump to solution |](#chaossol) -->
-
-<!-- # Fluctuation and Disperion analyses II {#fda2} -->
-
-<!-- There were no assignments for this Lecture. -->
+# Logistic map
+library(casnet)
+cat("\nLogistic map\nr=2.9\n")
+## 
+## Logistic map
+## r=2.9
+y1<-growth_ac(r = 2.9,type="logistic")
+sample_entropy(y1, edim = 3, r = sd(y1))
+## [1] 0.0002390343
+cat("\nLogistic map\nr=4\n")
+## 
+## Logistic map
+## r=4
+y2<-growth_ac(r = 4,type="logistic")
+sample_entropy(y2, edim = 3, r = sd(y2))
+## [1] 0.5293149
+```
 
