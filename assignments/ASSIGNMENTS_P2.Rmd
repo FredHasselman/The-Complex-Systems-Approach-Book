@@ -429,3 +429,121 @@ sample_entropy(y2, edim = 3, r = sd(y2))
 
 ```
 
+
+
+## **Fluctuation analyses**
+
+Install package `casnet` to use the functions `fd_sda()`, `fd_psd()` and `fd_dfa()`.
+
+```{r}
+# Install casnet if necessary: https://github.com/FredHasselman/casnet
+# !!Warning!! Very Beta...
+# Auto config of Marwan's commandline rqa works on Windows, MacOS and probably Linux as well
+library(devtools)
+ifelse("casnet"%in%installed.packages(),library(casnet),devtools::install_github("FredHasselman/casnet"))
+```
+
+###  Standardised Dispersion Analysis {.tabset .tabset-fade .tabset-pills}
+
+
+#### Questions {-}
+
+* Common data preparation before running fluctuation analyses:
+    + Normalize the time series (using `sd` based on `N`, not `N-1`)
+    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can padd the series with 0s, or make it shorter before analysis.
+* Perform `sda` on the 3 HRV timeseries, or any of the other series you already analysed.
+* Compare to what you find for `sda` to the other measures (`RR`,`SampEn`, `acf`, `pacf`)
+
+
+#### Answers {-}
+
+
+```{r,collapse=TRUE}
+library(rio)
+library(pracma)
+library(casnet)
+
+# ACF assignment data `series`
+cat(paste0("\nseries.TS1 m=3\n",fd_sda(series$TS_1, doPlot = TRUE)))
+cat(paste0("\nseries.TS2 m=3\n",fd_sda(series$TS_2, doPlot = TRUE)))
+cat(paste0("\nseries.TS3 m=3\n",fd_sda(series$TS_3, doPlot = TRUE)))
+
+
+# ACF assignment data `series`
+cat(paste0("\nseries.TS1 m=6\n",fd_sda(series$TS_1,  doPlot = TRUE)))
+cat(paste0("\nseries.TS2 m=6\n",fd_sda(series$TS_2,  doPlot = TRUE)))
+cat(paste0("\nseries.TS3 m=6\n",fd_sda(series$TS_3,  doPlot = TRUE)))
+
+
+# ACF assignment data `series`
+cat(paste0("\nseries.TS1 m=6, r=.5\n",fd_sda(series$TS_1, doPlot = TRUE)))
+cat(paste0("\nseries.TS2 m=6, r=.5\n",fd_sda(series$TS_2, doPlot = TRUE)))
+cat(paste0("\nseries.TS3 m=6, r=.5\n",fd_sda(series$TS_3, doPlot = TRUE)))
+
+```
+
+
+
+**Values of other time series**
+
+```{r message=FALSE, warning=FALSE, collapse=TRUE}
+
+L1 <- floor(log2(length(TS1$TS1)))
+L2 <- floor(log2(length(TS2$TS2)))
+L3 <- floor(log2(length(TS2$TS2)))
+
+# RR assignment data `TS1,TS2,TS3`
+cat(paste0("\nTS1\n",fd_sda(TS1$TS1[1:2^L1],  doPlot = TRUE)))
+cat(paste0("TS1Random\n",fd_sda(TS1Random[1:2^L1],  doPlot = TRUE)))
+
+cat(paste0("\nTS2\n",fd_sda(TS2$TS2[1:2^L2],  doPlot = TRUE)))
+cat(paste0("TS2Random\n",fd_sda(TS2Random[1:2^L2],  doPlot = TRUE)))
+
+cat(paste0("\nTS3\n",fd_sda(TS3$TS3[1:2^L3],  doPlot = TRUE)))
+cat(paste0("TS3Int\n",fd_sda(TS3Norm[1:2^L3],  doPlot = TRUE)))
+
+
+
+# Logistic map
+cat("\nLogistic map\nr=2.9\n")
+y1<-growth_ac(r = 2.9,type="logistic",N = 1024)
+fd_sda(y1, doPlot = TRUE)
+cat("\nLogistic map\nr=4\n")
+y2<-growth_ac(r = 4,type="logistic", N = 1024)
+fd_sda(y2, doPlot = TRUE)
+
+```
+
+
+
+###  Spectral Slope {.tabset .tabset-fade .tabset-pills}
+
+
+#### Questions {-}
+
+* Common data preparation before running fluctuation analyses:
+    + Normalize the time series (using `sd` based on `N`, not `N-1`)
+    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can padd the series with 0s, or make it shorter before analysis.
+* Perform `psd` on the 3 HRV timeseries, or any of the other series you already analysed.
+* Compare to what you find for `psd` to the other measures (`RR`,`SampEn`, `acf`, `pacf`)
+
+
+#### Answers {-}
+
+See `sda`
+
+###  Detrended Fluctuation Analysis {.tabset .tabset-fade .tabset-pills}
+
+
+#### Questions {-}
+
+* Common data preparation before running fluctuation analyses:
+    + Normalize the time series (using `sd` based on `N`, not `N-1`)
+    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can padd the series with 0s, or make it shorter before analysis.
+* Perform `dfa` on the 3 HRV timeseries, or any of the other series you already analysed.
+* Compare to what you find for `dfa` to the other measures (`RR`,`SampEn`, `acf`, `pacf`)
+
+
+#### Answers {-}
+
+See `sda`
