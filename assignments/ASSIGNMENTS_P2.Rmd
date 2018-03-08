@@ -547,3 +547,14 @@ See `sda`
 #### Answers {-}
 
 See `sda`
+
+
+
+
+## **Surrogate analysis**
+
+
+* Look at the explanation of surrogate analysis on the [TiSEAN website](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/index.html)
+
+* Package `nonlinearTseries` has a function `FFTsurrogate` look it up and try to create a surrogate test for some of the tume series of the previous assignments.
+
