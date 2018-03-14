@@ -4,6 +4,7 @@ author: "Fred Hasselman & Maarten Wijnants"
 date: "1/14/2018"
 output: 
   bookdown::html_document2: 
+    
     variant: markdown+hard_line_breaks
     fig_caption: yes
     highlight: pygments
@@ -21,7 +22,8 @@ output:
     includes:
         before_body: assignmentstyle.html
     pandoc_args: ["--number-offset","4"]
-    
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -43,12 +45,12 @@ knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
 
 # **Basic Timeseries Analysis** 
 
-In this course we will not discuss the type of linear time series models known as Autoregressive Models (e.g. AR, ARMA, ARiMA, ARfiMA) summarised on [this Wikipedia page on timeseries](https://en.wikipedia.org/wiki/Time_series#Models). We will in fact be discussing a lot of methods in a book the Wiki page refers to for *'Further references on nonlinear time series analysis'*: [**Nonlinear Time Series Analysis** by Kantz & Schreiber](https://www.cambridge.org/core/books/nonlinear-time-series-analysis/519783E4E8A2C3DCD4641E42765309C7). You do not need to buy the book, but it can be a helpful reference if you want to go beyond the formal level (= mathematics) used in this course. Some of the packages we use are based on the acompanying software [**TiSEAN**](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/index.html) which is written in `C` and `Fortran` and can be called from the commandline (Windows / Linux).
+In this course we will not discuss the type of linear time series models known as Autoregressive Models (e.g. AR, ARMA, ARiMA, ARfiMA) summarised on [this Wikipedia page on timeseries](https://en.wikipedia.org/wiki/Time_series#Models). We will in fact be discussing a lot of methods in a book the Wiki page refers to for *'Further references on nonlinear time series analysis'*: [**Nonlinear Time Series Analysis** by Kantz & Schreiber](https://www.cambridge.org/core/books/nonlinear-time-series-analysis/519783E4E8A2C3DCD4641E42765309C7). You do not need to buy the book, but it can be a helpful reference if you want to go beyond the formal level (= mathematics) used in this course. Some of the packages we use are based on the companying software [**TiSEAN**](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/index.html) which is written in `C` and `Fortran` and can be called from the command line (Windows / Linux).
 
 
 ## **Correlation functions**  
 
-Correlation functions are intuitive tools for quantifiying the temporal structure in a time series. As you know, correlation can only quantify linear regularities between variables, which is why we discuss them here as `basic` tools for time series analysis. So what are the variables? In the simplest case, the variables between which we calculate a correlation are between a datapoint at time *t* and a data point that is seperated in time by some *lag*, for example, if you would calculate the correlation in a lag-1 return plot, you would have calculated the 1st value of the correlation function (actually, it is 2nd value, the 1st value is the correlation of time series with itself, the lag-0 correlation, which is of course $r = 1$)  
+Correlation functions are intuitive tools for quantifying the temporal structure in a time series. As you know, correlation can only quantify linear regularities between variables, which is why we discuss them here as `basic` tools for time series analysis. So what are the variables? In the simplest case, the variables between which we calculate a correlation are between a data point at time *t* and a data point that is separated in time by some *lag*, for example, if you would calculate the correlation in a lag-1 return plot, you would have calculated the 1st value of the correlation function (actually, it is 2nd value, the 1st value is the correlation of time series with itself, the lag-0 correlation, which is of course $r = 1$)  
 
 ### ACF and PCF {.tabset .tabset-fade .tabset-pills}
 
@@ -157,7 +159,7 @@ If you want to use `R`, just go through the questions and ignore the `SPSS` spec
 By downloading:
 
 1. Follow the link, e.g. for [`series.sav`](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/blob/master/assignments/assignment_data/BasicTSA_arma/series.sav).
-2. On the Github page, find a button marked **Download** (or **Raw** for textfiles).
+2. On the Github page, find a button marked **Download** (or **Raw** for textiles).
 3. Download the file
 4. Load it into `R`
 
@@ -169,7 +171,7 @@ series <- import("series.sav", setclass = "tbl_df")
 
 By importing from Github:
 
-1. Copy the `url` associated with the **Download**  button on Github (right-clik).
+1. Copy the `url` associated with the **Download**  button on Github (right-clink).
 2. The copied path should contain the word 'raw' somewhere in the url.
 3. Call `rio::import(url)`
 ```{r}
@@ -211,14 +213,14 @@ colnames(TS3) <- "TS3"
 
 
 **The recordings**
-These HBI’s were constructed from the[] R-R interbeat intervals](https://www.physionet.org/tutorials/hrv/) in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).
+These HBI’s were constructed from the[] R-R inter-beat intervals](https://www.physionet.org/tutorials/hrv/) in electrocardiogram (ECG) recordings, as defined in Figure \@ref(fig:RRf1).
 
 ```{r RRf1, fig.cap="Definition of Heart Beat Periods.", fig.align='center',echo=FALSE, include=TRUE}
 knitr::include_graphics('images/RRfig1.png')
 ```
 
 
- * One HBI series is a sample from a male adult, 62 years old (called *Jimmy*). Approximately two years before the recording, the subject has had a coronary artery bypass, as advised by his physician following a diagnosis of congestive heart failure. *Jimmy* used antiarrhythmic medicines at the time of measurement.
+ * One HBI series is a sample from a male adult, 62 years old (called *Jimmy*). Approximately two years before the recording, the subject has had a coronary artery bypass, as advised by his physician following a diagnosis of congestive heart failure. *Jimmy* used anti-arrhythmic medicines at the time of measurement.
 
  * Another HBI series is a sample from a healthy male adult, 21 years old (called *Tommy*). This subject never reported any cardiac complaint. Tommy was playing the piano during the recording.
 
@@ -241,9 +243,9 @@ RR = 2\left[1−\frac{\gamma_1(x_i)}{Var(x_i)}\right]
 (\#eq:RR)
 \end{equation}
 
-The numerator in the formula stands for the `lag 1` autocovariance of the HBI time series $x_i$. The denominator stands for the (global) variance of $x_i$. Most statistics packages can calculate these variances, `R` and `Matlab` have built in functions. Alternatively, you can create the formula yourself.
+The numerator in the formula stands for the `lag 1` auto-covariance of the HBI time series $x_i$. The denominator stands for the (global) variance of $x_i$. Most statistics packages can calculate these variances, `R` and `Matlab` have built in functions. Alternatively, you can create the formula yourself.
 
-*	Compare your (intuitive) visual inspection with these preliminary dynamic quantifications, and find out where each of the HIB series are positions on the ‘colorful spectrum of noises’ (i.e., line them up with Figure \@ref(fig:RRf3)).
+*	Compare your (intuitive) visual inspection with these preliminary dynamic quantifications, and find out where each of the HIB series are positions on the ‘colourful spectrum of noises’ (i.e., line them up with Figure \@ref(fig:RRf3)).
 
 ```{r RRf3, fig.cap="Coloured Noise versus Relative Roughness", fig.align='center',echo=FALSE, include=TRUE}
 knitr::include_graphics('images/RRfig3.png')
@@ -364,8 +366,8 @@ Use the `sample_entropy()` function in package `pracma`.
 
 #### Questions {-}
 
-* Calculate the Sample Entropy of the two sets of three timeseries you now have.
-    + Use your favourite function to estimate the sample entropy of the three time series. Use for instance a segment length `edim` of 3 datapoints, and a tolerance range `r` of 1 * the standard deviation of the series. What values do you observe?
+* Calculate the Sample Entropy of the two sets of three time series you now have.
+    + Use your favourite function to estimate the sample entropy of the three time series. Use for instance a segment length `edim` of 3 data points, and a tolerance range `r` of 1 * the standard deviation of the series. What values do you observe?
     + Can you change the absolute SampEn outcomes by 'playing' with the m parameter? If so, how does the outcome change, and why?
     + Can you change the absolute SampEn outcomes by 'playing' with the r parameter If so, how does the outcome change, and why?
     + Do changes in the relative SampEn outcome change the outcomes for the three time series relative to each other?
@@ -400,7 +402,7 @@ cat(paste0("\nseries.TS3 m=6, r=.5\n",sample_entropy(series$TS_3, edim = 3, r = 
 
 ```
 
-The change of `m` keeps the relaive order, change of `r` for the same `m` does not.
+The change of `m` keeps the relative order, change of `r` for the same `m` does not.
 
 **Values of other time series**
 
@@ -450,8 +452,8 @@ ifelse("casnet"%in%installed.packages(),library(casnet),devtools::install_github
 
 * Common data preparation before running fluctuation analyses:
     + Normalize the time series (using `sd` based on `N`, not `N-1`)
-    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can padd the series with 0s, or make it shorter before analysis.
-* Perform `sda` on the 3 HRV timeseries, or any of the other series you already analysed.
+    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can pad the series with 0s, or make it shorter before analysis.
+* Perform `sda` on the 3 HRV time series, or any of the other series you already analysed.
 * Compare to what you find for `sda` to the other measures (`RR`,`SampEn`, `acf`, `pacf`)
 
 
@@ -486,7 +488,7 @@ cat(paste0("\nseries.TS3 m=6, r=.5\n",fd_sda(series$TS_3, doPlot = TRUE)))
 
 **Values of other time series**
 
-```{r message=FALSE, warning=FALSE, collapse=TRUE}
+```{r, message=FALSE, warning=FALSE, collapse=TRUE}
 
 L1 <- floor(log2(length(TS1$TS1)))
 L2 <- floor(log2(length(TS2$TS2)))
@@ -501,8 +503,6 @@ cat(paste0("TS2Random\n",fd_sda(TS2Random[1:2^L2],  doPlot = TRUE)))
 
 cat(paste0("\nTS3\n",fd_sda(TS3$TS3[1:2^L3],  doPlot = TRUE)))
 cat(paste0("TS3Int\n",fd_sda(TS3Norm[1:2^L3],  doPlot = TRUE)))
-
-
 
 # Logistic map
 cat("\nLogistic map\nr=2.9\n")
@@ -523,8 +523,8 @@ fd_sda(y2, doPlot = TRUE)
 
 * Common data preparation before running fluctuation analyses:
     + Normalize the time series (using `sd` based on `N`, not `N-1`)
-    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can padd the series with 0s, or make it shorter before analysis.
-* Perform `psd` on the 3 HRV timeseries, or any of the other series you already analysed.
+    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can pad the series with 0s, or make it shorter before analysis.
+* Perform `psd` on the 3 HRV time series, or any of the other series you already analysed.
 * Compare to what you find for `psd` to the other measures (`RR`,`SampEn`, `acf`, `pacf`)
 
 
@@ -539,8 +539,8 @@ See `sda`
 
 * Common data preparation before running fluctuation analyses:
     + Normalize the time series (using `sd` based on `N`, not `N-1`)
-    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can padd the series with 0s, or make it shorter before analysis.
-* Perform `dfa` on the 3 HRV timeseries, or any of the other series you already analysed.
+    + Check whether time series length is a power of `2`. If you use `N <- log2(length(y))`, the number you get is `2^N`. You need an integer power for the length in order to create equal bin sizes. You can pad the series with 0s, or make it shorter before analysis.
+* Perform `dfa` on the 3 HRV time series, or any of the other series you already analysed.
 * Compare to what you find for `dfa` to the other measures (`RR`,`SampEn`, `acf`, `pacf`)
 
 
@@ -550,11 +550,229 @@ See `sda`
 
 
 
+## **Surrogate testing: Beyond the straw-man null-hypothesis** 
 
-## **Surrogate analysis**
+Look at the explanation of surrogate analysis on the [TiSEAN website](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/)
+(Here is [direct link](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/docs/surropaper/node5.html) to the relevant sections)
 
 
-* Look at the explanation of surrogate analysis on the [TiSEAN website](https://www.pks.mpg.de/~tisean/Tisean_3.0.1/index.html)
+### Constrained realisations of complex signals {.tabset .tabset-fade .tabset-pills}
 
-* Package `nonlinearTseries` has a function `FFTsurrogate` look it up and try to create a surrogate test for some of the tume series of the previous assignments.
+We'll look mostly at three different kinds of surrogates:
+
+* *Randomly shuffled*: $H_0:$ The time series data are independent random numbers drawn from some probability distribution.
+* *Phase Randomised*: $H_0:$ The time series data were generated by a stationary linear stochastic process
+* *Amplitude Adjusted ,Phase Randomised*: $H_0:$ The time series data were generated by a rescaled linear stochastic process
+
+
+#### Questions {-}
+
+* Figure out how many surrogates you minimally need for a 2-sided test.
+* Package `nonlinearTseries` has a function `FFTsurrogate` and package `fractal` `surrogate`. Look them up and try to create a surrogate test for some of the time series of the previous assignments.
+    + If you use `fractal::surrogate()`, choose either `aaft` (amplitude adjusted Fourier transform) or `phase` (phase randomisation)
+    + `nonlinearTseries::FFTsurrogates` will calculate phase randomised surrogates.
+* In package `casnet` there's a function that will calculate and display a point-probability based on a distribution of surrogate measures and one observed measure: `plotSUR_hist`
+
+
+
+#### Answers {-}
+
+
+Create a number of surrogates, calulate the slopes and plot the results.
+
+* First let's get the values we found earlier (we'll use the FD from `sda`, then we do the same for `psd`,but you can take any of the measures as well)
+
+
+```{r message=FALSE, warning=FALSE}
+library(casnet)
+library(fractal)
+library(plyr)
+
+# RR assignment data `TS1,TS2,TS3`
+L1 <- floor(log2(length(TS1$TS1)))
+L2 <- floor(log2(length(TS2$TS2)))
+L3 <- floor(log2(length(TS2$TS2)))
+
+TS1_FDsda <- fd_sda(TS1$TS1[1:2^L1])$fitRange$FD
+TS2_FDsda <- fd_sda(TS2$TS2[1:2^L2])$fitRange$FD
+TS3_FDsda <- fd_sda(TS3$TS3[1:2^L3])$fitRange$FD
+
+y1<-growth_ac(r = 2.9,type="logistic",N = 2^L1)
+TSlogMapr29 <- fd_sda(y1)$fitRange$FD
+
+y2<-growth_ac(r = 4,type="logistic", N = 2^L1)
+TSlogMapr4 <- fd_sda(y2)$fitRange$FD
+
+
+TS1R_FDsda <- fd_sda(TS1Random[1:2^L1])$fitRange$FD
+TS2R_FDsda <- fd_sda(TS1Random[1:2^L2])$fitRange$FD
+TS3R_FDsda <- fd_sda(TS1Random[1:2^L3])$fitRange$FD
+```
+
+
+* To create the surrogates using `fractal::surrogate()`
+    + You'll need to repeatedly call the function and store the result
+    + To get into a dataframe we have to use `unclass()` otherwise `R` doesn't recognise the object
+    + Function `t()` trnasposes the data from 39 rows to 39 columns
+* Once you have the surrogates in a datafram, repeatedly calculate the measure you want to compare, in this case `fd_sda()`.
+
+```{r, message=FALSE, warning=FALSE, collapse=TRUE}
+# NOW CREATE SURROGATES
+library(dplyr)
+
+# For a two-sided test at alpha = .05 we need N=39
+Nsurrogates <- 39
+
+TS1surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS1$TS1[1:2^L1] ,method="aaft"))))
+colnames(TS1surrogates) <- paste0("aaftSurr",1:NCOL(TS1surrogates))
+
+TS1surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TS1surrogates[,s])$fitRange$FD)
+
+
+TS2surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS2$TS2[1:2^L2] ,method="aaft"))))
+colnames(TS2surrogates) <- paste0("aaftSurr",1:NCOL(TS2surrogates))
+
+TS2surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TS2surrogates[,s])$fitRange$FD)
+
+
+TS3surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS3$TS3[1:2^L3] ,method="aaft"))))
+colnames(TS3surrogates) <- paste0("aaftSurr",1:NCOL(TS3surrogates))
+
+TS3surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TS3surrogates[,s])$fitRange$FD)
+
+
+TSr29surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=y1, method="aaft"))))
+colnames(TSr29surrogates) <- paste0("aaftSurr",1:NCOL(TSr29surrogates))
+
+TSr29surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TSr29surrogates[,s])$fitRange$FD)
+
+
+TSr4surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=y2, method="aaft"))))
+colnames(TSr4surrogates) <- paste0("aaftSurr",1:NCOL(TSr4surrogates))
+
+TSr4surrogates_FD <- laply(1:Nsurrogates,function(s) fd_sda(y=TSr4surrogates[,s])$fitRange$FD)
+```
+
+* Collect the results in a dataframe, so we can compare.
+
+```{r}
+x <- data.frame(Source = c("TS1", "TS2", "TS3", "TSlogMapr29", "TSlogMapr4"), 
+                FDsda = c(TS1_FDsda, TS2_FDsda, TS3_FDsda, TSlogMapr29, TSlogMapr4), 
+                FDsdaRandom =  c(TS1R_FDsda, TS2R_FDsda, TS3R_FDsda,NA,NA), 
+                FDsdaAAFT.median= c(median(TS1surrogates_FD),median(TS2surrogates_FD),median(TS3surrogates_FD),median(TSr29surrogates_FD),median(TSr4surrogates_FD)))
+
+```
+
+
+* Call function `plotSUR_hist()` to see the results of the test.
+
+```{r, message=FALSE, warning=FALSE}
+plotSUR_hist(surrogateValues = TS1surrogates_FD, observedValue = TS1_FDsda, sides = "two.sided", doPlot = TRUE, measureName = "sda FD TS1")
+
+plotSUR_hist(surrogateValues = TS2surrogates_FD, observedValue = TS2_FDsda, sides = "two.sided", doPlot = TRUE, measureName = "sda FD TS2")
+
+plotSUR_hist(surrogateValues = TS3surrogates_FD, observedValue = TS3_FDsda,sides = "two.sided", doPlot = TRUE, measureName = "sda FD TS3")
+
+plotSUR_hist(surrogateValues = TSr29surrogates_FD, observedValue = TSlogMapr29,sides = "two.sided", doPlot = TRUE, measureName = "sda FD logMap r=2.9")
+
+plotSUR_hist(surrogateValues = TSr4surrogates_FD, observedValue = TSlogMapr4, sides = "two.sided", doPlot = TRUE, measureName = "sda FD logMap r=4")
+```
+
+**FD: SPECTRAL SLOPE**
+
+```{r message=FALSE, warning=FALSE}
+# RR assignment data `TS1,TS2,TS3`
+L1 <- floor(log2(length(TS1$TS1)))
+L2 <- floor(log2(length(TS2$TS2)))
+L3 <- floor(log2(length(TS2$TS2)))
+
+TS1_FDpsd <- fd_psd(TS1$TS1[1:2^L1])$low25$FD
+TS2_FDpsd <- fd_psd(TS2$TS2[1:2^L2])$low25$FD
+TS3_FDpsd <- fd_psd(TS3$TS3[1:2^L3])$low25$FD
+
+# Logistic map - make it the length of L1
+y1<-growth_ac(r = 2.9,type="logistic",N = 2^L1)
+# Turn standardisation and detrending off!
+TSlogMapr29 <- fd_psd(y1, standardise = FALSE, detrend = FALSE)$low25$FD
+y2<-growth_ac(r = 4,type="logistic", N = 2^L1)
+TSlogMapr4 <- fd_psd(y2, standardise = FALSE, detrend = FALSE)$low25$FD
+
+TS1R_FDpsd <- fd_psd(TS1Random[1:2^L1])$low25$FD
+TS2R_FDpsd <- fd_psd(TS1Random[1:2^L2])$low25$FD
+TS3R_FDpsd <- fd_psd(TS1Random[1:2^L3])$low25$FD
+```
+
+
+* To create the surrogates using `fractal::surrogate()`
+    + You'll need to repeatedly call the function and store the result
+    + To get into a dataframe we have to use `unclass()` otherwise `R` doesn't recognise the object
+    + Function `t()` trnasposes the data from 39 rows to 39 columns
+* Once you have the surrogates in a datafram, repeatedly calculate the measure you want to compare, in this case `fd_sda()`.
+
+```{r message=FALSE, warning=FALSE}
+# NOW CREATE SURROGATES
+library(dplyr)
+
+# For a two-sided test at alpha = .05 we need N=39
+Nsurrogates <- 39
+
+TS1surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS1$TS1[1:2^L1] ,method="aaft"))))
+colnames(TS1surrogates) <- paste0("aaftSurr",1:NCOL(TS1surrogates))
+
+TS1surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TS1surrogates[,s])$low25$FD)
+
+
+TS2surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS2$TS2[1:2^L2] ,method="aaft"))))
+colnames(TS2surrogates) <- paste0("aaftSurr",1:NCOL(TS2surrogates))
+
+TS2surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TS2surrogates[,s])$low25$FD)
+
+
+TS3surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=TS3$TS3[1:2^L3] ,method="aaft"))))
+colnames(TS3surrogates) <- paste0("aaftSurr",1:NCOL(TS3surrogates))
+
+TS3surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TS3surrogates[,s])$low25$FD)
+
+
+TSr29surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=y1, method="aaft"))))
+colnames(TSr29surrogates) <- paste0("aaftSurr",1:NCOL(TSr29surrogates))
+
+TSr29surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TSr29surrogates[,s])$low25$FD)
+
+
+TSr4surrogates <- t(ldply(1:Nsurrogates, function(s) unclass(surrogate(x=y2, method="aaft"))))
+colnames(TSr4surrogates) <- paste0("aaftSurr",1:NCOL(TSr4surrogates))
+
+TSr4surrogates_FD <- laply(1:Nsurrogates,function(s) fd_psd(y=TSr4surrogates[,s])$low25$FD)
+
+
+```
+
+
+* Call function `plotSUR_hist()` to get the results of the test.
+
+```{r, message=FALSE, warning=FALSE}
+plotSUR_hist(surrogateValues = TS1surrogates_FD, observedValue = TS1_FDpsd, sides = "two.sided", doPlot = TRUE, measureName = "psd FD TS1")
+
+plotSUR_hist(surrogateValues = TS2surrogates_FD, observedValue = TS2_FDpsd,sides = "two.sided", doPlot = TRUE, measureName = "psd FD TS2")
+
+plotSUR_hist(surrogateValues = TS3surrogates_FD, observedValue = TS3_FDpsd,sides = "two.sided", doPlot = TRUE, measureName = "psd FD TS3")
+
+plotSUR_hist(surrogateValues = TSr29surrogates_FD, observedValue = TSlogMapr29,sides = "two.sided", doPlot = TRUE, measureName = "psd FD logMap r=2.9")
+
+plotSUR_hist(surrogateValues = TSr4surrogates_FD, observedValue = TSlogMapr4, sides = "two.sided", doPlot = TRUE, measureName = "psd FD logMap r=4")
+
+```
+
+
+ * Let's print the results into a table
+ 
+
+```{r message=FALSE, paged.print=TRUE}
+x$FDpsd <- c(TS1_FDpsd,TS2_FDpsd,TS3_FDpsd,TSlogMapr29,TSlogMapr4)
+x$FDpsdRandom <- c(TS1R_FDpsd, TS2R_FDpsd, TS3R_FDpsd,NA,NA)
+x$FDpsdAAFT.median <- c(median(TS1surrogates_FD),median(TS2surrogates_FD),median(TS3surrogates_FD),median(TSr29surrogates_FD),median(TSr4surrogates_FD))
+knitr::kable(x, digits = 2, booktabs=TRUE,formt="html")
+```
+
 
