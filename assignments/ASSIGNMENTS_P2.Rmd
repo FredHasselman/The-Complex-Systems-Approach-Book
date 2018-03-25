@@ -4,7 +4,6 @@ author: "Fred Hasselman & Maarten Wijnants"
 date: "1/14/2018"
 output: 
   bookdown::html_document2: 
-    
     variant: markdown+hard_line_breaks
     fig_caption: yes
     highlight: pygments
@@ -442,7 +441,7 @@ Install package `casnet` to use the functions `fd_sda()`, `fd_psd()` and `fd_dfa
 # !!Warning!! Very Beta...
 # Auto config of Marwan's commandline rqa works on Windows, MacOS and probably Linux as well
 library(devtools)
-ifelse("casnet"%in%installed.packages(),library(casnet),devtools::install_github("FredHasselman/casnet"))
+devtools::install_github("FredHasselman/casnet")
 ```
 
 ###  Standardised Dispersion Analysis {.tabset .tabset-fade .tabset-pills}

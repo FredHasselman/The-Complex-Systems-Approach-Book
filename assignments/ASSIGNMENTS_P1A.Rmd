@@ -20,6 +20,9 @@ output:
     csl: apa.csl
     includes:
         before_body: assignmentstyle.html
+    pandoc_args: ["--number-offset","0"]
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include=FALSE}
@@ -1081,7 +1084,7 @@ F  <- as.numeric(c(F0, rep(NA,N-1)))
 # Time constant
 delta <- 0.01
 
-# Numerical integration of the logistic differential equation
+# Numerical integration of the lpredator-prey system
 l_ply(seq_along(R), function(t){
     R[[t+1]] <<- (a - b * F[t]) * R[t] * delta + R[t] 
     F[[t+1]] <<- (c * R[t] - d) * F[t] * delta + F[t] 
