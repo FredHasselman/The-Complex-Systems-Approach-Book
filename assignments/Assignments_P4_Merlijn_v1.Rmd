@@ -68,16 +68,32 @@ d) Factor 7 yields the scores on 'Impairment by Symptoms and Problems' for this 
 
 #### Answers {-}
 
-a) df <- read.csv2('clinical.case.study.csv'), include your working directory in the function. Other option: read.csv()
+a) The data file is on [Github](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/blob/master/assignments/assignment_data/EarlyWarningSignals/clinical.case.study.csv)
+```{r}
+library(rio)
+df <- import("https://raw.githubusercontent.com/FredHasselman/The-Complex-Systems-Approach-Book/master/assignments/assignment_data/EarlyWarningSignals/clinical.case.study.csv")
+
+```
+
 b) In the rows.
-c) df$days <- (1:nrow(df))
-d) plot(df$days, df$factor7, type='l')
+
+c) 
+```{r}
+df$days <- (1:nrow(df))
+```
+d) 
+```{r}
+plot(df$days, df$factor7, type='l')
+```
 
 
 ### Phase Transitions and Early-Warning Signals {.tabset .tabset-fade .tabset-pills}
 
 Before we continue, read this short summary of what you (should) know about phase transitions and early-warning signals: 
+
+```{block2,type="rmdimportant"}
 Change from one attractor to another is called a phase transition. Phase transitions are preceded by a destabilization period in which the stability of the existing state decreases (as a consequence of increasing control parameters). During destabilization, the system loses its resilience to external influences leading to increased fluctuations and disorder in the systems behaviour (critical fluctuations) and an increased return time to the existing state after perturbation (critical slowing down). Destabilization ends abruptly when the system makes a phase transition towards a new stable state. Critical fluctuations and critical slowing down can therefore serve as early-warning signals (EWS) for phase transitions. 
+```
 
 #### Questions {-}
 
@@ -88,6 +104,7 @@ c)	Look at the plot of factor 7 for our patient. Can you visualize a possible ph
 d)  Do you expect to find early-warning signals in the data of our patient? And where?
 
 #### Answers {-}
+
 a)  Onset of pathology (e.g. psychosis), relapse in addiction, suicide attempts, sudden gains and losses, etc.
 b)  Destabilization is most of the time a good thing in treatment: the goal of treatment is to change (destabilize) the existing state.
 During destabilization, the patient is increasingly sensitive to external influences (including treatment). Destabilization can be a target period for intervention.
@@ -100,13 +117,35 @@ In the last question, you might have hypothesized the occurrence of a phase tran
 
 #### Questions {-}
 
-a)	Analyze the time series of factor 7 using the function casnet::ts_levels(df$factor7, minLevelChange=1, minLevelDuration = 7, changeSensitivity = 0.01, maxLevels=30, method="anova").
-b)	Describe verbally the change trajectory in the symptom severity of our patient. 
+a)	Analyze the time series of factor 7 using the function `ts_levels()` in casnet. Look at the manual pages to get an idea what is going. Use this code: `casnet::ts_levels(df$factor7, minLevelChange=1, minLevelDuration = 7, changeSensitivity = 0.01, maxLevels=30, method="anova")`.
+b) Look at the `summary()` of the `tree` field in the output object.
+c) Plot the results in the `pred` field of the output object (`x` is `time`, `y` is the original series, `p` is the predicted level of the original series.
+d) Describe verbally the change trajectory in the symptom severity of our patient. 
 
 #### Answers {-}
 
-a) casnet::ts_levels(df$factor7, minLevelChange=1, minLevelDuration = 7, changeSensitivity = 0.01, maxLevels=30, method="anova"). This method uses regression trees to quantify segments of the time series. This is OK for descriptive purposes. Ideally, we would classify a phase transition in a qualitative manner (remember, it is a qualitative shift) but the ts_levels function is very useful to identify discontinous shifts in time series data. 
-b) Flutucations, shift, fluctuations.
+a) 
+```{r}
+library(casnet)
+library(ggplot2)
+library(tidyr)
+lvl <- ts_levels(df$factor7, minDataSplit = 12, minLevelDuration = 7, changeSensitivity = 0.05, maxLevels=30, method="anova") 
+```
+This method uses regression trees to quantify segments of the time series. This is OK for descriptive purposes. Ideally, we would classify a phase transition in a qualitative manner (remember, it is a qualitative shift) but the ts_levels function is very useful to identify discontinous shifts in time series data. 
+
+b)
+```{r}
+summary(lvl$tree)
+```
+
+c)
+```{r}
+# ggplot likes the long data format
+lvl_long <- gather(lvl$pred, key=variable, value=value, -x)
+ggplot(lvl_long, aes(x=x, y=value, colour=variable)) + geom_line() + theme_bw()
+```
+
+d) Flutucations, shift, fluctuations.
 
 ### Early Warning Signals {.tabset .tabset-fade .tabset-pills}
 
@@ -127,14 +166,22 @@ i) You get a warning that there are NA values. Why are there NA's?
 #### Answers {-}
 
 a) #rescale predictors to max=6
+```{r}
 for(j in (9:50)){
-  if(max(df.99[,j])>6){
+  if(max(df[,j])>6){
     df[,j] <- (df[,j]/100)*6
   }
 }
-b) dc.case <- dyn_comp(df, win=7, col_first=9, col_last=50, scale_min=0, scale_max=6, doPlot = TRUE)
+```
+b) 
+```{r}
+dc.case <- dyn_comp(df, win=7, col_first=9, col_last=50, scale_min=0, scale_max=6, doPlot = TRUE)
+```
 c) dataframe + plot object
-d) dc.df$plot.dc
+d) 
+```{r}
+dc.case$plot.dc
+```
 e) ci.case <- crit_in(dc.case$df.comp, 7)
 f) ci.case$plot.ci
 g) dc.mean <- rowMeans(as.matrix(dc.case$df.comp))

@@ -16,12 +16,12 @@
 #' @description Calculates Dynamic Complexity, a complexity index for short and coarse-grained time series (Schiepek & Strunk, 2010; Schiepek, 2003; Haken & Schiepek 2006).
 #'
 #' @param df A dataframe containing multivariate time series data from 1 person. Rows should indicate time,  columns should indicate variables. The multivariate time series should be on the same scale. If nescessary, rescale variables.
-#' @param col_first The first column of the dataframe that should be analyzed. 
-#' @param col_last The last column of the dataframe that should be analyzed. 
-#' @param win Window size. Default is whole time series. 
+#' @param col_first The first column of the dataframe that should be analyzed.
+#' @param col_last The last column of the dataframe that should be analyzed.
+#' @param win Window size. Default is whole time series.
 #' @param scale_min Theoretical minimum value of thescale.
 #' @param scale_max Theoretical maximum value of the scale.
-#' @param doPlot doPlot=TRUE shows a plot. Default is doPlot=FALSE. 
+#' @param doPlot doPlot=TRUE shows a `ggplot2`` object and returns it. Default is doPlot=FALSE, which also does not return a plot.
 #'
 #' @return A list object containing a dataframe of dynamic complexity values and a ggplot object of the dynamic complexity resonance diagram (e.g. Schiepek et al., 2016)
 #' @export
@@ -30,13 +30,13 @@
 #'
 #' @references Schiepek, G., & Strunk, G. (2010). The identification of critical fluctuations and phase transitions in short term and coarse-grained time series-a method for the real-time monitoring of human change processes. Biological cybernetics, 102(3), 197-207.
 #' @references Schiepek, G. (2003). A Dynamic Systems Approach to Clinical Case Formulation. European Journal of Psychological Assessment, 19, 175-184.
-#' @references Haken, H. & Schiepek, G. (2006, 2. Aufl. 2010). Synergetik in der Psychologie. Selbstorganisation verstehen und gestalten. Göttingen: Hogrefe.
-#' @references Schiepek, G. K., Stöger-Schmidinger, B., Aichhorn, W., Schöller, H., & Aas, B. (2016). Systemic case formulation, individualized process monitoring, and state dynamics in a case of dissociative identity disorder. Frontiers in psychology, 7, 1545.
+#' @references Haken, H. & Schiepek, G. (2006, 2. Aufl. 2010). Synergetik in der Psychologie. Selbstorganisation verstehen und gestalten. G?ttingen: Hogrefe.
+#' @references Schiepek, G. K., St?ger-Schmidinger, B., Aichhorn, W., Sch?ller, H., & Aas, B. (2016). Systemic case formulation, individualized process monitoring, and state dynamics in a case of dissociative identity disorder. Frontiers in psychology, 7, 1545.
 dyn_comp = function(df, col_first, col_last, scale_min, scale_max, win=NROW(df),  doPlot = FALSE){
 
 
 if(win>0){ok=TRUE}
-  
+
   #if(df>scale_max){ok=FALSE}
 
   data_f <- DC_F(df=df, win=win, xmin=scale_min, xmax=scale_max, col_first =col_first, col_last = col_last)
@@ -51,8 +51,8 @@ if(win>0){ok=TRUE}
 
   mat.dc <- data.matrix(df.comp)
   colnames(mat.dc) <- c(1:ncol(mat.dc))
- 
-  
+
+
   plot.dc <- ggplot2::ggplot(reshape2::melt(mat.dc), aes(x=Var1, y=Var2, fill=value)) + ggplot2::geom_tile() +
     ggplot2::scale_fill_gradient2(low='blue', high='red', mid='yellow', midpoint=(max(mat.dc, na.rm=T)/2), na.value='white') +
     ggplot2::theme_bw() +
@@ -151,11 +151,11 @@ DC_F = function(df, win, xmin, xmax, col_first, col_last){
 #' @param value value
 #'
 #' @return heaviside change
-#' @export 
+#' @export
 #' @keywords internal
 #'
 Heaviside = function(value){
-  
+
   if (value>0){
     h=1
   }
@@ -226,16 +226,16 @@ DC_D = function (df, win, xmin, xmax, col_first, col_last){
 #'
 #' @return A list with a dataframe of binary critical instability indices and a summed critical intability index, a ggplot object containing a critical instability diagram.
 #' @export
-#' 
+#'
 #' @author Merlijn Olthof
 #'
 #' @references Schiepek, G., & Strunk, G. (2010). The identification of critical fluctuations and phase transitions in short term and coarse-grained time series-a method for the real-time monitoring of human change processes. Biological cybernetics, 102(3), 197-207.
 #' @references Schiepek, G. (2003). A Dynamic Systems Approach to Clinical Case Formulation. European Journal of Psychological Assessment, 19, 175-184.
-#' @references Haken, H. & Schiepek, G. (2006, 2. Aufl. 2010). Synergetik in der Psychologie. Selbstorganisation verstehen und gestalten. Göttingen: Hogrefe.
+#' @references Haken, H. & Schiepek, G. (2006, 2. Aufl. 2010). Synergetik in der Psychologie. Selbstorganisation verstehen und gestalten. G?ttingen: Hogrefe.
 #' @references Schiepek, G. K., Tominschek, I., & Heinzel, S. (2014). Self-organization in psychotherapy: testing the synergetic model of change processes. Frontiers in psychology, 5, 1089.
 #'
 crit_in = function(df, win){
-  
+
   df.ci <- matrix(data=NA, nrow=nrow(df), ncol=ncol(df))
   df.ci <- data.frame(df.ci)
   colnames(df.ci) <- colnames(df)
