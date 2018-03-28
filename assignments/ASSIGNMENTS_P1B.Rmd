@@ -29,8 +29,6 @@ knitr::opts_chunk$set(include=TRUE)
 ```
 
 
-
-
 # **Quick Links** {-}
 
 * [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
@@ -41,8 +39,6 @@ knitr::opts_chunk$set(include=TRUE)
   
 </br>
 </br>
-
-
 
 
 # **Fitting Parameters of Analytic Solutions**

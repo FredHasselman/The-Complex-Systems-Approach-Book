@@ -25,9 +25,7 @@ output:
 ---
 
 
-```{r, include=FALSE}
-knitr::opts_chunk$set(include=TRUE, tidy = FALSE)
-```
+
 
 
 # **Quick Links** {-}
@@ -69,31 +67,33 @@ d) Factor 7 yields the scores on 'Impairment by Symptoms and Problems' for this 
 #### Answers {-}
 
 a) The data file is on [Github](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/blob/master/assignments/assignment_data/EarlyWarningSignals/clinical.case.study.csv)
-```{r}
+
+```r
 library(rio)
 df <- import("https://raw.githubusercontent.com/FredHasselman/The-Complex-Systems-Approach-Book/master/assignments/assignment_data/EarlyWarningSignals/clinical.case.study.csv")
-
 ```
 
 b) In the rows.
 
 c) 
-```{r}
+
+```r
 df$days <- (1:nrow(df))
 ```
 d) 
-```{r}
+
+```r
 plot(df$days, df$factor7, type='l')
 ```
+
+![](Assignments_P4_Merlijn_v1_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
 
 ### Phase Transitions and Early-Warning Signals {.tabset .tabset-fade .tabset-pills}
 
 Before we continue, read this short summary of what you (should) know about phase transitions and early-warning signals: 
 
-```{block2,type="rmdkennen"}
-Change from one attractor to another is called a phase transition. Phase transitions are preceded by a destabilization period in which the stability of the existing state decreases (as a consequence of increasing control parameters). During destabilization, the system loses its resilience to external influences leading to increased fluctuations and disorder in the systems behaviour (critical fluctuations) and an increased return time to the existing state after perturbation (critical slowing down). Destabilization ends abruptly when the system makes a phase transition towards a new stable state. Critical fluctuations and critical slowing down can therefore serve as early-warning signals (EWS) for phase transitions. 
-```
+\BeginKnitrBlock{rmdnote}<div class="rmdnote">Change from one attractor to another is called a phase transition. Phase transitions are preceded by a destabilization period in which the stability of the existing state decreases (as a consequence of increasing control parameters). During destabilization, the system loses its resilience to external influences leading to increased fluctuations and disorder in the systems behaviour (critical fluctuations) and an increased return time to the existing state after perturbation (critical slowing down). Destabilization ends abruptly when the system makes a phase transition towards a new stable state. Critical fluctuations and critical slowing down can therefore serve as early-warning signals (EWS) for phase transitions. </div>\EndKnitrBlock{rmdnote}
 
 #### Questions {-}
 
@@ -127,7 +127,8 @@ d) Describe verbally the change trajectory in the symptom severity of our patien
 
 a) This method uses regression trees to quantify segments of the time series. This is OK for descriptive purposes. Ideally, we would classify a phase transition in a qualitative manner (remember, it is a qualitative shift) but the ts_levels function is very useful to identify discontinous shifts in time series data. 
 
-```{r}
+
+```r
 library(casnet)
 library(ggplot2)
 library(tidyr)
@@ -136,18 +137,49 @@ lvl <- ts_levels(df$factor7, minDataSplit = 12, minLevelDuration = 7, changeSens
 
 b) Look for `primary splits`
 
-```{r}
+
+```r
 summary(lvl$tree)
 ```
 
+```
+## Call:
+## rpart::rpart(formula = y ~ x, data = dfs, method = method, control = list(minsplit = minDataSplit, 
+##     minbucket = minLevelDuration, maxdepth = maxLevels, cp = changeSensitivity))
+##   n= 101 
+## 
+##          CP nsplit rel error    xerror      xstd
+## 1 0.4399209      0 1.0000000 1.0163256 0.1501655
+## 2 0.0500000      1 0.5600791 0.6217326 0.1210092
+## 
+## Variable importance
+##   x 
+## 100 
+## 
+## Node number 1: 101 observations,    complexity param=0.4399209
+##   mean=6.930683e-11, MSE=0.4817495 
+##   left son=2 (62 obs) right son=3 (39 obs)
+##   Primary splits:
+##       x < 39.5 to the right, improve=0.4399209, (0 missing)
+## 
+## Node number 2: 62 observations
+##   mean=-0.3651189, MSE=0.2190611 
+## 
+## Node number 3: 39 observations
+##   mean=0.5804455, MSE=0.350508
+```
+
 c)
-```{r}
+
+```r
 # ggplot likes the long data format
 lvl_long <- lvl$pred %>% 
   gather(key=variable, value=value, -x)
 
 ggplot(lvl_long, aes(x=x, y=value, colour=variable)) + geom_line() + theme_bw()
 ```
+
+![](Assignments_P4_Merlijn_v1_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 d) Flutucations, shift, fluctuations.
 
@@ -170,7 +202,8 @@ i) You get a warning that there are NA values. Why are there NA's?
 #### Answers {-}
 
 a) rescale predictors to max=6
-```{r}
+
+```r
 for(j in (9:50)){
   if(max(df[,j])>6){
     df[,j] <- (df[,j]/100)*6
@@ -178,30 +211,62 @@ for(j in (9:50)){
 }
 ```
 b) 
-```{r}
+
+```r
 dc.case <- dyn_comp(df, win=7, col_first=9, col_last=50, scale_min=0, scale_max=6, doPlot = TRUE)
 ```
 c) dataframe + plot object
 d) 
-```{r}
+
+```r
 dc.case$plot.dc
 ```
+
+![](Assignments_P4_Merlijn_v1_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 e) 
-```{r}
+
+```r
 ci.case <- crit_in(dc.case$df.comp, 7)
 ```
 f) 
-```{r}
+
+```r
 ci.case$plot.ci
 ```
+
+![](Assignments_P4_Merlijn_v1_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 g) 
-```{r}
+
+```r
 dc.mean <- rowMeans(as.matrix(dc.case$df.comp))
 plot(dc.mean, type='l')
-```   
+```
+
+![](Assignments_P4_Merlijn_v1_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 h) 
-```{r}
+
+```r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(ggplot2)
 
 # Create a long dataset for ggplot
@@ -212,6 +277,12 @@ df %>%
   gather(key=variable,value=value,-days) %>%
   ggplot(aes(x=days, y=value, colour=variable)) + geom_line() + theme_bw()
 ```
+
+```
+## Warning: Removed 6 rows containing missing values (geom_path).
+```
+
+![](Assignments_P4_Merlijn_v1_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
 i) Because dynamic complexity is analyzed over a backwards window. The first value is at day 7.
 
 

@@ -1,13 +1,14 @@
 ---
-title: "Complex Networks"
-author: "Fred Hasselman & Maarten Wijnants"
+title: "DCS Assignments Part X"
+author: "Fred Hasselman, Maarten Wijnants & Merlijn Olthof"
 date: "1/14/2018"
 output: 
   bookdown::html_document2: 
+    variant: markdown+hard_line_breaks
     fig_caption: yes
     highlight: pygments
     keep_md: yes
-    number_sections: no
+    number_sections: yes
     theme: spacelab
     toc: yes
     toc_float: true
@@ -19,16 +20,217 @@ output:
     csl: apa.csl
     includes:
         before_body: assignmentstyle.html
+    pandoc_args: ["--number-offset","7"]
+    
 ---
 
-# **Complex Networks** {#nets}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(include=TRUE, tidy = FALSE, warning = FALSE, message = FALSE)
+```
+
+
+# **Quick Links** {-}
+
+* [Main Assignments Page](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/)
+* [Assignments Part 1A: Introduction to the mathematics of change](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1A.html)
+* [Assignments Part 1B: Fitting Parameters and Potential Functions](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P1B.html)
+* [Assignments Part 2: Time Series Analysis: Temporal Correlations and Fractal Scaling](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P2.html)
+* [Assignments Part 3: Quantifying Recurrences in State Space](https://darwin.pwo.ru.nl/skunkworks/courseware/1718_DCS/assignments/ASSIGNMENTS_P3.html)
+  
+</br>
+</br>
+
+
+# **Early Warning Signals and Complex Networks**
+
+
+## **Early Warning Signals in a Clinical Case Study**
+
+Dynamic assessment (e.g. ecological momentary assesment) is increasingly used in the mental health field. Process monitoring with dynamic assessment can empower patients and benefit self-insight (van Os et al., 2017). Additionally, ecological momentary assesment (EMA) time series can be analyzed and the results can be used to inform the treatment process. 
+In this assignment, we will use complex systems theory and methodology to perform a quantitative case study for a real patient. 
+
+### First Steps {.tabset .tabset-fade .tabset-pills}
+
+You will analyze EMA data from a patient who received impatient psychotherapy for mood disorders. The patient answered questions from the therapy process questionnaire on a daily basis for the full 101 days of his treatment. 
+The learning objectives of the assignments are as follows:
+1) You can interpret plots of raw EMA time series, as well as complexity resonance diagrams and critical instability diagrams of EMA time series.
+2) You can describe what possible change processes in complex systems could explain the quantitative results from the case study. 
+
+
+#### Questions {-}
+
+a) Open R and load the data 'clinical.case.study.csv' to a dataframe called df. 
+b) Look at the data frame. Where is time in this data? In the rows or the columns?
+c) Add a time variable called 'days' to the dataframe. 
+d) Factor 7 yields the scores on 'Impairment by Symptoms and Problems' for this patient on each day. Plot the time series. What do you see?
+
+
+#### Answers {-}
+
+a) The data file is on [Github](https://github.com/FredHasselman/The-Complex-Systems-Approach-Book/blob/master/assignments/assignment_data/EarlyWarningSignals/clinical.case.study.csv)
+```{r}
+library(rio)
+df <- import("https://raw.githubusercontent.com/FredHasselman/The-Complex-Systems-Approach-Book/master/assignments/assignment_data/EarlyWarningSignals/clinical.case.study.csv")
+
+```
+
+b) In the rows.
+
+c) 
+```{r}
+df$days <- (1:nrow(df))
+```
+d) 
+```{r}
+plot(df$days, df$factor7, type='l')
+```
+
+
+### Phase Transitions and Early-Warning Signals {.tabset .tabset-fade .tabset-pills}
+
+Before we continue, read this short summary of what you (should) know about phase transitions and early-warning signals: 
+
+```{block2,type="rmdkennen"}
+Change from one attractor to another is called a phase transition. Phase transitions are preceded by a destabilization period in which the stability of the existing state decreases (as a consequence of increasing control parameters). During destabilization, the system loses its resilience to external influences leading to increased fluctuations and disorder in the systems behaviour (critical fluctuations) and an increased return time to the existing state after perturbation (critical slowing down). Destabilization ends abruptly when the system makes a phase transition towards a new stable state. Critical fluctuations and critical slowing down can therefore serve as early-warning signals (EWS) for phase transitions. 
+```
+
+#### Questions {-}
+
+Answer the following questions, please think and discuss with your neighbours before turning to the answers. You can use the literature and what you've learned in the lecture:
+
+a) Can you think of possible phase transitions in psychopathology? Give examples. 
+b)What is the role of destabilization in the treatment of psychopathology?
+c) Look at the plot of factor 7 for our patient. Can you visualize a possible phase transition?
+d) Do you expect to find early-warning signals in the data of our patient? And where?
+
+#### Answers {-}
+
+a) Onset of pathology (e.g. psychosis), relapse in addiction, suicide attempts, sudden gains and losses, etc.
+b) Destabilization is most of the time a good thing in treatment: the goal of treatment is to change (destabilize) the existing state.
+During destabilization, the patient is increasingly sensitive to external influences (including treatment). Destabilization can be a target period for intervention.
+c) There is a sudden gain (abrupt and persisting decrease in symptoms) somewhere around day 40.
+d) Before the sudden gain
+
+### Phase transitions in symptom severity {.tabset .tabset-fade .tabset-pills}
+
+In the last question, you might have hypothesized the occurrence of a phase transition in the impairment by symptoms and problems of our patient (sudden gain). Let's try a method to quantify level shifts, including sudden gains, in time series data.  
+
+#### Questions {-}
+
+a)	Analyze the time series of factor 7 using the function `ts_levels()` in casnet. Look at the manual pages to get an idea what is going. Use this code: `casnet::ts_levels(df$factor7, minLevelChange=1, minLevelDuration = 7, changeSensitivity = 0.01, maxLevels=30, method="anova")`.
+b) Look at the `summary()` of the `tree` field in the output object.
+c) Plot the results in the `pred` field of the output object (`x` is `time`, `y` is the original series, `p` is the predicted level of the original series.
+d) Describe verbally the change trajectory in the symptom severity of our patient. 
+
+#### Answers {-}
+
+a) This method uses regression trees to quantify segments of the time series. This is OK for descriptive purposes. Ideally, we would classify a phase transition in a qualitative manner (remember, it is a qualitative shift) but the ts_levels function is very useful to identify discontinous shifts in time series data. 
+
+```{r}
+library(casnet)
+library(ggplot2)
+library(tidyr)
+lvl <- ts_levels(df$factor7, minDataSplit = 12, minLevelDuration = 7, changeSensitivity = 0.05, maxLevels=30, method="anova") 
+```
+
+b) Look for `primary splits`
+
+```{r}
+summary(lvl$tree)
+```
+
+c)
+```{r}
+# ggplot likes the long data format
+lvl_long <- lvl$pred %>% 
+  gather(key=variable, value=value, -x)
+
+ggplot(lvl_long, aes(x=x, y=value, colour=variable)) + geom_line() + theme_bw()
+```
+
+d) Flutucations, shift, fluctuations.
+
+### Early Warning Signals {.tabset .tabset-fade .tabset-pills}
+
+Now it is time to analyze the dynamic complexity of the ES time series and see if we can find early-warning signals. 
+
+#### Questions {-}
+
+a) Some questions in the data where answered on a scale from 0 to 100, others from 0 to 6. We must rescale all questions that are 0-100 to the scale 0-6 before we can analyze EWS. If you like, you can try to write a for loop for this. You can also look at the first answer.  
+b) Analyze the dynamic complexity of the ES time series using the function dyn_comp(), ask for a plot.
+c) The function returns a list, what is in the list?
+d) Look at the complexity resonance diagram, do you see early-warning signals for the sudden gain?
+e) Analyze the presence of critical instabilities using the function crit_in(), set doPlot=TRUE
+f) Look at the critical instability diagram, do you see early-warning signals for the sudden gain?
+g) Plot the time series of the average dynamic complexity of all items 
+h) Plot the time series of factor 7 and the time series of the average dynamic complexity in one plot
+i) You get a warning that there are NA values. Why are there NA's?
+
+#### Answers {-}
+
+a) rescale predictors to max=6
+```{r}
+for(j in (9:50)){
+  if(max(df[,j])>6){
+    df[,j] <- (df[,j]/100)*6
+  }
+}
+```
+b) 
+```{r}
+dc.case <- dyn_comp(df, win=7, col_first=9, col_last=50, scale_min=0, scale_max=6, doPlot = TRUE)
+```
+c) dataframe + plot object
+d) 
+```{r}
+dc.case$plot.dc
+```
+e) 
+```{r}
+ci.case <- crit_in(dc.case$df.comp, 7)
+```
+f) 
+```{r}
+ci.case$plot.ci
+```
+g) 
+```{r}
+dc.mean <- rowMeans(as.matrix(dc.case$df.comp))
+plot(dc.mean, type='l')
+```   
+h) 
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Create a long dataset for ggplot
+# Here we use the syntax from the `tidyverse` set of packages to create a 
+df %>% 
+  mutate(MeanDC=ts_standardise(dc.mean)) %>% 
+  select(days,factor7,MeanDC) %>% 
+  gather(key=variable,value=value,-days) %>%
+  ggplot(aes(x=days, y=value, colour=variable)) + geom_line() + theme_bw()
+```
+i) Because dynamic complexity is analyzed over a backwards window. The first value is at day 7.
+
+
+
+# **Complex Networks**
+
+
 
 To complete these assignments you need:
-```{r, message=FALSE, warning=FALSE}
+```{r}
 library(igraph)
 library(qgraph)
 library(devtools)
-source_url("https://raw.githubusercontent.com/FredHasselman/DCS/master/functionLib/nlRtsa_SOURCE.R")
+library(casnet)
+```
+
+
+```{block2,type="rmdnote"}
+The following set of assignments serve as a demonstration to get you acquianted with graph models, just follow the instructions.
 ```
 
 ## Basic graphs
@@ -37,31 +239,44 @@ source_url("https://raw.githubusercontent.com/FredHasselman/DCS/master/functionL
 
 ```{r}
 g <- graph.ring(20)
+plot(g)
 ```
 
-    - Look in the manual of `igraph` for a function that will get you the degree of each node.
-    - ALso, get the average path length.
+    - Look in the manual of `igraph` for a function that will get you the `degree` of each node.
+    - Also, find a function to get the average path length.
 
 
 2. Create a "Small world" graph and plot it.
-     - Get the degree, average path length and transitivity
+    - Get the degree, average path length and transitivity
 
 
 ```{r}
-g <- watts.strogatz.game(1, 20, 5, 0.05)
+g_ws <- watts.strogatz.game(1, 20, 5, 0.05)
+plot(g_ws)
 ```
 
 
 3. Directed scale-free  graph
-     - Get the degree, average path length and transitivity
+    - Get the `degree`, `average path length` and `transitivity`
 
 ```{r}
-g <- barabasi.game(20)
+g_bara <- barabasi.game(20)
+plot(g_bara)
 ```
 
-     - There should be a power law relation between nodes and degree ... (but this is a very small network)
+    - There should be a power law relation between nodes number and degree ... (but this is a very small network)
+
 ```{r, eval=FALSE}
-plot(log(1:20),log(degree(g)))
+# We can add properties to nodes:
+V(g_bara)$degree <- degree(g_bara)
+get.vertex.attribute(g_bara)
+
+V(g_bara)$name <- 1:20
+
+df.deg <- data.frame(Node=V(g_bara)$name, Degree = V(g_bara)$degree)
+df.deg <- df.deg %>% arrange(Degree)
+
+ggplot(df.deg,aes(x=Node,y=Degree)) + geom_point() + stat_smooth(method = "lm") + theme_bw()
 ```
 
 ## Social Networks 
@@ -147,7 +362,6 @@ par(mfrow=c(1,1))
 ```
 
 
-[| Jump to solutions |](#netssol)
 
 
 ## Package `qgraph`
